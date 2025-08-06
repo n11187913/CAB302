@@ -9,6 +9,7 @@ from util.dates import parse_to_local, date_range
 
 @dataclass
 class BurndownChartDataSeries:
+    jmdsojdsiojds
     name: str
     data: Dict[datetime, int]
     format: Dict[str, Any]
