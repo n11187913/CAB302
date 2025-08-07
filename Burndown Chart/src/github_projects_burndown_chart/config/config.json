@@ -1,0 +1,20 @@
+{
+  "repository": {
+    "n11187913/CAB302": {
+      "query_variables": {
+        "repo_owner": "n11187913",
+        "repo_name": "CAB302",
+        "project_number": 1,
+        "column_count": 5,
+        "max_cards_per_column_count": 50,
+        "labels_per_issue_count": 5
+      },
+      "settings": {
+        "sprint_start_date": "31/07/2025",
+        "sprint_end_date": "31/08/2025",
+        "points_label": null,
+        "version": 2
+      }
+    }
+  }
+}
