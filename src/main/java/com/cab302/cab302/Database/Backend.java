@@ -1,24 +1,28 @@
 package com.cab302.cab302.Database;
 
+import java.security.SecureRandom;
 import java.sql.*;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.security.SecureRandom;
-
 
 public class Backend implements AutoCloseable {
 
+    // DB file created in the working directory
     private static final String DB_URL = "jdbc:sqlite:cab302.db";
+
+    // Allowed focus areas (simple whitelist)
     private static final String[] ALLOWED_FOCUS = {
             "Electrical", "Dynamics", "Calculus", "Physics", "Mechanical", "Probability", "Other"
     };
 
-
+    // PBKDF2 params (Java 21 / Corretto 21 supports this out of the box)
     private static final String KDF_ALGO = "PBKDF2WithHmacSHA256";
-    private static final int KDF_ITER = 120_000; // sensible default
+    private static final int KDF_ITER = 120_000;
     private static final int SALT_BYTES = 16;
     private static final int KEY_BITS = 256;
 
@@ -29,9 +33,9 @@ public class Backend implements AutoCloseable {
         initSchema();
     }
 
+    // ----------------------- Public API -----------------------
 
-
-
+    /** Create a new user (throws if username exists). */
     public long addUser(String username, String password, String focusArea) throws Exception {
         requireNonBlank(username, "username");
         requireNonBlank(password, "password");
@@ -39,9 +43,9 @@ public class Backend implements AutoCloseable {
 
         String[] kdf = hashPassword(password);
         String sql = """
-            INSERT INTO users(username, password_hash, password_salt, focus_area, created_at)
-            VALUES(?,?,?,?,?)
-        """;
+                INSERT INTO users(username, password_hash, password_salt, focus_area, created_at)
+                VALUES(?,?,?,?,?)
+                """;
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, username.trim());
             ps.setString(2, kdf[1]); // hash
@@ -56,7 +60,7 @@ public class Backend implements AutoCloseable {
         throw new SQLException("Failed to insert user");
     }
 
-
+    /** Authenticate a user by username/password. */
     public boolean authenticate(String username, String password) throws Exception {
         String sql = "SELECT password_hash, password_salt FROM users WHERE username = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -70,13 +74,13 @@ public class Backend implements AutoCloseable {
         }
     }
 
-
+    /** Fetch a user (without password fields). */
     public Optional<User> getUser(String username) throws SQLException {
         String sql = """
-            SELECT id, username, focus_area, created_at
-            FROM users
-            WHERE username = ?
-        """;
+                SELECT id, username, focus_area, created_at
+                FROM users
+                WHERE username = ?
+                """;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username.trim());
             try (ResultSet rs = ps.executeQuery()) {
@@ -93,16 +97,16 @@ public class Backend implements AutoCloseable {
         return Optional.empty();
     }
 
-
+    /** Insert a question. */
     public long addQuestion(String focusArea, String question, String answer, String reference) throws SQLException {
         requireNonBlank(question, "question");
         requireNonBlank(answer, "answer");
         focusArea = sanitizeFocus(focusArea);
 
         String sql = """
-            INSERT INTO questions(focus_area, question, answer, reference, created_at)
-            VALUES(?,?,?,?,?)
-        """;
+                INSERT INTO questions(focus_area, question, answer, reference, created_at)
+                VALUES(?,?,?,?,?)
+                """;
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, focusArea);
             ps.setString(2, question.trim());
@@ -117,12 +121,12 @@ public class Backend implements AutoCloseable {
         throw new SQLException("Failed to insert question");
     }
 
-
+    /** Get questions by focus area (randomized), limited. If focusArea is null/"Any", returns from all. */
     public List<Question> getQuestions(String focusArea, int limit) throws SQLException {
         String base = """
-            SELECT id, focus_area, question, answer, reference, created_at
-            FROM questions
-        """;
+                SELECT id, focus_area, question, answer, reference, created_at
+                FROM questions
+                """;
         boolean all = (focusArea == null) || focusArea.equalsIgnoreCase("Any");
         String sql = all ? base + " ORDER BY RANDOM() LIMIT ?" :
                 base + " WHERE focus_area = ? ORDER BY RANDOM() LIMIT ?";
@@ -151,7 +155,6 @@ public class Backend implements AutoCloseable {
         return out;
     }
 
-
     public long countUsers() throws SQLException { return scalarLong("SELECT COUNT(*) FROM users"); }
     public long countQuestions() throws SQLException { return scalarLong("SELECT COUNT(*) FROM questions"); }
 
@@ -159,9 +162,12 @@ public class Backend implements AutoCloseable {
         if (conn != null && !conn.isClosed()) conn.close();
     }
 
-
+    // ----------------------- Internals -----------------------
 
     private void connect() throws SQLException {
+        // Ensure driver is registered (usually automatic with xerial, but harmless)
+        try { Class.forName("org.sqlite.JDBC"); } catch (ClassNotFoundException ignored) {}
+
         conn = DriverManager.getConnection(DB_URL);
         try (Statement st = conn.createStatement()) {
             st.execute("PRAGMA foreign_keys = ON");
@@ -171,27 +177,26 @@ public class Backend implements AutoCloseable {
 
     private void initSchema() throws SQLException {
         String createUsers = """
-            CREATE TABLE IF NOT EXISTS users(
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              username TEXT NOT NULL UNIQUE,
-              password_hash TEXT NOT NULL,
-              password_salt TEXT NOT NULL,
-              focus_area TEXT NOT NULL,
-              created_at TEXT NOT NULL
-            );
-        """;
+                CREATE TABLE IF NOT EXISTS users(
+                  id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  username TEXT NOT NULL UNIQUE,
+                  password_hash TEXT NOT NULL,
+                  password_salt TEXT NOT NULL,
+                  focus_area TEXT NOT NULL,
+                  created_at TEXT NOT NULL
+                );
+                """;
 
         String createQuestions = """
-            CREATE TABLE IF NOT EXISTS questions(
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              focus_area TEXT NOT NULL,
-              question TEXT NOT NULL,
-              answer TEXT NOT NULL,
-              reference TEXT,
-              created_at TEXT NOT NULL
-            );
-        """;
-
+                CREATE TABLE IF NOT EXISTS questions(
+                  id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  focus_area TEXT NOT NULL,
+                  question TEXT NOT NULL,
+                  answer TEXT NOT NULL,
+                  reference TEXT,
+                  created_at TEXT NOT NULL
+                );
+                """;
 
         String createIndexQFocus = "CREATE INDEX IF NOT EXISTS idx_questions_focus ON questions(focus_area);";
         String createIndexUName = "CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users(username);";
@@ -224,10 +229,10 @@ public class Backend implements AutoCloseable {
 
     private static String capitalize(String s) {
         if (s.isEmpty()) return s;
-        return s.substring(0,1).toUpperCase() + s.substring(1);
+        return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
-
+    /** Returns [saltB64, "pbkdf2:ITER:hashB64"] */
     private static String[] hashPassword(String password) throws Exception {
         byte[] salt = new byte[SALT_BYTES];
         new SecureRandom().nextBytes(salt);
@@ -235,14 +240,12 @@ public class Backend implements AutoCloseable {
         byte[] hash = pbkdf2(password.toCharArray(), salt, KDF_ITER, KEY_BITS);
         return new String[] {
                 Base64.getEncoder().encodeToString(salt),
-                // store algo:iter:hash for future-proofing
                 "pbkdf2:" + KDF_ITER + ":" + Base64.getEncoder().encodeToString(hash)
         };
     }
 
     private static boolean verifyPassword(String password, String saltB64, String stored) throws Exception {
-        if (stored == null || !stored.startsWith("pbkdf2:"))
-            return false;
+        if (stored == null || !stored.startsWith("pbkdf2:")) return false;
         String[] parts = stored.split(":");
         if (parts.length != 3) return false;
         int iter = Integer.parseInt(parts[1]);
@@ -265,12 +268,12 @@ public class Backend implements AutoCloseable {
         return res == 0;
     }
 
-
+    // ----------------------- DTOs -----------------------
 
     public record User(long id, String username, String focusArea, String createdAt) {}
     public record Question(long id, String focusArea, String question, String answer, String reference, String createdAt) {}
 
-    
+    // ----------------------- Quick manual test -----------------------
     public static void main(String[] args) throws Exception {
         try (Backend db = new Backend()) {
             if (db.countUsers() == 0) {
