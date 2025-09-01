@@ -30,6 +30,8 @@ public class Backend implements AutoCloseable {
     }
 
 
+
+
     public long addUser(String username, String password, String focusArea) throws Exception {
         requireNonBlank(username, "username");
         requireNonBlank(password, "password");
@@ -268,7 +270,7 @@ public class Backend implements AutoCloseable {
     public record User(long id, String username, String focusArea, String createdAt) {}
     public record Question(long id, String focusArea, String question, String answer, String reference, String createdAt) {}
 
-
+    
     public static void main(String[] args) throws Exception {
         try (Backend db = new Backend()) {
             if (db.countUsers() == 0) {
@@ -288,4 +290,3 @@ public class Backend implements AutoCloseable {
         }
     }
 }
-
