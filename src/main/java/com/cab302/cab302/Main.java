@@ -9,13 +9,15 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class Main extends Application {
+    public static final String TITLE = "Sign In / Log In";
+    public static final int WIDTH = 560;
+    public static final int HEIGHT = 420;
+
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
-        String stylesheet = Objects.requireNonNull(Main.class.getResource("stylesheet.css")).toExternalForm();
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        scene.getStylesheets().add(stylesheet);
-        stage.setTitle("Hello!");
+    public void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("auth-view.fxml"));
+        Scene scene = new Scene(loader.load(), WIDTH, HEIGHT);
+        stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.show();
     }

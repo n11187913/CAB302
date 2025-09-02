@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.signin.AuthController"
+      fx:controller="com.cab302.cab302.controller.AuthController"
       spacing="16" alignment="TOP_LEFT">
     <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
 

@@ -1,5 +1,8 @@
-package com.example.signin;
+package com.cab302.cab302.controller;
 
+import com.cab302.cab302.Main;
+import com.cab302.cab302.model.UserAccount;
+import com.cab302.cab302.TestUserList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -40,7 +43,7 @@ public class AuthController {
             return;
         }
 
-        userDAO.add(new User(first, last, email, pass));
+        userDAO.add(new UserAccount(first, last, email, pass));
         setStatus("Account created for " + first + " " + last + ". You can log in now.", false);
     }
 
@@ -55,7 +58,7 @@ public class AuthController {
             return;
         }
 
-        User found = userDAO.getByEmail(email);
+        UserAccount found = userDAO.getByEmail(email);
         if (found == null) {
             setStatus("No account found for that email. Sign up first.", true);
             return;
@@ -70,8 +73,8 @@ public class AuthController {
 
         //untested as i havent created the home controller page
         try {
-            FXMLLoader loader = new FXMLLoader(AuthApplication.class.getResource("/com/example/signin/home-view.fxml"));
-            Scene homeScene = new Scene(loader.load(), AuthApplication.WIDTH, AuthApplication.HEIGHT);
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/com/cab302/cab302/home-view.fxml"));
+            Scene homeScene = new Scene(loader.load(), Main.WIDTH, Main.HEIGHT);
 
             //ADD PAGE HERE instead of HomeController <-------------------
             //HomeController homeController = loader.getController();
