@@ -7,5 +7,5 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" alignment="CENTER" spacing="16">
-    <Label text="Home Page"/>
+    <Label text="About"/>
 </VBox>
