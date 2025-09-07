@@ -176,38 +176,135 @@ public class Backend implements AutoCloseable {
     }
 
     private void initSchema() throws SQLException {
-        String createUsers = """
-                CREATE TABLE IF NOT EXISTS users(
-                  id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  username TEXT NOT NULL UNIQUE,
-                  password_hash TEXT NOT NULL,
-                  password_salt TEXT NOT NULL,
-                  focus_area TEXT NOT NULL,
-                  created_at TEXT NOT NULL
-                );
-                """;
+        String[] ddl = {
+                "PRAGMA foreign_keys = ON",
 
-        String createQuestions = """
-                CREATE TABLE IF NOT EXISTS questions(
-                  id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  focus_area TEXT NOT NULL,
-                  question TEXT NOT NULL,
-                  answer TEXT NOT NULL,
-                  reference TEXT,
-                  created_at TEXT NOT NULL
-                );
-                """;
+                // profiles
+                """
+        CREATE TABLE IF NOT EXISTS profiles(
+          profile_id       INTEGER PRIMARY KEY AUTOINCREMENT,
+          name             TEXT NOT NULL,
+          email            TEXT NOT NULL UNIQUE,
+          username         TEXT NOT NULL UNIQUE,
+          password_hash    TEXT NOT NULL,
+          password_salt    TEXT NOT NULL,
+          student_teacher  TEXT NOT NULL CHECK (student_teacher IN ('student','teacher')),
+          created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+        );
+        """,
 
-        String createIndexQFocus = "CREATE INDEX IF NOT EXISTS idx_questions_focus ON questions(focus_area);";
-        String createIndexUName = "CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username ON users(username);";
+                // focus areas
+                """
+        CREATE TABLE IF NOT EXISTS focus_areas(
+          focus_area_id  INTEGER PRIMARY KEY,
+          area_name      TEXT NOT NULL UNIQUE
+        );
+        """,
+
+                // profile ↔ focus areas (many-to-many)
+                """
+        CREATE TABLE IF NOT EXISTS profile_focus_areas(
+          profile_id     INTEGER NOT NULL,
+          focus_area_id  INTEGER NOT NULL,
+          PRIMARY KEY (profile_id, focus_area_id),
+          FOREIGN KEY (profile_id)    REFERENCES profiles(profile_id)    ON DELETE CASCADE,
+          FOREIGN KEY (focus_area_id) REFERENCES focus_areas(focus_area_id) ON DELETE CASCADE
+        );
+        """,
+
+                // question library
+                """
+        CREATE TABLE IF NOT EXISTS question_library(
+          question_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+          question       TEXT NOT NULL,
+          answer         TEXT NOT NULL,
+          reference      TEXT,
+          focus_area_id  INTEGER,
+          question_type  TEXT NOT NULL CHECK (question_type IN ('numerical','worded','object')),
+          created_at     TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+          FOREIGN KEY (focus_area_id) REFERENCES focus_areas(focus_area_id) ON DELETE SET NULL
+        );
+        """,
+                "CREATE INDEX IF NOT EXISTS idx_qlib_focus ON question_library(focus_area_id);",
+                "CREATE INDEX IF NOT EXISTS idx_qlib_type  ON question_library(question_type);",
+
+                // numerical subtype
+                """
+        CREATE TABLE IF NOT EXISTS numerical_questions(
+          question_id  INTEGER PRIMARY KEY,
+          question     TEXT NOT NULL,
+          answer       TEXT NOT NULL,
+          FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE
+        );
+        """,
+
+                // worded subtype
+                """
+        CREATE TABLE IF NOT EXISTS worded_questions(
+          question_id  INTEGER PRIMARY KEY,
+          question     TEXT NOT NULL,
+          answer       TEXT NOT NULL,
+          FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE
+        );
+        """,
+
+                // object subtype
+                """
+        CREATE TABLE IF NOT EXISTS object_questions(
+          question_id  INTEGER PRIMARY KEY,
+          question     TEXT NOT NULL,
+          answer       TEXT NOT NULL,
+          image        TEXT,
+          FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE
+        );
+        """,
+
+                // sessions
+                """
+        CREATE TABLE IF NOT EXISTS sessions(
+          session_id          INTEGER PRIMARY KEY AUTOINCREMENT,
+          profile_id          INTEGER NOT NULL,
+          flagged_question_id INTEGER,
+          started_at          TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+          FOREIGN KEY (profile_id)          REFERENCES profiles(profile_id)           ON DELETE CASCADE,
+          FOREIGN KEY (flagged_question_id) REFERENCES question_library(question_id) ON DELETE SET NULL
+        );
+        """,
+                "CREATE INDEX IF NOT EXISTS idx_sessions_profile ON sessions(profile_id);",
+
+                // statistics
+                """
+        CREATE TABLE IF NOT EXISTS statistics(
+          statistics_id  INTEGER PRIMARY KEY AUTOINCREMENT,
+          question_id    INTEGER NOT NULL,
+          profile_id     INTEGER NOT NULL,
+          user_answer    TEXT,
+          speed          REAL,
+          accuracy       REAL,
+          created_at     TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+          FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE,
+          FOREIGN KEY (profile_id)  REFERENCES profiles(profile_id)          ON DELETE CASCADE
+        );
+        """,
+                "CREATE INDEX IF NOT EXISTS idx_stats_profile  ON statistics(profile_id);",
+                "CREATE INDEX IF NOT EXISTS idx_stats_question ON statistics(question_id);"
+        };
 
         try (Statement st = conn.createStatement()) {
-            st.execute(createUsers);
-            st.execute(createQuestions);
-            st.execute(createIndexQFocus);
-            st.execute(createIndexUName);
+            for (String sql : ddl) st.execute(sql);
+        }
+
+        // Seed focus areas (idempotent)
+        String seed = """
+        INSERT OR IGNORE INTO focus_areas(focus_area_id, area_name) VALUES
+          (1,'Electrical'),(2,'Dynamics'),(3,'Calculus'),(4,'Physics'),
+          (5,'Mechanical'),(6,'Probability'),(7,'Other');
+    """;
+        try (Statement st = conn.createStatement()) {
+            st.execute(seed);
         }
     }
+
 
     private long scalarLong(String sql) throws SQLException {
         try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
