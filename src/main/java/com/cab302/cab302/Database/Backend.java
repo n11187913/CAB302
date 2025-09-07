@@ -188,6 +188,28 @@ public class Backend implements AutoCloseable {
         return out;
     }
 
+    /** Record a quiz attempt (includes correctness flag). */
+    public long recordAttempt(long profileId, long questionId, String userAnswer,
+                              boolean isCorrect, double speedSeconds, double accuracy) throws SQLException {
+        String sql = """
+          INSERT INTO statistics(question_id, profile_id, user_answer, is_correct, speed, accuracy)
+          VALUES(?,?,?,?,?,?)
+        """;
+        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setLong(1, questionId);
+            ps.setLong(2, profileId);
+            ps.setString(3, userAnswer);
+            ps.setInt(4, isCorrect ? 1 : 0);
+            ps.setDouble(5, speedSeconds);
+            ps.setDouble(6, accuracy);
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) return rs.getLong(1);
+            }
+        }
+        throw new SQLException("Failed to insert statistics row.");
+    }
+
     public long countUsers() throws SQLException { return scalarLong("SELECT COUNT(*) FROM profiles"); }
     public long countQuestions() throws SQLException { return scalarLong("SELECT COUNT(*) FROM question_library"); }
 
@@ -211,7 +233,7 @@ public class Backend implements AutoCloseable {
         }
     }
 
-    /** Full schema with VARCHAR (per your teammate’s review). */
+    /** Full schema with VARCHAR (per your teammate’s review) + is_correct flag in statistics. */
     private void initSchema() throws SQLException {
         String[] ddl = {
                 "PRAGMA foreign_keys = ON",
@@ -309,13 +331,14 @@ public class Backend implements AutoCloseable {
                 """,
                 "CREATE INDEX IF NOT EXISTS idx_sessions_profile ON sessions(profile_id);",
 
-                // statistics
+                // statistics (now includes is_correct flag)
                 """
                 CREATE TABLE IF NOT EXISTS statistics(
                   statistics_id  INTEGER PRIMARY KEY AUTOINCREMENT,
                   question_id    INTEGER NOT NULL,
                   profile_id     INTEGER NOT NULL,
                   user_answer    VARCHAR(500),
+                  is_correct     INTEGER NOT NULL CHECK (is_correct IN (0,1)) DEFAULT 0,
                   speed          REAL,
                   accuracy       REAL,
                   created_at     VARCHAR(40) NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
