@@ -275,9 +275,9 @@ public class Backend implements AutoCloseable {
                 """
                 CREATE TABLE IF NOT EXISTS question_library(
                   question_id    INTEGER PRIMARY KEY AUTOINCREMENT,
-                  question       VARCHAR(500) NOT NULL,
-                  answer         VARCHAR(500) NOT NULL,
-                  reference      VARCHAR(255),
+                  question       TEXT NOT NULL,
+                  answer         TEXT NOT NULL,
+                  reference      TEXT,
                   focus_area_id  INTEGER,
                   question_type  VARCHAR(20) NOT NULL CHECK (question_type IN ('numerical','worded','object')),
                   created_at     VARCHAR(40)  NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
@@ -291,8 +291,8 @@ public class Backend implements AutoCloseable {
                 """
                 CREATE TABLE IF NOT EXISTS numerical_questions(
                   question_id  INTEGER PRIMARY KEY,
-                  question     VARCHAR(500) NOT NULL,
-                  answer       VARCHAR(500) NOT NULL,
+                  question     TEXT NOT NULL,
+                  answer       TEXT NOT NULL,
                   FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE
                 );
                 """,
@@ -301,8 +301,8 @@ public class Backend implements AutoCloseable {
                 """
                 CREATE TABLE IF NOT EXISTS worded_questions(
                   question_id  INTEGER PRIMARY KEY,
-                  question     VARCHAR(500) NOT NULL,
-                  answer       VARCHAR(500) NOT NULL,
+                  question     TEXT NOT NULL,
+                  answer       TEXT NOT NULL,
                   FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE
                 );
                 """,
@@ -311,8 +311,8 @@ public class Backend implements AutoCloseable {
                 """
                 CREATE TABLE IF NOT EXISTS object_questions(
                   question_id  INTEGER PRIMARY KEY,
-                  question     VARCHAR(500) NOT NULL,
-                  answer       VARCHAR(500) NOT NULL,
+                  question     TEXT NOT NULL,
+                  answer       TEXT NOT NULL,
                   image        VARCHAR(255),
                   FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE
                 );
