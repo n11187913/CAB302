@@ -11,36 +11,22 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>21</maven.compiler.release>
+        <javafx.version>21.0.5</javafx.version>
         <junit.version>5.10.2</junit.version>
-        <!-- stay on the JavaFX 21 LTS line, latest patch -->
-        <javafx.version>21.0.4</javafx.version>
-        <!-- make sure Maven compiles for Java 21 -->
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
     </properties>
 
-    <!-- Keep all JavaFX modules on the same version -->
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-bom</artifactId>
-                <version>${javafx.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <dependencies>
-        <!-- JavaFX (versions come from the BOM above) -->
+        <!-- JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
         </dependency>
 
         <!-- SQLite JDBC -->
@@ -67,14 +53,13 @@
 
     <build>
         <plugins>
-            <!-- Java 21 compilation -->
+            <!-- Compiler plugin (Java 21) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
 
@@ -84,21 +69,9 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.cab302.cab302/com.cab302.cab302.Main</mainClass>
+                    <!-- Replace with your real main class -->
+                    <mainClass>com.cab302.cab302.Main</mainClass>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>default-cli</id>
-                        <configuration>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
