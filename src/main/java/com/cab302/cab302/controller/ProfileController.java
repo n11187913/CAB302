@@ -15,8 +15,9 @@ public class ProfileController {
     @FXML private CheckBox accessibilityBox;
     @FXML private ProgressBar progressBar;
 
-    private String username;  // set this when navigating here
+    private String username;
 
+    // Called by your navigation code
     public void initWithUser(String username) {
         this.username = username;
         loadProfile();
@@ -26,7 +27,7 @@ public class ProfileController {
         try (Backend db = new Backend()) {
             db.getUser(username).ifPresentOrElse(u -> {
                 nameLbl.setText(u.username());
-                emailLbl.setText(u.username() + "@gmail.com"); // placeholder until backend supports email
+                emailLbl.setText(u.username() + "@gmail.com"); // placeholder
                 phoneLbl.setText("+0412345678");                // placeholder
                 bioLbl.setText("i love solving math problems!!");
                 progressBar.setProgress(0.5);
@@ -35,9 +36,11 @@ public class ProfileController {
         } catch (Exception e) {
             status.setText("Error: " + e.getMessage());
         }
+    }
 
-        // language dropdown values
-        languageBox.getItems().addAll("English", "Spanish", "French");
+    @FXML// Runs automatically after FXML loads
+    private void initialize() {
+        languageBox.getItems().setAll("English", "Spanish", "French" ,"Chinese");
         languageBox.setValue("English");
     }
 
@@ -64,7 +67,9 @@ public class ProfileController {
 
     @FXML
     private void onDeleteAccount() {
-        Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete your account?", ButtonType.YES, ButtonType.NO);
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION,
+                "Are you sure you want to delete your account?",
+                ButtonType.YES, ButtonType.NO);
         a.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.YES) {
                 status.setText("Account deleted (backend delete TODO)");
@@ -83,3 +88,27 @@ public class ProfileController {
         }
     }
 }
+@FXML
+private void onChangeNumber() {
+    TextInputDialog d = new TextInputDialog(phoneLbl.getText());
+    d.setHeaderText("Change Phone Number");
+    d.setContentText("New number (+countrycode…):");
+
+    d.showAndWait().ifPresent(newPhone -> {
+        // simple validation: allow +, digits, spaces, dashes
+        String cleaned = newPhone.trim();
+        if (!cleaned.matches("[+\\d][\\d\\s-]{6,20}")) {
+            status.setText("Invalid number format");
+            return;
+        }
+        try (Backend db = new Backend()) {
+            var user = db.getUser(username).orElseThrow();
+            db.updatePhone(user.id(), cleaned);        // calls backend (step 3)
+            phoneLbl.setText(cleaned);
+            status.setText("Phone number updated");
+        } catch (Exception e) {
+            status.setText("Failed to update number: " + e.getMessage());
+        }
+    });
+}
+

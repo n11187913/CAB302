@@ -34,6 +34,15 @@ public class Backend implements AutoCloseable {
     // ------------------------------------------------------------
     // Public API (kept compatible with your existing method names)
     // ------------------------------------------------------------
+    public void updatePhone(long profileId, String phone) throws SQLException {
+        String sql = "UPDATE profiles SET phone = ? WHERE profile_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ps.setLong(2, profileId);
+            ps.executeUpdate();
+        }
+    }
+
 
     /** Create a new user (stored in 'profiles'). */
     public long addUser(String username, String password, String focusArea) throws Exception {
@@ -248,6 +257,7 @@ public class Backend implements AutoCloseable {
                   password_hash   VARCHAR(255) NOT NULL,
                   password_salt   VARCHAR(255) NOT NULL,
                   studentTeacher  VARCHAR(20),
+                  phone           VARCHAR(30),
                   created_at      VARCHAR(40)  NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
                 );
                 """,
