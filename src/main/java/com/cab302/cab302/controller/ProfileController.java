@@ -17,7 +17,6 @@ public class ProfileController {
 
     private String username;
 
-    // Called by your navigation code
     public void initWithUser(String username) {
         this.username = username;
         loadProfile();
@@ -38,9 +37,9 @@ public class ProfileController {
         }
     }
 
-    @FXML// Runs automatically after FXML loads
+    @FXML
     private void initialize() {
-        languageBox.getItems().setAll("English", "Spanish", "French" ,"Chinese");
+        languageBox.getItems().setAll("English", "Spanish", "French", "Chinese");
         languageBox.setValue("English");
     }
 
@@ -87,28 +86,28 @@ public class ProfileController {
             status.setText("Profile picture updated");
         }
     }
-}
-@FXML
-private void onChangeNumber() {
-    TextInputDialog d = new TextInputDialog(phoneLbl.getText());
-    d.setHeaderText("Change Phone Number");
-    d.setContentText("New number (+countrycode…):");
 
-    d.showAndWait().ifPresent(newPhone -> {
-        // simple validation: allow +, digits, spaces, dashes
-        String cleaned = newPhone.trim();
-        if (!cleaned.matches("[+\\d][\\d\\s-]{6,20}")) {
-            status.setText("Invalid number format");
-            return;
-        }
-        try (Backend db = new Backend()) {
-            var user = db.getUser(username).orElseThrow();
-            db.updatePhone(user.id(), cleaned);        // calls backend (step 3)
-            phoneLbl.setText(cleaned);
-            status.setText("Phone number updated");
-        } catch (Exception e) {
-            status.setText("Failed to update number: " + e.getMessage());
-        }
-    });
-}
+    // ⬇⬇⬇ This was outside the class before — put it here
+    @FXML
+    private void onChangeNumber() {
+        TextInputDialog d = new TextInputDialog(phoneLbl.getText());
+        d.setHeaderText("Change Phone Number");
+        d.setContentText("New number (+countrycode…):");
 
+        d.showAndWait().ifPresent(newPhone -> {
+            String cleaned = newPhone.trim();
+            if (!cleaned.matches("[+\\d][\\d\\s-]{6,20}")) {
+                status.setText("Invalid number format");
+                return;
+            }
+            try (Backend db = new Backend()) {
+                var user = db.getUser(username).orElseThrow();
+                db.updatePhone(user.id(), cleaned);   // your Backend method
+                phoneLbl.setText(cleaned);
+                status.setText("Phone number updated");
+            } catch (Exception e) {
+                status.setText("Failed to update number: " + e.getMessage());
+            }
+        });
+    }
+}
