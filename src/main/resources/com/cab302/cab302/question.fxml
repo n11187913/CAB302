@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
- page-template-and-navigation-bar
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" alignment="CENTER" spacing="16">
-    <Label text="Home Page"/>
-</VBox>
-=======
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cab302.cab302.controller.QuestionController">
 
     <!-- Top Navigation Bar with Centered Title -->
     <top>
@@ -48,12 +38,10 @@
     <!-- Left Operation Symbols -->
     <left>
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <!-- Set 1 -->
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <!-- Set 2 -->
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
@@ -64,12 +52,10 @@
     <!-- Right Operation Symbols -->
     <right>
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <!-- Set 1 -->
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <!-- Set 2 -->
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
@@ -77,12 +63,47 @@
         </VBox>
     </right>
 
-    <!-- Center Content -->
+    <!-- Center Question and Answer Section -->
     <center>
-        <VBox alignment="CENTER" spacing="15">
-            <Label style="-fx-text-fill: #cccccc; -fx-font-size: 20;" text="Home Screen Placeholder" />
+        <VBox alignment="CENTER" spacing="20">
+
+            <!-- Score and High Score -->
+            <HBox spacing="40" alignment="CENTER">
+                <Label fx:id="scoreLabel" text="Score: 0" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
+                <Label fx:id="highScoreLabel" text="High Score: 1" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
+            </HBox>
+
+            <!-- Timer Countdown -->
+            <Label fx:id="timerLabel" text="Time: 1:30" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
+
+            <!-- Timer Progress Bar -->
+            <ProgressBar fx:id="timerProgressBar" prefWidth="750" progress="0.3" style="-fx-accent: #2DBEDF;" />
+
+            <!-- Spacer between progress bar and question -->
+            <Region prefHeight="75"/>
+
+            <!-- Question Display -->
+            <Label fx:id="questionLabel" text="10 - 5" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" wrapText="true" />
+
+            <!-- Spacer between question and answer field -->
+            <Region prefHeight="25"/>
+
+            <!-- Answer Input -->
+            <!-- Placeholder Label -->
+            <Label fx:id="answerPlaceholder" text="?" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" />
+            <!-- Hidden Answer Field -->
+            <TextField fx:id="answerField" promptText="Enter your answer..." style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 16;" maxWidth="200" visible="false" />
+
+            <Region prefHeight="50"/>
+
+            <Button fx:id="skipButton" text="Skip" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" />
+
         </VBox>
     </center>
 
+    <!-- Bottom Skip Button -->
+    <bottom>
+
+    </bottom>
+
 </BorderPane>
- main
