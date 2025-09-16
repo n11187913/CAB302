@@ -18,6 +18,8 @@ public class Main extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+        ui.ProfileController c = fxmlLoader.getController();
+        c.initWithUser("alice");
     }
 
     public static void main(String[] args) {
