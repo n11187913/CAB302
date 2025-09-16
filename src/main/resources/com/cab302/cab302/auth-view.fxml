@@ -5,7 +5,7 @@
 <?import javafx.geometry.Insets?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.cab302.cab302.controller.AuthController"
-            prefWidth="400" prefHeight="350">
+            prefWidth="400" prefHeight="400">
 
     <children>
         <!-- Title -->
@@ -27,13 +27,21 @@
         <Label text="Password:" layoutX="50" layoutY="190" />
         <PasswordField fx:id="passwordField" layoutX="150" layoutY="185" prefWidth="200" />
 
+        <!-- Role selection -->
+        <Label text="Role:" layoutX="50" layoutY="225" />
+        <HBox layoutX="150" layoutY="220" spacing="20">
+            <children>
+                <RadioButton fx:id="studentRadio" text="Student" selected="true"/>
+                <RadioButton fx:id="teacherRadio" text="Teacher"/>
+            </children>
+        </HBox>
+
         <!-- Status Label -->
-        <Label fx:id="statusLabel" layoutX="50" layoutY="230" prefWidth="300" style="-fx-text-fill: red;" wrapText="true"/>
+        <Label fx:id="statusLabel" layoutX="50" layoutY="260" prefWidth="300" style="-fx-text-fill: red;" wrapText="true"/>
 
         <!-- Buttons -->
-        <Button text="Sign Up" layoutX="100" layoutY="270" prefWidth="80" onAction="#onSignUp"/>
-        <Button text="Log In" layoutX="220" layoutY="270" prefWidth="80" onAction="#onLogIn"/>
+        <Button text="Sign Up" layoutX="100" layoutY="300" prefWidth="80" onAction="#onSignUp"/>
+        <Button text="Log In" layoutX="220" layoutY="300" prefWidth="80" onAction="#onLogIn"/>
 
     </children>
-
 </AnchorPane>

@@ -1,72 +1,51 @@
 package com.cab302.cab302.controller;
 
+import com.cab302.cab302.Database.Backend;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import java.sql.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 public class AuthController {
 
-    @FXML private TextField firstNameField;
-    @FXML private TextField lastNameField;
     @FXML private TextField emailField;
+    @FXML private TextField focusField; // optional: default to "Other"
     @FXML private PasswordField passwordField;
     @FXML private Label statusLabel;
+    @FXML private RadioButton studentRadio;
+    @FXML private RadioButton teacherRadio;
+    private ToggleGroup roleGroup;
 
-    private final String DB_URL = "jdbc:sqlite:users.db";
-
-    public AuthController() {
-        // Initialize database and users table
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             Statement stmt = conn.createStatement()) {
-
-            String sql = "CREATE TABLE IF NOT EXISTS profiles (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "first_name TEXT NOT NULL," +
-                    "last_name TEXT NOT NULL," +
-                    "email TEXT NOT NULL UNIQUE," +
-                    "password_hash TEXT NOT NULL)";
-            stmt.execute(sql);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @FXML
+    public void initialize() {
+        roleGroup = new ToggleGroup();
+        studentRadio.setToggleGroup(roleGroup);
+        teacherRadio.setToggleGroup(roleGroup);
+        studentRadio.setSelected(true);
     }
 
     @FXML
     private void onSignUp() {
-        String firstName = firstNameField.getText().trim();
-        String lastName = lastNameField.getText().trim();
         String email = emailField.getText().trim();
         String password = passwordField.getText().trim();
+        String focusArea = (focusField != null) ? focusField.getText().trim() : "";
+        String role = studentRadio.isSelected() ? "student" : "teacher";
 
-        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            statusLabel.setText("Please fill in all fields.");
+        if (email.isEmpty() || password.isEmpty()) {
+            statusLabel.setText("Please fill in all required fields.");
             return;
         }
 
-        String hashedPassword = hashPassword(password);
+        if (focusArea.isEmpty()) focusArea = "Other";
 
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(
-                     "INSERT INTO profiles(first_name, last_name, email, password_hash) VALUES(?,?,?,?)")) {
-
-            pstmt.setString(1, firstName);
-            pstmt.setString(2, lastName);
-            pstmt.setString(3, email);
-            pstmt.setString(4, hashedPassword);
-            pstmt.executeUpdate();
-
-            statusLabel.setText("Sign-up successful!");
+        try (Backend db = new Backend()) {
+            long id = db.addUser(email, password, focusArea); // Using email as username
+            statusLabel.setText("Sign-up successful! Your ID: " + id);
             clearFields();
-
-        } catch (SQLException e) {
-            if (e.getMessage().contains("UNIQUE constraint")) {
+        } catch (Exception e) {
+            if (e.getMessage().contains("UNIQUE")) {
                 statusLabel.setText("Email already exists.");
             } else {
-                statusLabel.setText("Database error: " + e.getMessage());
+                statusLabel.setText("Error: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -82,53 +61,26 @@ public class AuthController {
             return;
         }
 
-        String hashedPassword = hashPassword(password);
-
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement pstmt = conn.prepareStatement(
-                     "SELECT * FROM profiles WHERE email=? AND password_hash=?")) {
-
-            pstmt.setString(1, email);
-            pstmt.setString(2, hashedPassword);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                statusLabel.setText("Login successful! Welcome " + rs.getString("first_name"));
+        try (Backend db = new Backend()) {
+            boolean ok = db.authenticate(email, password);
+            if (ok) {
+                Optional<Backend.User> user = db.getUser(email);
+                String msg = "Login successful!";
+                if (user.isPresent()) msg += " Welcome " + user.get().username();
+                statusLabel.setText(msg);
                 clearFields();
             } else {
                 statusLabel.setText("Invalid email or password.");
             }
-
-        } catch (SQLException e) {
-            statusLabel.setText("Database error: " + e.getMessage());
+        } catch (Exception e) {
+            statusLabel.setText("Error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     private void clearFields() {
-        firstNameField.clear();
-        lastNameField.clear();
         emailField.clear();
         passwordField.clear();
-    }
-
-    private String hashPassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            return bytesToHex(encodedHash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error hashing password", e);
-        }
-    }
-
-    private String bytesToHex(byte[] hash) {
-        StringBuilder hexString = new StringBuilder(2 * hash.length);
-        for (byte b : hash) {
-            String hex = Integer.toHexString(0xff & b);
-            if (hex.length() == 1) hexString.append('0');
-            hexString.append(hex);
-        }
-        return hexString.toString();
+        if (focusField != null) focusField.clear();
     }
 }
