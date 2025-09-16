@@ -247,7 +247,7 @@ public class Backend implements AutoCloseable {
                   username        VARCHAR(50)  NOT NULL UNIQUE,
                   password_hash   VARCHAR(255) NOT NULL,
                   password_salt   VARCHAR(255) NOT NULL,
-                  studentTeacher  VARCHAR(20),
+                  studentTeacher  VARCHAR(20) NOT NULL DEFAULT 'student',
                   created_at      VARCHAR(40)  NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
                 );
                 """,

@@ -1,63 +1,80 @@
 package com.cab302.cab302.controller;
 
-import com.cab302.cab302.Main;
-import com.cab302.cab302.model.UserAccount;
-import com.cab302.cab302.TestUserList;
+import com.cab302.cab302.Database.Backend;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-
-import java.io.IOException;
+import javafx.scene.control.*;
+import java.util.Optional;
 
 public class AuthController {
-    @FXML private TextField firstNameField;
-    @FXML private TextField lastNameField;
+
     @FXML private TextField emailField;
+    @FXML private TextField focusField; // optional: default to "Other"
     @FXML private PasswordField passwordField;
     @FXML private Label statusLabel;
+    @FXML private RadioButton studentRadio;
+    @FXML private RadioButton teacherRadio;
+    private ToggleGroup roleGroup;
 
-    private final UserList userDAO = new TestUserList();
+    @FXML
+    public void initialize() {
+        roleGroup = new ToggleGroup();
+        studentRadio.setToggleGroup(roleGroup);
+        teacherRadio.setToggleGroup(roleGroup);
+        studentRadio.setSelected(true);
+    }
 
     @FXML
     private void onSignUp() {
-        String first = trim(firstNameField.getText());
-        String last  = trim(lastNameField.getText());
-        String email = trim(emailField.getText());
-        String pass  = passwordField.getText();
+        String email = emailField.getText().trim();
+        String password = passwordField.getText().trim();
+        String focusArea = (focusField != null) ? focusField.getText().trim() : "";
+        String role = studentRadio.isSelected() ? "student" : "teacher";
 
-        // added some signup valdification messages
-        if (first.isEmpty() || last.isEmpty() || email.isEmpty() || pass.isEmpty()) {
-            setStatus("All fields are required.", true);
-            return;
-        }
-        if (!email.contains("@") || !email.contains(".")) {
-            setStatus("Please enter a valid email address.", true);
-            return;
-        }
-        if (userDAO.existsByEmail(email)) {
-            setStatus("An account with that email already exists. Try logging in.", true);
+        if (email.isEmpty() || password.isEmpty()) {
+            statusLabel.setText("Please fill in all required fields.");
             return;
         }
 
-        userDAO.add(new UserAccount(first, last, email, pass));
-        setStatus("Account created for " + first + " " + last + ". You can log in now.", false);
+        if (focusArea.isEmpty()) focusArea = "Other";
+
+        try (Backend db = new Backend()) {
+            long id = db.addUser(email, password, focusArea); // Using email as username
+            statusLabel.setText("Sign-up successful! Your ID: " + id);
+            clearFields();
+        } catch (Exception e) {
+            if (e.getMessage().contains("UNIQUE")) {
+                statusLabel.setText("Email already exists.");
+            } else {
+                statusLabel.setText("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
     private void onLogIn() {
-        String email = trim(emailField.getText());
-        String pass  = passwordField.getText();
+        String email = emailField.getText().trim();
+        String password = passwordField.getText().trim();
 
-        // added some login valdification messages
-        if (email.isEmpty() || pass.isEmpty()) {
-            setStatus("Email and password are required.", true);
+        if (email.isEmpty() || password.isEmpty()) {
+            statusLabel.setText("Please enter email and password.");
             return;
         }
 
+
+        try (Backend db = new Backend()) {
+            boolean ok = db.authenticate(email, password);
+            if (ok) {
+                Optional<Backend.User> user = db.getUser(email);
+                String msg = "Login successful!";
+                if (user.isPresent()) msg += " Welcome " + user.get().username();
+                statusLabel.setText(msg);
+                clearFields();
+            } else {
+                statusLabel.setText("Invalid email or password.");
+            }
+        } catch (Exception e) {
+            statusLabel.setText("Error: " + e.getMessage());
         UserAccount found = userDAO.getByEmail(email);
         if (found == null) {
             setStatus("No account found for that email. Sign up first.", true);
@@ -80,17 +97,12 @@ public class AuthController {
 
         } catch (IOException e) {
             e.printStackTrace();
-            setStatus("Error loading home screen.", true);
         }
     }
 
-    private static String trim(String s) {
-        return s == null ? "" : s.trim();
-    }
-
-//this changes label to display valdation error message below buttons
-    private void setStatus(String msg, boolean error) {
-        statusLabel.setText(msg);
-        statusLabel.setStyle(error ? "-fx-text-fill: #b00020;" : "-fx-text-fill: #2e7d32;");
+    private void clearFields() {
+        emailField.clear();
+        passwordField.clear();
+        if (focusField != null) focusField.clear();
     }
 }
