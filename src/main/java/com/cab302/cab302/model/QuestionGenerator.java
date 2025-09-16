@@ -1,5 +1,6 @@
 package com.cab302.cab302.model;
 
+=======
 public class QuestionGenerator {
     
     public static String generateBasicAlgebraProblem(int a, int b) {
@@ -31,3 +32,4 @@ public class QuestionGenerator {
         return problem + "\n" + solution;
     }
 }
+ main

@@ -73,15 +73,11 @@ public class AuthController {
 
         //untested as i havent created the home controller page
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/com/cab302/cab302/home-view.fxml"));
-            Scene homeScene = new Scene(loader.load(), Main.WIDTH, Main.HEIGHT);
-
-            //ADD PAGE HERE instead of HomeController <-------------------
-            //HomeController homeController = loader.getController();
-           // homeController.setWelcomeMessage("Welcome, " + found.getFirstName() + "!");
-
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/com/cab302/cab302/base-layout.fxml"));
+            Scene scene = new Scene(loader.load(), Main.WIDTH, Main.HEIGHT);
             Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(homeScene);
+            stage.setScene(scene);
+
         } catch (IOException e) {
             e.printStackTrace();
             setStatus("Error loading home screen.", true);
