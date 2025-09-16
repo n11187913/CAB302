@@ -61,6 +61,7 @@ public class AuthController {
             return;
         }
 
+
         try (Backend db = new Backend()) {
             boolean ok = db.authenticate(email, password);
             if (ok) {
@@ -74,6 +75,27 @@ public class AuthController {
             }
         } catch (Exception e) {
             statusLabel.setText("Error: " + e.getMessage());
+        UserAccount found = userDAO.getByEmail(email);
+        if (found == null) {
+            setStatus("No account found for that email. Sign up first.", true);
+            return;
+        }
+        if (!pass.equals(found.getPassword())) {
+            setStatus("Incorrect password.", true);
+            return;
+        }
+
+        // success
+        setStatus("Welcome, " + found.getFirstName() + " " + found.getLastName() + "! (logged in)", false);
+
+        //untested as i havent created the home controller page
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("/com/cab302/cab302/base-layout.fxml"));
+            Scene scene = new Scene(loader.load(), Main.WIDTH, Main.HEIGHT);
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(scene);
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

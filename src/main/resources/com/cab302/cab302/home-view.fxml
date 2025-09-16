@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+ page-template-and-navigation-bar
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" alignment="CENTER" spacing="16">
+    <Label text="Home Page"/>
+</VBox>
+=======
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -74,3 +85,4 @@
     </center>
 
 </BorderPane>
+ main
