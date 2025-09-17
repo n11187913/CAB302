@@ -31,9 +31,7 @@ public class Backend implements AutoCloseable {
         initSchema();
     }
 
-    // ------------------------------------------------------------
-    // Public API (kept compatible with your existing method names)
-    // ------------------------------------------------------------
+    // API (kept compatible with existing method names)
 
     /** Create a new user (stored in 'profiles'). */
     public long addUser(String username, String password, String focusArea) throws Exception {
@@ -217,9 +215,7 @@ public class Backend implements AutoCloseable {
         if (conn != null && !conn.isClosed()) conn.close();
     }
 
-    // ------------------------------------------------------------
     // Internals
-    // ------------------------------------------------------------
 
     private void connect() throws SQLException {
         try { Class.forName("org.sqlite.JDBC"); }
@@ -424,7 +420,7 @@ public class Backend implements AutoCloseable {
         return res == 0;
     }
 
-    // ------------- helpers -------------
+    // helpers
 
     /** Ensure a focus area exists and return its id. */
     private int ensureFocusExists(String areaName) throws SQLException {
@@ -456,16 +452,13 @@ public class Backend implements AutoCloseable {
         return null;
     }
 
-    // ------------------------------------------------------------
-    // DTOs (unchanged names for compatibility)
-    // ------------------------------------------------------------
+    // DTOs
 
     public record User(long id, String username, String focusArea, String createdAt) {}
     public record Question(long id, String focusArea, String question, String answer, String reference, String createdAt) {}
 
-    // ------------------------------------------------------------
     // Quick manual test
-    // ------------------------------------------------------------
+
     public static void main(String[] args) throws Exception {
         try (Backend db = new Backend()) {
             if (db.countUsers() == 0) {
