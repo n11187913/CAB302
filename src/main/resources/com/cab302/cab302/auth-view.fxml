@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.geometry.Insets?>
-
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;"
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.cab302.cab302.controller.AuthController">
@@ -23,7 +20,7 @@
             </StackPane>
             <Region HBox.hgrow="ALWAYS" />
             <HBox alignment="CENTER_RIGHT" spacing="20">
-                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="169.0"
+                <Button prefHeight="25.0" prefWidth="169.0"
                         style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
                 <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0"
                         style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
