@@ -368,6 +368,14 @@ public class Backend implements AutoCloseable {
         } catch (SQLException ignore) {
             // will throw "duplicate column name" after the first run — that's fine
         }
+        try (Statement st = conn.createStatement()) {
+            st.executeUpdate("""
+        INSERT OR IGNORE INTO profiles(name,email,username,password_hash,password_salt,studentTeacher)
+        VALUES ('Alice','alice@local','alice', ?, ?, 'student')
+    """);
+        }
+// OR better: call addUser("alice", "ChangeMe123", "Calculus");
+
 
         // Seed focus areas (idempotent)
         String seed = """
