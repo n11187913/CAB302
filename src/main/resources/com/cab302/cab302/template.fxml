@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+
+    <!-- Top Navigation Bar with Centered Title -->
+    <top>
+        <HBox spacing="0" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
+            <!-- Left Navigation -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Home" />
+                <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Leaderboard" />
+                <Button prefWidth="65.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="About" />
+            </HBox>
+
+            <!-- Spacer before title -->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Centered Title -->
+            <StackPane>
+                <Label style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" text="Mental Math Game" />
+            </StackPane>
+
+            <!-- Spacer after title -->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Right Hamburger Menu -->
+            <HBox alignment="CENTER_RIGHT" spacing="20">
+                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="169.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
+                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- Left Operation Symbols -->
+    <left>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <!-- Set 1 -->
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <!-- Set 2 -->
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </left>
+
+    <!-- Right Operation Symbols -->
+    <right>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <!-- Set 1 -->
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <!-- Set 2 -->
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </right>
+
+    <!-- Center Content -->
+    <center>
+        <VBox alignment="CENTER" spacing="15">
+            <Label style="-fx-text-fill: #cccccc; -fx-font-size: 20;" text="Home Screen Placeholder" />
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.cab302.BaseController"
+            prefWidth="1100" prefHeight="650">
+<!--Heres the navgation bar-->
+    <top>
+        <HBox>
+            <!--Tabs-->
+            <HBox alignment="CENTER_LEFT" spacing="24">
+                <padding>
+                    <Insets top="8" right="16" bottom="8" left="16"/>
+                </padding>
+                <children>
+                    <ToggleButton fx:id="homeTab" text="Home" selected="true" onAction="#goHome"/>
+                    <ToggleButton fx:id="leaderTab" text="Leaderboard" onAction="#goLeader"/>
+                    <ToggleButton fx:id="aboutTab" text="About" onAction="#goAbout"/>
+                </children>
+            </HBox>
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- APp name -->
+            <Label text="GAME NAME NEED TO DECIDE"/>
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox alignment="CENTER_RIGHT">
+                <padding>
+                    <Insets top="0" right="16" bottom="0" left="0"/>
+                </padding>
+                <children>
+                    <Label text="≡"/>
+                </children>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- Symbols down the side (might be better way to do this) -->
+    <left>
+        <VBox alignment="CENTER" spacing="28" prefWidth="64">
+            <children>
+                <Label text="+"/>
+                <Label text="−"/>
+                <Label text="×"/>
+                <Label text="÷"/>
+            </children>
+        </VBox>
+    </left>
+    <right>
+        <VBox alignment="CENTER" spacing="28" prefWidth="64">
+            <children>
+                <Label text="+"/>
+                <Label text="−"/>
+                <Label text="×"/>
+                <Label text="÷"/>
+            </children>
+        </VBox>
+    </right>
+
+    <!-- Here is the container for everything -->
+    <center>
+        <StackPane fx:id="contentContainer"/>
+    </center>
+</BorderPane>
