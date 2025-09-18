@@ -74,26 +74,30 @@ public class ProfileController {
 
         a.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.YES) {
-                // (TODO: add backend delete here later)
                 status.setText("Account deleted (backend delete TODO)");
 
-                try {
-                    // Load the login page FXML
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/cab302/hello-view.fxml"));
-                    Parent root = loader.load();
+                // TODO: set this to your teammate's actual login FXML path if different
+                final String LOGIN_FXML = "/com/cab302/cab302/hello-view.fxml";
 
-                    // Get current stage
+                try {
+                    var url = getClass().getResource(LOGIN_FXML);
+                    if (url == null) {
+                        status.setText("Login FXML not found at: " + LOGIN_FXML);
+                        return;
+                    }
+
+                    Parent root = new FXMLLoader(url).load();
                     Stage stage = (Stage) status.getScene().getWindow();
                     stage.setScene(new Scene(root));
                     stage.setTitle("Login");
                     stage.show();
-
                 } catch (IOException e) {
                     status.setText("Failed to go back to login: " + e.getMessage());
                 }
             }
         });
     }
+
 
 
     @FXML
