@@ -30,7 +30,6 @@ public class ProfileController {
         emailLbl.setText(username + "@gmail.com");
         status.setText("Loaded profile for " + username);
     }
-
     /** Runs automatically after FXML loads */
     @FXML
     private void initialize() {
@@ -103,8 +102,6 @@ public class ProfileController {
             }
         });
     }
-
-
     @FXML
     private void onUploadAvatar() {
         FileChooser fc = new FileChooser();
