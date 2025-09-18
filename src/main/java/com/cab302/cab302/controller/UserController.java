@@ -13,7 +13,7 @@ public class UserController {
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private Button loginButton;
-    @FXML private Label status;
+    @FXML private Label statusLabel;
 
     @FXML
     private void onLogin() {
@@ -21,39 +21,37 @@ public class UserController {
         String password = passwordField.getText() == null ? "" : passwordField.getText();
 
         if (username.isEmpty() || password.isEmpty()) {
-            status.setText("Enter username and password.");
+            statusLabel.setText("Please enter username and password.");
             return;
         }
 
         try (Backend db = new Backend()) {
             if (!db.authenticate(username, password)) {
-                status.setText("Invalid credentials.");
+                statusLabel.setText("Invalid username or password.");
                 return;
             }
         } catch (Exception e) {
-            status.setText("Login error: " + e.getMessage());
+            statusLabel.setText("Login failed: " + e.getMessage());
             return;
         }
 
-        // Navigate to profile.fxml and pass the logged-in username
+        // Auth OK → open profile view and pass username
         try {
-            // Look for profile.fxml under src/main/resources/com/cab302/cab302/
-            var url = UserController.class.getResource("/com/cab302/cab302/profile.fxml");
-            if (url == null) {
-                throw new IllegalStateException("profile.fxml not found on classpath");
-            }
-
-            FXMLLoader loader = new FXMLLoader(url);
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/cab302/cab302/\"hello-view.fxml\""));
             Parent root = loader.load();
 
-            ProfileController pc = loader.getController();
-            pc.initWithUser(username);     // updates labels in profile.fxml
+            // ProfileController lives in package `ui`
+            ui.ProfileController profileCtrl = loader.getController();
+            profileCtrl.initWithUser(username);
 
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(new Scene(root, 800, 800));
+            stage.setTitle("Profile");
             stage.show();
         } catch (Exception e) {
-            status.setText("Failed to open profile: " + e.getMessage());
+            statusLabel.setText("Could not open profile: " + e.getMessage());
         }
     }
 }
+

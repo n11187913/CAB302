@@ -1,49 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.ProgressBar?>
 
-<VBox xmlns="http://javafx.com/javafx/21"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.cab302.cab302.controller.ProfileController"
-      spacing="20" alignment="CENTER"
-      style="-fx-background-color: #2b2b2b; -fx-padding: 30;">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="ui.ProfileController"
+      spacing="20" alignment="CENTER" style="-fx-background-color:#2b2b2b; -fx-padding:30;">
     <children>
 
-        <Label text="Profile Page" style="-fx-text-fill: white; -fx-font-size: 26; -fx-font-weight: bold;"/>
+        <!-- Title -->
+        <Label text="Profile Page"
+               style="-fx-text-fill:white; -fx-font-size:26; -fx-font-weight:bold;"/>
 
+        <!-- Profile header (avatar, name, email, bio) -->
         <VBox spacing="10" alignment="CENTER">
             <ImageView fx:id="avatar" fitWidth="120" fitHeight="120" preserveRatio="true"
-                       style="-fx-background-color: gray; -fx-border-color: white; -fx-border-width: 2; -fx-background-radius: 60;"/>
-            <Label fx:id="nameLbl"  text="Name"               style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;"/>
-            <Label fx:id="emailLbl" text="email@example.com"  style="-fx-text-fill: white;"/>
-            <Label fx:id="bioLbl"   text="i love solving math problems!!" style="-fx-text-fill: white; -fx-font-style: italic;"/>
+                       style="-fx-background-color:gray; -fx-border-color:white; -fx-border-width:2; -fx-background-radius:60;"/>
+            <Label fx:id="nameLbl"  text="Guest"
+                   style="-fx-text-fill:white; -fx-font-size:20; -fx-font-weight:bold;"/>
+            <Label fx:id="emailLbl" text="—"
+                   style="-fx-text-fill:white;"/>
+            <Label fx:id="bioLbl"   text="i love solving math problems!!"
+                   style="-fx-text-fill:white; -fx-font-style:italic;"/>
         </VBox>
 
+        <!-- Account -->
         <VBox spacing="8" alignment="CENTER_LEFT">
-            <Label text="Account" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Label text="Account"
+                   style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
             <Button text="Change Email"    onAction="#onChangeEmail"/>
             <Button text="Change Password" onAction="#onChangePassword"/>
-            <Button text="Delete Account"  onAction="#onDeleteAccount" style="-fx-background-color:#b00020; -fx-text-fill: white;"/>
+            <Button text="Delete Account"  onAction="#onDeleteAccount"
+                    style="-fx-background-color:#b00020; -fx-text-fill:white;"/>
         </VBox>
 
+        <!-- Preferences -->
         <VBox spacing="8" alignment="CENTER_LEFT">
-            <Label text="Preferences" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;"/>
+            <Label text="Preferences"
+                   style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
             <HBox spacing="10">
-                <Label text="Language:" style="-fx-text-fill: white;"/>
-                <ComboBox fx:id="languageBox"/>
+                <Label text="Language:" style="-fx-text-fill:white;"/>
+                <ComboBox fx:id="languageBox" prefWidth="160"/>
             </HBox>
-            <CheckBox fx:id="accessibilityBox" text="Accessibility Mode" style="-fx-text-fill: white;"/>
+            <CheckBox fx:id="accessibilityBox" text="Accessibility Mode" style="-fx-text-fill:white;"/>
         </VBox>
 
+        <!-- Game Stats -->
         <VBox spacing="8" alignment="CENTER">
-            <Label text="Game Stats" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;"/>
-            <ProgressBar fx:id="progressBar" prefWidth="200"/>
-            <Label fx:id="levelLbl" text="⭐ Level 5" style="-fx-text-fill: yellow; -fx-font-size: 16;"/>
+            <Label text="Game Stats"
+                   style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;"/>
+            <ProgressBar fx:id="progressBar" prefWidth="240"/>
+            <Label fx:id="levelLbl" text="⭐ Level 5" style="-fx-text-fill:yellow;"/>
         </VBox>
 
-        <Label fx:id="status" style="-fx-text-fill: lightgreen;"/>
+        <Label fx:id="status" style="-fx-text-fill:lightgreen;"/>
     </children>
 </VBox>
