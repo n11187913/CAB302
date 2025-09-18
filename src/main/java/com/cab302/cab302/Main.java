@@ -4,20 +4,26 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.util.Objects;
+import com.cab302.cab302.Database.Backend;
 
 public class Main extends Application {
+
     @Override
     public void start(Stage stage) throws Exception {
-        // Load the LOGIN view first
-        FXMLLoader fxmlLoader = new FXMLLoader(
-                Main.class.getResource("hello-view.fxml") // resources/com/cab302/cab302/hello-view.fxml
-        );
+        // ONE-TIME SEED: create a test user if missing
+        try (Backend db = new Backend()) {
+            var u = db.getUser("don");
+            if (u.isEmpty()) {
+                db.addUser("don", "Password123", "Physics");
+            }
+        } catch (Exception ignored) {
+            // ignore if already exists or any seed-time hiccup
+        }
 
+        // Load the LOGIN view
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 800);
 
-        // If you keep a global stylesheet, add it here (optional)
         var cssUrl = Main.class.getResource("stylesheet.css");
         if (cssUrl != null) {
             scene.getStylesheets().add(cssUrl.toExternalForm());

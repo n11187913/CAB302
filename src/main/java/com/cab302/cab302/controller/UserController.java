@@ -37,11 +37,17 @@ public class UserController {
 
         // Navigate to profile.fxml and pass the logged-in username
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/cab302/profile.fxml"));
+            // Look for profile.fxml under src/main/resources/com/cab302/cab302/
+            var url = UserController.class.getResource("/com/cab302/cab302/profile.fxml");
+            if (url == null) {
+                throw new IllegalStateException("profile.fxml not found on classpath");
+            }
+
+            FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
 
             ProfileController pc = loader.getController();
-            pc.initWithUser(username);     // updates name/email/etc.
+            pc.initWithUser(username);     // updates labels in profile.fxml
 
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(new Scene(root, 800, 800));
