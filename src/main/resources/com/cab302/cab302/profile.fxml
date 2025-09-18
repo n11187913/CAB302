@@ -27,7 +27,6 @@
             <Label text="Account" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;"/>
             <Button text="Change Email"    onAction="#onChangeEmail"/>
             <Button text="Change Password" onAction="#onChangePassword"/>
-            <Button text="Change Number"   onAction="#onChangeNumber"/> <!-- ADDED HERE -->
             <Button text="Delete Account"  onAction="#onDeleteAccount" style="-fx-background-color:#b00020; -fx-text-fill: white;"/>
         </VBox>
 
