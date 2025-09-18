@@ -6,6 +6,8 @@ module com.cab302.cab302 {
     // JDBC
     requires java.sql;
     requires org.xerial.sqlitejdbc;
+    requires java.net.http;
+    requires org.json;
 
     // Open packages for FXML reflection
     opens com.cab302.cab302 to javafx.fxml;

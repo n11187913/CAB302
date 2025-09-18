@@ -29,7 +29,7 @@ public class Main extends Application {
 
     public static void changeScene(String fxmlPath) {
         try {
-            Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxmlPath)));
+            Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/com/cab302/cab302/" +  fxmlPath)));
             primaryStage.getScene().setRoot(pane);
         } catch (IOException e) {
             e.printStackTrace();

@@ -83,7 +83,7 @@
             <Region prefHeight="75"/>
 
             <!-- Question Display -->
-            <Label fx:id="questionLabel" text="10 - 5" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" wrapText="true" />
+            <Label fx:id="questionLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" wrapText="true" />
 
             <!-- Spacer between question and answer field -->
             <Region prefHeight="25"/>
@@ -96,7 +96,7 @@
 
             <Region prefHeight="50"/>
 
-            <Button fx:id="skipButton" text="Skip" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" />
+            <Button fx:id="skipButton" onAction="#onSkip" text="Skip" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" />
 
         </VBox>
     </center>
