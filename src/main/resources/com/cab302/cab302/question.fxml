@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.*?>
+<?import javafx.scene.web.*?>
 
 <BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cab302.cab302.controller.QuestionController">
 
@@ -83,7 +83,8 @@
             <Region prefHeight="75"/>
 
             <!-- Question Display -->
-            <Label fx:id="questionLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" wrapText="true" />
+            <!-- LaTeX Question Display -->
+            <WebView fx:id="questionWebView" prefWidth="800" prefHeight="100" />
 
             <!-- Spacer between question and answer field -->
             <Region prefHeight="25"/>
@@ -96,7 +97,7 @@
 
             <Region prefHeight="50"/>
 
-            <Button fx:id="skipButton" onAction="#onSkip" text="Skip" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" />
+            <Button fx:id="skipButton" text="Skip" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" />
 
         </VBox>
     </center>

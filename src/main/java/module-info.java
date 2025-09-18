@@ -2,6 +2,7 @@ module com.cab302.cab302 {
     // JavaFX
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.web;
 
     // JDBC
     requires java.sql;

@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.web.WebView;
 import javafx.scene.control.ToggleGroup;
 import org.json.JSONObject;
 
@@ -30,6 +31,9 @@ public class QuestionController {
     private TextField answerField;
 
     @FXML
+    private WebView questionWebView;
+
+    @FXML
     private Label questionLabel;
 
     @FXML
@@ -53,10 +57,30 @@ public class QuestionController {
         });
     }
 
+    private void renderLatexQuestion(String latex) {
+        String html = """
+    <html>
+      <head>
+        <script type="text/javascript" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
+      </head>
+      <body style='color:#cccccc; background-color:#3c3c3c; font-size:24px;'>
+        <p>\\( %s \\)</p>
+      </body>
+    </html>
+    """.formatted(latex);
+
+        questionWebView.getEngine().loadContent(html);
+    }
+
     @FXML
     public void initialize() {
         questions = getQuestions();
-        questionLabel.setText(questions.get(questionCount).getString("problem"));
+        String latex = questions.get(questionCount).getString("problem");
+
+        // Render it using MathJax in WebView
+        renderLatexQuestion(latex);
     }
 
     @FXML
