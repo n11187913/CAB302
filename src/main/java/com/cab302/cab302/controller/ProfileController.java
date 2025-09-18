@@ -67,35 +67,43 @@ public class ProfileController {
     }
 
     @FXML
-
     private void onDeleteAccount() {
-        Alert a = new Alert(Alert.AlertType.CONFIRMATION,
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
                 "Are you sure you want to delete your account?",
                 ButtonType.YES, ButtonType.NO);
 
-        a.showAndWait().ifPresent(btn -> {
+        confirm.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.YES) {
-                // TODO: call your backend delete here
+                // TODO: call backend delete here
                 status.setText("Account deleted (backend delete TODO)");
 
                 try {
-                    // Load login page
+                    // 1) Load the login screen
                     FXMLLoader loader = new FXMLLoader(
-                            getClass().getResource("/com/cab302/cab302/auth-view.fxml")
+                            getClass().getResource("/com/cab302/cab302/Login-view.fxml")
                     );
-                    Parent root = loader.load();
+                    Parent loginRoot = loader.load();
 
-                    // Swap the root on the existing scene (keeps size & CSS)
+                    // 2) Get the current stage
                     Stage stage = (Stage) status.getScene().getWindow();
-                    stage.getScene().setRoot(root);
+
+                    // 3a) If you want to keep the same Scene (preserves size/CSS):
+                    stage.getScene().setRoot(loginRoot);
+
+                    // 3b) Or, if you prefer to create a fresh Scene (uncomment this instead):
+                    // stage.setScene(new Scene(loginRoot));
+
                     stage.setTitle("Login");
+                    stage.centerOnScreen();
 
                 } catch (IOException e) {
+                    e.printStackTrace();
                     status.setText("Failed to go back to login: " + e.getMessage());
                 }
             }
         });
     }
+
 
 
 
