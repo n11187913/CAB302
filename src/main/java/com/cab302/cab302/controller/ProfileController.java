@@ -105,8 +105,6 @@ public class ProfileController {
     }
 
 
-
-
     @FXML
     private void onUploadAvatar() {
         FileChooser fc = new FileChooser();
