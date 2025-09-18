@@ -67,6 +67,7 @@ public class ProfileController {
     }
 
     @FXML
+
     private void onDeleteAccount() {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION,
                 "Are you sure you want to delete your account?",
@@ -74,19 +75,20 @@ public class ProfileController {
 
         a.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.YES) {
-                // (TODO: add backend delete here later)
+                // TODO: call your backend delete here
                 status.setText("Account deleted (backend delete TODO)");
 
                 try {
-                    // Load the login page FXML
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/cab302/hello-view.fxml"));
+                    // Load login page
+                    FXMLLoader loader = new FXMLLoader(
+                            getClass().getResource("/com/cab302/cab302/auth-view.fxml")
+                    );
                     Parent root = loader.load();
 
-                    // Get current stage
+                    // Swap the root on the existing scene (keeps size & CSS)
                     Stage stage = (Stage) status.getScene().getWindow();
-                    stage.setScene(new Scene(root));
+                    stage.getScene().setRoot(root);
                     stage.setTitle("Login");
-                    stage.show();
 
                 } catch (IOException e) {
                     status.setText("Failed to go back to login: " + e.getMessage());
@@ -94,6 +96,7 @@ public class ProfileController {
             }
         });
     }
+
 
 
     @FXML
