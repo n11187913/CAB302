@@ -93,12 +93,12 @@ public class AuthController {
 
     @FXML
     private void goToLogin() {
-        switchScene("/com/cab302/cab302/login-view.fxml");
+        switchScene("/com/cab302/cab302/Auth/login-view.fxml");
     }
 
     @FXML
     private void goToSignUp() {
-        switchScene("/com/cab302/cab302/auth-view.fxml");
+        switchScene("/com/cab302/cab302/Auth/signup-view.fxml");
     }
 
     @FXML
