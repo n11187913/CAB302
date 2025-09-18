@@ -4,6 +4,10 @@ import com.cab302.cab302.Database.Backend;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.util.Optional;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import java.io.IOException;
 
 public class AuthController {
 
@@ -17,10 +21,12 @@ public class AuthController {
 
     @FXML
     public void initialize() {
-        roleGroup = new ToggleGroup();
-        studentRadio.setToggleGroup(roleGroup);
-        teacherRadio.setToggleGroup(roleGroup);
-        studentRadio.setSelected(true);
+        if (studentRadio != null && teacherRadio != null) {
+            roleGroup = new ToggleGroup();
+            studentRadio.setToggleGroup(roleGroup);
+            teacherRadio.setToggleGroup(roleGroup);
+            studentRadio.setSelected(true);
+        }
     }
 
     @FXML
@@ -68,6 +74,7 @@ public class AuthController {
                 String msg = "Login successful!";
                 if (user.isPresent()) msg += " Welcome " + user.get().username();
                 statusLabel.setText(msg);
+                goToHome();
                 clearFields();
             } else {
                 statusLabel.setText("Invalid email or password.");
@@ -82,5 +89,34 @@ public class AuthController {
         emailField.clear();
         passwordField.clear();
         if (focusField != null) focusField.clear();
+    }
+
+    @FXML
+    private void goToLogin() {
+        switchScene("/com/cab302/cab302/login-view.fxml");
+    }
+
+    @FXML
+    private void goToSignUp() {
+        switchScene("/com/cab302/cab302/auth-view.fxml");
+    }
+
+    @FXML
+    private void goToHome() {
+        switchScene("/com/cab302/cab302/home-view.fxml");
+    }
+
+
+
+    private void switchScene(String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Scene next = new Scene(loader.load());
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(next);
+        } catch (IOException e) {
+            statusLabel.setText("Error switching page.");
+            e.printStackTrace();
+        }
     }
 }
