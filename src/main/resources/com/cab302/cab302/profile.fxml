@@ -18,7 +18,6 @@
                        style="-fx-background-color: gray; -fx-border-color: white; -fx-border-width: 2; -fx-background-radius: 60;"/>
             <Label fx:id="nameLbl"  text="Name"             style="-fx-text-fill: white; -fx-font-size: 20; -fx-font-weight: bold;"/>
             <Label fx:id="emailLbl" text="email@example.com" style="-fx-text-fill: white;"/>
-            <Label fx:id="phoneLbl" text="+61XXXXXX"         style="-fx-text-fill: white;"/>
             <Label fx:id="bioLbl"   text="i love solving math problems!!" style="-fx-text-fill: white; -fx-font-style: italic;"/>
         </VBox>
 
