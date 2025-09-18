@@ -6,6 +6,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import java.io.File;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import java.io.IOException;
 
 public class ProfileController {
 
@@ -66,13 +71,30 @@ public class ProfileController {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION,
                 "Are you sure you want to delete your account?",
                 ButtonType.YES, ButtonType.NO);
-        a.setHeaderText("Delete Account");
+
         a.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.YES) {
-                status.setText("Account deleted (wire backend later)");
+                // (TODO: add backend delete here later)
+                status.setText("Account deleted (backend delete TODO)");
+
+                try {
+                    // Load the login page FXML
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/cab302/hello-view.fxml"));
+                    Parent root = loader.load();
+
+                    // Get current stage
+                    Stage stage = (Stage) status.getScene().getWindow();
+                    stage.setScene(new Scene(root));
+                    stage.setTitle("Login");
+                    stage.show();
+
+                } catch (IOException e) {
+                    status.setText("Failed to go back to login: " + e.getMessage());
+                }
             }
         });
     }
+
 
     @FXML
     private void onUploadAvatar() {
