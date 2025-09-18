@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
@@ -58,68 +57,45 @@
         </VBox>
     </right>
 
-    <!-- Center Auth Form -->
     <center>
         <VBox spacing="20" alignment="TOP_LEFT" style="-fx-padding: 40;">
             <padding>
                 <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
             </padding>
 
-            <Label text="Create an account or log in"
-                   style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+        <Label text="Log in to your account"
+               style="-fx-font-size:20; -fx-font-weight:bold; -fx-text-fill:white;"/>
 
-            <GridPane hgap="10" vgap="10">
-                <columnConstraints>
-                    <ColumnConstraints minWidth="120"/>
-                    <ColumnConstraints hgrow="ALWAYS"/>
-                </columnConstraints>
+        <GridPane hgap="8" vgap="8">
+            <columnConstraints>
+                <ColumnConstraints minWidth="120"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
 
-                <Label text="First name:" GridPane.rowIndex="0" GridPane.columnIndex="0"
-                       style="-fx-text-fill: #cccccc;" />
-                <TextField fx:id="firstNameField" promptText="First name"
-                           GridPane.rowIndex="0" GridPane.columnIndex="1" />
+            <Label text="Email:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-text-fill: white; -fx-font-size: 14;"/>
+            <TextField fx:id="emailField" promptText="email@example.com"
+                       GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                <Label text="Last name:" GridPane.rowIndex="1" GridPane.columnIndex="0"
-                       style="-fx-text-fill: #cccccc;" />
-                <TextField fx:id="lastNameField" promptText="Last name"
-                           GridPane.rowIndex="1" GridPane.columnIndex="1" />
+            <Label text="Password:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-text-fill: white; -fx-font-size: 14;"/>
+            <PasswordField fx:id="passwordField" promptText="Password"
+                           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        </GridPane>
 
-                <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0"
-                       style="-fx-text-fill: #cccccc;" />
-                <TextField fx:id="emailField" promptText="email@example.com"
-                           GridPane.rowIndex="2" GridPane.columnIndex="1" />
+        <HBox spacing="8">
+            <Button text="Log In" onAction="#goToHome" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" />
+        </HBox>
 
-                <Label text="Password:" GridPane.rowIndex="3" GridPane.columnIndex="0"
-                       style="-fx-text-fill: #cccccc;" />
-                <PasswordField fx:id="passwordField" promptText="Password"
-                               GridPane.rowIndex="3" GridPane.columnIndex="1" />
-            </GridPane>
+        <HBox alignment="BASELINE_LEFT" spacing="6">
+            <Label text="Need an account? Sign up"
+                   style="-fx-text-fill: white; -fx-font-size: 14;"/>
+            <Hyperlink text="here"
+                       onAction="#goToSignUp"
+                       style="-fx-text-fill: #1E90FF; -fx-font-weight: bold; -fx-underline: true; -fx-font-size: 14;"/>
+        </HBox>
 
-            <HBox spacing="20" alignment="CENTER_LEFT">
-                <Label text="Role:" style="-fx-text-fill: #cccccc;" />
-                <RadioButton fx:id="studentRadio" text="Student" selected="true"
-                             style="-fx-text-fill: white;" />
-                <RadioButton fx:id="teacherRadio" text="Teacher"
-                             style="-fx-text-fill: white;" />
-            </HBox>
-
-            <HBox spacing="10">
-                <Button text="Sign Up" onAction="#onSignUp"
-                        style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" />
-            </HBox>
-
-            <HBox alignment="BASELINE_LEFT" spacing="6">
-                <Label text="If you already have an account, log in"
-                       style="-fx-text-fill: white; -fx-font-size: 14;"/>
-                <Hyperlink text="here"
-                           onAction="#goToLogin"
-                           style="-fx-text-fill: #1E90FF; -fx-font-weight: bold; -fx-underline: true; -fx-font-size: 14;"/>
-            </HBox>
-
-            <Label fx:id="statusLabel" text="" wrapText="true"
-                   style="-fx-text-fill: #cccccc;" />
-
-        </VBox>
+        <Pane VBox.vgrow="ALWAYS"/>
+    </VBox>
     </center>
-
 </BorderPane>
