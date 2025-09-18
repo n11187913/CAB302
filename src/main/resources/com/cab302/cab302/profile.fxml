@@ -26,17 +26,17 @@
                </image>
            </ImageView>
             <Label fx:id="nameLbl" style="-fx-text-fill:white; -fx-font-size:20; -fx-font-weight:bold;" text="Guest" />
-            <ImageView fx:id="avatar" fitHeight="120" fitWidth="120" preserveRatio="true" style="-fx-background-color:gray; -fx-border-color:white; -fx-border-width:2; -fx-background-radius:60;" />
-            <Label fx:id="emailLbl" style="-fx-text-fill:white;" text="—" />
             <Label fx:id="bioLbl" prefHeight="18.0" prefWidth="166.0" style="-fx-text-fill:white; -fx-font-style:italic;" text="i love solving math problems!!" />
-        </VBox>
-
-        <!-- Account -->
-        <VBox alignment="CENTER_LEFT" spacing="8">
-            <Label style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;" text="Account" />
-            <Button onAction="#onChangeEmail" text="Change Email" />
-            <Button onAction="#onChangePassword" text="Change Password" />
-            <Button onAction="#onDeleteAccount" style="-fx-background-color:#b00020; -fx-text-fill:white;" text="Delete Account" />
+            <ImageView fx:id="avatar" fitHeight="120" fitWidth="120" preserveRatio="true" style="-fx-background-color:gray; -fx-border-color:white; -fx-border-width:2; -fx-background-radius:60;" />
+   
+           <!-- Account -->
+           <VBox alignment="CENTER_LEFT" spacing="8">
+               <Label style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;" text="Account" />
+               <Button onAction="#onChangeEmail" text="Change Email" />
+               <Button onAction="#onChangePassword" text="Change Password" />
+               <Button onAction="#onDeleteAccount" style="-fx-background-color:#b00020; -fx-text-fill:white;" text="Delete Account" />
+           </VBox>
+            <Label fx:id="emailLbl" style="-fx-text-fill:white;" text="—" />
         </VBox>
 
         <!-- Preferences -->
