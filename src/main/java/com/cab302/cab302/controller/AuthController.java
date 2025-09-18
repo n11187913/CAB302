@@ -4,10 +4,8 @@ import com.cab302.cab302.Database.Backend;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.util.Optional;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import java.io.IOException;
+
+import static com.cab302.cab302.Main.changeScene;
 
 public class AuthController {
 
@@ -93,30 +91,16 @@ public class AuthController {
 
     @FXML
     private void goToLogin() {
-        switchScene("/com/cab302/cab302/Auth/login-view.fxml");
+        changeScene("/com/cab302/cab302/Auth/login-view.fxml");
     }
 
     @FXML
     private void goToSignUp() {
-        switchScene("/com/cab302/cab302/Auth/signup-view.fxml");
+        changeScene("/com/cab302/cab302/Auth/signup-view.fxml");
     }
 
     @FXML
     private void goToHome() {
-        switchScene("/com/cab302/cab302/home-view.fxml");
-    }
-
-
-
-    private void switchScene(String fxmlPath) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            Scene next = new Scene(loader.load());
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(next);
-        } catch (IOException e) {
-            statusLabel.setText("Error switching page.");
-            e.printStackTrace();
-        }
+        changeScene("/com/cab302/cab302/home-view.fxml");
     }
 }

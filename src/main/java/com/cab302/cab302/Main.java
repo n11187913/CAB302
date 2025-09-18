@@ -2,14 +2,20 @@ package com.cab302.cab302;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.Objects;
+
 public class Main extends Application {
     public static final String TITLE = "Sign In / Log In";
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage stage) throws Exception {
+        this.primaryStage = stage;
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("Auth/signup-view.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setTitle(TITLE);
@@ -19,5 +25,15 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public static void changeScene(String fxmlPath) {
+        try {
+            Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxmlPath)));
+            primaryStage.getScene().setRoot(pane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -28,4 +28,8 @@ public class QuestionController {
             }
         });
     }
+
+    @FXML void onPlayButton() {
+
+    }
 }
