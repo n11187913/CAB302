@@ -52,7 +52,6 @@ public class ProfileController {
             status.setText("Email updated (backend save TODO)");
         });
     }
-
     @FXML
     private void onChangePassword() {
         TextInputDialog d = new TextInputDialog();
@@ -74,7 +73,6 @@ public class ProfileController {
             }
         });
     }
-
     @FXML
     private void onUploadAvatar() {
         FileChooser fc = new FileChooser();
@@ -86,6 +84,5 @@ public class ProfileController {
         }
     }
 
-    // ⬇⬇⬇ This was outside the class before — put it here
 
 }
