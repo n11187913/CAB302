@@ -9,7 +9,7 @@ module com.cab302.cab302 {
     opens com.cab302.cab302.Database to javafx.fxml;
 
     // add this line if controllers live in `ui`
-    opens ui to javafx.fxml;
+
 
     exports com.cab302.cab302;
     exports com.cab302.cab302.controller;

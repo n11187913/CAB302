@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" fillWidth="false" spacing="15.0" stylesheets="@stylesheet.css">
-    <TextField alignment="CENTER" text="TextField" />
-    <Label text="Label" />
-    <HBox alignment="CENTER" spacing="15.0">
-        <Button text="Button 1" />
-        <Button text="Button 2" />
-        <Button text="Button 3" />
-    </HBox>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cab302.cab302.controller.UserController"
+      spacing="12" alignment="CENTER"
+      stylesheets="@stylesheet.css"
+      style="-fx-background-color:#2b2b2b; -fx-padding: 40;">
+    <children>
+        <Label text="Log in" style="-fx-text-fill:white; -fx-font-size:26; -fx-font-weight:bold;"/>
+
+        <GridPane hgap="8" vgap="8">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" minWidth="90"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <children>
+                <Label text="Username:" style="-fx-text-fill:white;" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField fx:id="usernameField" promptText="username" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Password:" style="-fx-text-fill:white;" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <PasswordField fx:id="passwordField" promptText="password" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            </children>
+        </GridPane>
+
+        <Button fx:id="loginButton" text="Log in" onAction="#onLogin" />
+        <Label fx:id="status" style="-fx-text-fill:lightcoral;"/>
+    </children>
 </VBox>
+

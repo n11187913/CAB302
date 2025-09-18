@@ -1,4 +1,4 @@
-package ui;
+package com.cab302.cab302.controller;
 
 import com.cab302.cab302.Database.Backend;
 import javafx.fxml.FXML;
