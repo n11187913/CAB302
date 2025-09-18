@@ -10,7 +10,7 @@
     <children>
 
         <!-- Title -->
-        <Label text="Profile Page"
+        <Label text="Profile"
                style="-fx-text-fill:white; -fx-font-size:26; -fx-font-weight:bold;"/>
 
         <!-- Profile header (avatar, name, email, bio) -->
