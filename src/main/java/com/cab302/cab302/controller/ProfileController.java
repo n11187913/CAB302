@@ -10,7 +10,7 @@ import java.io.File;
 
 public class ProfileController {
     @FXML private ImageView avatar;
-    @FXML private Label nameLbl, emailLbl, phoneLbl, bioLbl, levelLbl, status;
+    @FXML private Label nameLbl, emailLbl, bioLbl, levelLbl, status;
     @FXML private ComboBox<String> languageBox;
     @FXML private CheckBox accessibilityBox;
     @FXML private ProgressBar progressBar;
@@ -26,8 +26,7 @@ public class ProfileController {
         try (Backend db = new Backend()) {
             db.getUser(username).ifPresentOrElse(u -> {
                 nameLbl.setText(u.username());
-                emailLbl.setText(u.username() + "@gmail.com"); // placeholder
-                phoneLbl.setText("+0412345678");                // placeholder
+                emailLbl.setText(u.username() + "@gmail.com");
                 bioLbl.setText("i love solving math problems!!");
                 progressBar.setProgress(0.5);
                 levelLbl.setText("⭐ Level 5");
@@ -88,26 +87,5 @@ public class ProfileController {
     }
 
     // ⬇⬇⬇ This was outside the class before — put it here
-    @FXML
-    private void onChangeNumber() {
-        TextInputDialog d = new TextInputDialog(phoneLbl.getText());
-        d.setHeaderText("Change Phone Number");
-        d.setContentText("New number (+countrycode…):");
 
-        d.showAndWait().ifPresent(newPhone -> {
-            String cleaned = newPhone.trim();
-            if (!cleaned.matches("[+\\d][\\d\\s-]{6,20}")) {
-                status.setText("Invalid number format");
-                return;
-            }
-            try (Backend db = new Backend()) {
-                var user = db.getUser(username).orElseThrow();
-                db.updatePhone(user.id(), cleaned);   // your Backend method
-                phoneLbl.setText(cleaned);
-                status.setText("Phone number updated");
-            } catch (Exception e) {
-                status.setText("Failed to update number: " + e.getMessage());
-            }
-        });
-    }
 }
