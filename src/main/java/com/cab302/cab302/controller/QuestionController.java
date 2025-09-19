@@ -25,6 +25,9 @@ public class QuestionController {
     private int questionCount = 0;
 
     @FXML
+    public Label statusLabel;
+
+    @FXML
     private Label answerPlaceholder;
 
     @FXML
@@ -34,10 +37,7 @@ public class QuestionController {
     private WebView questionWebView;
 
     @FXML
-    private Label questionLabel;
-
-    @FXML
-    private Button playButton;
+    private Button submit;
 
     @FXML
     public void on_user_input() {
@@ -65,8 +65,10 @@ public class QuestionController {
           src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
         </script>
       </head>
-      <body style='color:#cccccc; background-color:#3c3c3c; font-size:24px; margin: 0 auto; text-align: center;'>
-        <p style='width=100%%; text-align: center;' id="question">\\( %s \\)</p>
+      <body style='overflow: hidden; color:#cccccc; background-color:#3c3c3c; height: 100%%; font-size:24px; margin: 0 auto; display: flex; justify-content: center; align-items: center;'>
+        <div height: auto; margin: auto 0;>
+            <p style='width=100%%; text-align: center;' id="question">\\( %s \\)</p>
+        </div>
       </body>
     </html>
     """.formatted(latex);
@@ -105,6 +107,13 @@ public class QuestionController {
     @FXML
     public void onSkip() {
         nextQuestion();
+    }
+
+    @FXML
+    public void onSubmit() {
+        if (answerField.getText().isEmpty()) {
+            statusLabel.setText("Please enter your answer");
+        }
     }
 
     private ArrayList<JSONObject> getQuestions() {
