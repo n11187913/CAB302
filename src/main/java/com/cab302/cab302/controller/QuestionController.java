@@ -1,60 +1,98 @@
 package com.cab302.cab302.controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.web.WebView;
-import javafx.scene.control.ToggleGroup;
+import javafx.util.Duration;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static com.cab302.cab302.Main.changeScene;
 
 public class QuestionController {
 
     private ArrayList<JSONObject> questions;
     private int questionCount = 0;
 
-    @FXML
-    public Label statusLabel;
+    private int score = 0;
+    private int highScore = 0;
+
+    private Timeline timer;
+    private final int totalSeconds = 60;
+    private int secondsRemaining;
+
+    @FXML private Label scoreLabel;
+    @FXML private Label highScoreLabel;
+    @FXML private Label timerLabel;
+    @FXML private ProgressBar timerProgressBar;
+
+    @FXML private Label answerPlaceholder;
+    @FXML private TextField answerField;
+    @FXML private WebView questionWebView;
+    @FXML private Button skipButton;
+
+    @FXML private Button submit;
+    @FXML private Label statusLabel;
 
     @FXML
-    private Label answerPlaceholder;
+    public void initialize() {
+        questions = getQuestions();
+        renderLatexQuestion(questions.get(questionCount).getString("problem"));
+        answerField.setVisible(true);
+        scoreLabel.setText("Score: 0");
+        highScoreLabel.setText("High Score: 0");
+        startGameTimer();
 
-    @FXML
-    private TextField answerField;
+        answerField.setOnAction(e -> checkAnswer());
+        skipButton.setOnAction(e -> nextQuestion());
+    }
 
-    @FXML
-    private WebView questionWebView;
+    private void startGameTimer() {
+        secondsRemaining = totalSeconds;
+        timerLabel.setText("Time: " + secondsRemaining);
+        timerProgressBar.setProgress(1.0);
 
-    @FXML
-    private Button submit;
-
-    @FXML
-    public void on_user_input() {
-        answerField.setVisible(false); // ensure it's hidden initially
-
-        answerPlaceholder.setOnMouseClicked(e -> {
-            answerPlaceholder.setVisible(false);
-            answerField.setVisible(true);
-            answerField.requestFocus();
-        });
-
-        answerField.setOnKeyTyped(e -> {
-            if (!answerField.isVisible()) {
-                answerPlaceholder.setVisible(false);
-                answerField.setVisible(true);
+        timer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            secondsRemaining--;
+            timerLabel.setText("Time: " + secondsRemaining);
+            timerProgressBar.setProgress((double) secondsRemaining / totalSeconds);
+            if (secondsRemaining <= 0) {
+                timer.stop();
+                endGame();
             }
-        });
+        }));
+        timer.setCycleCount(totalSeconds);
+        timer.play();
+    }
+
+    private void endGame() {
+        questionWebView.getEngine().loadContent("<html><body><h2 style='color:white;'>Time's up!</h2></body></html>");
+        answerField.setDisable(true);
+        answerPlaceholder.setVisible(false);
+        skipButton.setDisable(true);
+    }
+
+    private void checkAnswer() {
+        String userAnswer = answerField.getText().trim();
+        String correctAnswer = questions.get(questionCount).getString("solution").trim();
+
+        if (userAnswer.equalsIgnoreCase(correctAnswer)) {
+            score++;
+            if (score > highScore) highScore = score;
+            scoreLabel.setText("Score: " + score);
+            highScoreLabel.setText("High Score: " + highScore);
+
+            answerField.clear(); // 👈 This clears the field after correct answer
+            nextQuestion();
+        } else {
+            answerField.clear(); // 👈 Optional: clear on incorrect too
+        }
     }
 
     private void renderLatexQuestion(String latex) {
@@ -92,16 +130,6 @@ public class QuestionController {
                 "MathJax.typeset();";
 
         questionWebView.getEngine().executeScript(script);
-    }
-
-    @FXML
-    public void initialize() {
-        questions = getQuestions();
-        String latex = questions.get(questionCount).getString("problem");
-
-        answerField.setVisible(true);
-
-        renderLatexQuestion(latex);
     }
 
     @FXML

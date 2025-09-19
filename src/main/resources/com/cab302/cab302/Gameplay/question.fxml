@@ -88,9 +88,6 @@
             <WebView fx:id="questionWebView" prefHeight="60.0" prefWidth="905.0" />
 
             <!-- Answer Input -->
-            <!-- Placeholder Label -->
-            <Label fx:id="answerPlaceholder" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" text="?" />
-            <!-- Hidden Answer Field -->
             <TextField fx:id="answerField" maxWidth="200" promptText="Enter your answer..." style="-fx-border-color: white; -fx-border-radius: 2%; -fx-border-width: 1; -fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 16;" />
          <Button fx:id="submit" mnemonicParsing="false" onAction="#onSubmit" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" text="Submit" textFill="WHITE" />
          <Label fx:id="statusLabel" textAlignment="CENTER" textFill="RED">
