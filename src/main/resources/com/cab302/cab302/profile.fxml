@@ -19,7 +19,7 @@
 
         <!-- Profile header (avatar, name, email, bio) -->
         <VBox alignment="CENTER" spacing="10">
-   
+
            <ImageView fx:id="avatar" fitHeight="120" fitWidth="120" preserveRatio="true" style="-fx-border-color:white; -fx-border-width:2; -fx-background-radius:60;">
                <image>
                    <Image url="@profile.png" />
@@ -28,7 +28,7 @@
             <Label fx:id="nameLbl" style="-fx-text-fill:white; -fx-font-size:20; -fx-font-weight:bold;" text="Guest" />
             <Label fx:id="bioLbl" prefHeight="18.0" prefWidth="166.0" style="-fx-text-fill:white; -fx-font-style:italic;" text="i love solving math problems!!" />
             <ImageView fx:id="avatar" fitHeight="120" fitWidth="120" preserveRatio="true" style="-fx-background-color:gray; -fx-border-color:white; -fx-border-width:2; -fx-background-radius:60;" />
-   
+
            <!-- Account -->
            <VBox alignment="CENTER_LEFT" spacing="8">
                <Label style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;" text="Account" />
