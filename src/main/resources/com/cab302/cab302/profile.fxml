@@ -1,61 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressBar?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
 
-<VBox alignment="CENTER" prefHeight="826.0" prefWidth="714.0" spacing="20" style="-fx-background-color:#2b2b2b; -fx-padding:30;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/24.0.1" fx:controller="ui.ProfileController">
-    <children>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ui.ProfileController"
+      alignment="CENTER"
+      spacing="24"
+      stylesheets="@stylesheet.css"
+      styleClass="wrapper">
 
-        <!-- Title -->
-        <Label style="-fx-text-fill:white; -fx-font-size:26; -fx-font-weight:bold;" text="Profile" />
+    <!-- Content container -->
+    <VBox alignment="CENTER_LEFT" maxWidth="600" spacing="20">
+        <children>
 
+            <!-- Title -->
+            <Label text="Profile" styleClass="title"/>
 
-        <!-- Profile header (avatar, name, email, bio) -->
-        <VBox alignment="CENTER" spacing="10">
+            <!-- Header row: avatar + basic info -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <children>
 
-           <ImageView fx:id="avatar" fitHeight="120" fitWidth="120" preserveRatio="true" style="-fx-border-color:white; -fx-border-width:2; -fx-background-radius:60;">
-               <image>
-                   <Image url="@profile.png" />
-               </image>
-           </ImageView>
-            <Label fx:id="nameLbl" style="-fx-text-fill:white; -fx-font-size:20; -fx-font-weight:bold;" text="Guest" />
-            <Label fx:id="bioLbl" prefHeight="18.0" prefWidth="166.0" style="-fx-text-fill:white; -fx-font-style:italic;" text="i love solving math problems!!" />
-            <ImageView fx:id="avatar" fitHeight="120" fitWidth="120" preserveRatio="true" style="-fx-background-color:gray; -fx-border-color:white; -fx-border-width:2; -fx-background-radius:60;" />
+                    <!-- Avatar with circular clip -->
+                    <ImageView fx:id="avatar"
+                               fitWidth="120" fitHeight="120"
+                               preserveRatio="true">
+                        <image>
+                            <Image url="@profile.png" />
+                        </image>
+                        <clip>
+                            <Circle radius="60" centerX="60" centerY="60"/>
+                        </clip>
+                    </ImageView>
 
-           <!-- Account -->
-           <VBox alignment="CENTER_LEFT" spacing="8">
-               <Label style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;" text="Account" />
-               <Button onAction="#onChangeEmail" text="Change Email" />
-               <Button onAction="#onChangePassword" text="Change Password" />
-               <Button onAction="#onDeleteAccount" style="-fx-background-color:#b00020; -fx-text-fill:white;" text="Delete Account" />
-           </VBox>
-            <Label fx:id="emailLbl" style="-fx-text-fill:white;" text="—" />
-        </VBox>
-
-        <!-- Preferences -->
-        <VBox alignment="CENTER_LEFT" spacing="8">
-            <Label style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weig0ht:bold;" text="Preferences" />
-            <HBox spacing="10">
-                <Label style="-fx-text-fill:white;" text="Language:" />
-                <ComboBox fx:id="languageBox" prefWidth="160" />
+                    <!-- Name / Email / Bio -->
+                    <VBox spacing="6">
+                        <children>
+                            <Label fx:id="nameLbl" text="Guest"/>
+                            <Label fx:id="emailLbl" text="—"/>
+                            <Label fx:id="bioLbl" text="I love solving math problems!!"/>
+                        </children>
+                    </VBox>
+                </children>
             </HBox>
-            <CheckBox fx:id="accessibilityBox" style="-fx-text-fill:white;" text="Accessibility Mode" />
-        </VBox>
 
-        <!-- Game Stats -->
-        <VBox alignment="CENTER" spacing="8">
-            <Label style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;" text="Game Stats" />
-            <ProgressBar fx:id="progressBar" prefWidth="240" />
-            <Label fx:id="levelLbl" style="-fx-text-fill:yellow;" text="⭐ Level 5" />
-        </VBox>
+            <Separator/>
 
-        <Label fx:id="status" style="-fx-text-fill:lightgreen;" />
-    </children>
+            <!-- Account -->
+            <VBox spacing="10">
+                <children>
+                    <Label text="Account" styleClass="section-title"/>
+                    <HBox spacing="10">
+                        <children>
+                            <Button text="Change Email" onAction="#onChangeEmail" styleClass="btn"/>
+                            <Button text="Change Password" onAction="#onChangePassword" styleClass="btn"/>
+                            <Pane HBox.hgrow="ALWAYS"/>
+                            <Button text="Delete Account" onAction="#onDeleteAccount" styleClass="btn"/>
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
+
+            <!-- Preferences (aligned with GridPane) -->
+            <VBox spacing="12">
+                <children>
+                    <Label text="Preferences" styleClass="section-title"/>
+
+                    <GridPane hgap="12" vgap="12">
+                        <columnConstraints>
+                            <!-- Right-align labels; controls column grows -->
+                            <ColumnConstraints halignment="RIGHT" minWidth="110"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <children>
+                            <!-- Row 0: Language -->
+                            <Label text="Language:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                            <ComboBox fx:id="languageBox"
+                                      prefWidth="180"
+                                      GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                            <!-- Row 1: Accessibility checkbox aligned under controls column -->
+                            <CheckBox fx:id="accessibilityBox"
+                                      text="Accessibility Mode"
+                                      GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                      GridPane.halignment="LEFT"/>
+                        </children>
+                    </GridPane>
+                </children>
+            </VBox>
+
+            <!-- Game stats -->
+            <VBox spacing="10" alignment="CENTER_LEFT">
+                <children>
+                    <Label text="Game Stats" styleClass="section-title"/>
+                    <ProgressBar fx:id="progressBar" progress="0.5" styleClass="progress-wide"/>
+                    <Label fx:id="levelLbl" text="⭐ Level 5"/>
+                </children>
+            </VBox>
+
+            <!-- Status -->
+            <Label fx:id="status" text=""/>
+
+        </children>
+        <padding>
+            <Insets top="24" right="24" bottom="24" left="24"/>
+        </padding>
+    </VBox>
+
 </VBox>

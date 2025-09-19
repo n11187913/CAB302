@@ -1,3 +1,113 @@
-.root {
-    -fx-background-color: #f9f6ee;
+/* Global dark theme */
+.root, .wrapper {
+    -fx-background-color: #2b2b2b;
+    -fx-font-family: "Poppins", Arial, Helvetica, sans-serif;
+    -fx-font-size: 16px;
+    -fx-text-fill: white;
 }
+
+/* Title */
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+/* Section headings */
+.section-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* General labels */
+.label {
+    -fx-text-fill: white;
+}
+
+/* Buttons – blue theme */
+.button.btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2196f3;            /* blue text */
+    -fx-border-color: #2196f3;
+    -fx-border-radius: 24;
+    -fx-background-radius: 24;
+    -fx-padding: 8 16;
+    -fx-font-weight: bold;
+}
+.button.btn:hover {
+    -fx-background-color: #2196f3;     /* filled blue */
+    -fx-text-fill: white;
+}
+
+/* If any button still uses btn-danger, make it identical to btn */
+.button.btn-danger {
+    -fx-text-fill: #2196f3;
+    -fx-border-color: #2196f3;
+}
+.button.btn-danger:hover {
+    -fx-background-color: #2196f3;
+    -fx-text-fill: white;
+}
+
+/* -------------------- */
+/* ComboBox (pill look) */
+/* -------------------- */
+.combo-box {
+    -fx-background-color: #444;
+    -fx-border-color: #666;
+    -fx-background-radius: 24;
+    -fx-border-radius: 24;
+    -fx-text-fill: white;
+}
+.combo-box:focused {
+    -fx-border-color: #2196f3;
+}
+/* Make the displayed value white */
+.combo-box .list-cell {
+    -fx-text-fill: white;
+}
+/* Dropdown popup list */
+.combo-box-popup .list-view {
+    -fx-background-color: #444;
+}
+.combo-box-popup .list-view .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: #444;
+}
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #2196f3;
+    -fx-text-fill: white;
+}
+
+/* -------------------- */
+/* Checkbox (simple, aligned) */
+/* -------------------- */
+.check-box {
+    -fx-background-color: transparent;   /* no pill */
+    -fx-padding: 0;                      /* align to baseline */
+    -fx-text-fill: white;
+}
+.check-box .box {
+    -fx-background-color: transparent;
+    -fx-border-color: #999;
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+}
+.check-box:selected .box {
+    -fx-background-color: #2196f3;
+    -fx-border-color: #2196f3;
+}
+/* small gap between tick and label text */
+.check-box .text {
+    -fx-fill: white;
+    -fx-padding: 0 0 0 6;
+}
+
+/* Progress bar in blue */
+.progress-wide > .bar {
+    -fx-background-color: #2196f3;
+}
+
+/* Optional: subtle separator like login */
+.separator *.line { -fx-background-color: rgba(255,255,255,0.2); }
