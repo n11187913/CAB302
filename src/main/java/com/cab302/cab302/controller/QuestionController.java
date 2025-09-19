@@ -14,6 +14,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class QuestionController {
 
@@ -42,7 +45,7 @@ public class QuestionController {
 
     @FXML
     public void initialize() {
-        questions = getQuestions();
+        questions = getQuestions(difficulty, 5);
         renderLatexQuestion(questions.get(questionCount).getString("problem"));
         answerField.setVisible(true);
         scoreLabel.setText("Score: 0");
@@ -88,14 +91,15 @@ public class QuestionController {
             scoreLabel.setText("Score: " + score);
             highScoreLabel.setText("High Score: " + highScore);
 
-            answerField.clear(); // 👈 This clears the field after correct answer
+            answerField.clear(); // clears the field after correct answer
             nextQuestion();
         } else {
-            answerField.clear(); // 👈 Optional: clear on incorrect too
+            answerField.clear(); // clear on incorrect too
         }
     }
 
     private void renderLatexQuestion(String latex) {
+        // Split into prefix and math content
         String html = """
     <html>
       <head>
@@ -104,27 +108,36 @@ public class QuestionController {
         </script>
       </head>
       <body style='overflow: hidden; color:#cccccc; background-color:#3c3c3c; height: 100%%; font-size:24px; margin: 0 auto; display: flex; justify-content: center; align-items: center;'>
-        <div height: auto; margin: auto 0;>
-            <p style='width=100%%; text-align: center;' id="question">\\( %s \\)</p>
+        <div style='height: auto; margin: auto 0;'>
+            <p style='width:100%%; text-align: center;' id="question">%s \\( %s \\)</p>
         </div>
       </body>
     </html>
-    """.formatted(latex);
+    """.formatted(getPrefix(latex), getMathOnly(latex));
 
         questionWebView.getEngine().loadContent(html);
     }
 
+    private String getPrefix(String latex) {
+        int dollarIndex = latex.indexOf('$');
+        return (dollarIndex > 0) ? latex.substring(0, dollarIndex).trim() : "";
+    }
+
+    private String getMathOnly(String latex) {
+        return latex.replaceAll(".*\\$", "").replace("$", "").trim();
+    }
+
     public void nextQuestion() {
+        // If we're running low on questions, fetch more using current difficulty
         if (questionCount >= questions.size() - 2) {
-            questions.addAll(getQuestions());
+            questions.addAll(getQuestions(difficulty, 5)); // 👈 pass difficulty and count
         }
+
         questionCount++;
         String latex = questions.get(questionCount).getString("problem");
 
         String newQuestionHtml = "\\( " + latex + " \\)";
-
-        String escapedHtml = newQuestionHtml.replace("\\", "\\\\")
-                .replace("'", "\\'");
+        String escapedHtml = newQuestionHtml.replace("\\", "\\\\").replace("'", "\\'");
 
         String script = "document.getElementById('question').innerHTML = '" + escapedHtml + "';" +
                 "MathJax.typeset();";
@@ -144,21 +157,55 @@ public class QuestionController {
         }
     }
 
-    private ArrayList<JSONObject> getQuestions() {
-        ArrayList<JSONObject> qs = new ArrayList<JSONObject>();
+    private String difficulty = "easy"; // default
+
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    private ArrayList<JSONObject> getQuestions(String difficultyLabel, int count) {
+        ArrayList<JSONObject> qs = new ArrayList<>();
+
+        // Map difficulty label to numeric value expected by Flask API
+        int difficultyLevel = switch (difficultyLabel.toLowerCase()) {
+            case "easy" -> 1;
+            case "medium" -> 2;
+            case "hard" -> 3;
+            default -> 1;
+        };
+
+        // Full pool of question types
+        List<String> questionTypes = List.of(
+                "algebra/basic",
+//                "algebra/combine_like_terms",
+//                "algebra/complex_quadratic",
+                "algebra/factoring",
+//                "algebra/system_of_equations",
+                "calculus/power_rule_differentiation"
+//                "calculus/power_rule_integration",
+//                "statistics/combinations",
+//                "statistics/permutations"
+        );
+
+        Random rand = new Random();
+
         try {
             HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://math.saeidnia.com/algebra/basic/1")).build();
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < count; i++) {
+                String type = questionTypes.get(rand.nextInt(questionTypes.size()));
+                String url = "https://math.saeidnia.com/" + type + "/" + difficultyLevel;
+
+                HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 JSONObject question = new JSONObject(response.body());
                 qs.add(question);
             }
+
+            Collections.shuffle(qs);
             return qs;
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

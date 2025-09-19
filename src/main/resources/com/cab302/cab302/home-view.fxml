@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
 
 <BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cab302.cab302.controller.HomeController">
 
@@ -68,9 +69,21 @@
 
     <!-- Center Content -->
     <center>
-        <VBox alignment="CENTER" spacing="15">
-            <Label style="-fx-text-fill: #cccccc; -fx-font-size: 20;" text="Home Screen Placeholder" />
-            <Button onAction="#onPlayButton" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Play" />
+        <VBox alignment="CENTER" spacing="20" prefWidth="600">
+            <Label text="Select Difficulty"
+                   style="-fx-text-fill: #cccccc; -fx-font-size: 24; -fx-font-weight: bold;" />
+
+            <Button fx:id="easyButton" text="Easy"
+                    style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;"
+                    onAction="#onEasy" prefWidth="500" />
+
+            <Button fx:id="mediumButton" text="Medium"
+                    style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;"
+                    onAction="#onMedium" prefWidth="500" />
+
+            <Button fx:id="hardButton" text="Hard"
+                    style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;"
+                    onAction="#onHard" prefWidth="500" />
         </VBox>
     </center>
 
