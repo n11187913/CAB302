@@ -1,3 +1,12 @@
 .root {
     -fx-background-color: #f9f6ee;
 }
+.difficulty-btn {
+    -fx-background-color: #2a2a2a;
+    -fx-text-fill: white;
+}
+
+.difficulty-btn:selected, .difficulty-btn.selected-btn {
+    -fx-background-color: #00bcd4; /* bright teal when active */
+    -fx-text-fill: black;
+}
