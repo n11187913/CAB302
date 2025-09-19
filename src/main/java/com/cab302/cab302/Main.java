@@ -10,6 +10,8 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("profile.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
+
+
         stage.setTitle("Mental Math – Profile");
         stage.setScene(scene);
         stage.show();
