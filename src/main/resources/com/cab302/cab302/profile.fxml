@@ -41,7 +41,7 @@
 
         <!-- Preferences -->
         <VBox alignment="CENTER_LEFT" spacing="8">
-            <Label style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weight:bold;" text="Preferences" />
+            <Label style="-fx-text-fill:white; -fx-font-size:18; -fx-font-weig0ht:bold;" text="Preferences" />
             <HBox spacing="10">
                 <Label style="-fx-text-fill:white;" text="Language:" />
                 <ComboBox fx:id="languageBox" prefWidth="160" />
