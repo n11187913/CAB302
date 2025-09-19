@@ -65,8 +65,8 @@ public class QuestionController {
           src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
         </script>
       </head>
-      <body style='color:#cccccc; background-color:#3c3c3c; font-size:24px;'>
-        <p>\\( %s \\)</p>
+      <body style='color:#cccccc; background-color:#3c3c3c; font-size:24px; margin: 0 auto; text-align: center;'>
+        <p style='width=100%%; text-align: center;' id="question">\\( %s \\)</p>
       </body>
     </html>
     """.formatted(latex);
@@ -74,19 +74,37 @@ public class QuestionController {
         questionWebView.getEngine().loadContent(html);
     }
 
+    public void nextQuestion() {
+        if (questionCount >= questions.size() - 2) {
+            questions.addAll(getQuestions());
+        }
+        questionCount++;
+        String latex = questions.get(questionCount).getString("problem");
+
+        String newQuestionHtml = "\\( " + latex + " \\)";
+
+        String escapedHtml = newQuestionHtml.replace("\\", "\\\\")
+                .replace("'", "\\'");
+
+        String script = "document.getElementById('question').innerHTML = '" + escapedHtml + "';" +
+                "MathJax.typeset();";
+
+        questionWebView.getEngine().executeScript(script);
+    }
+
     @FXML
     public void initialize() {
         questions = getQuestions();
         String latex = questions.get(questionCount).getString("problem");
 
-        // Render it using MathJax in WebView
+        answerField.setVisible(true);
+
         renderLatexQuestion(latex);
     }
 
     @FXML
     public void onSkip() {
-        questionCount++;
-        questionLabel.setText(questions.get(questionCount).getString("problem"));
+        nextQuestion();
     }
 
     private ArrayList<JSONObject> getQuestions() {
@@ -95,7 +113,7 @@ public class QuestionController {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://math.saeidnia.com/algebra/basic/1")).build();
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 3; i++) {
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 JSONObject question = new JSONObject(response.body());
                 qs.add(question);

@@ -68,36 +68,33 @@
         <VBox alignment="CENTER" spacing="20">
 
             <!-- Score and High Score -->
-            <HBox spacing="40" alignment="CENTER">
-                <Label fx:id="scoreLabel" text="Score: 0" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
-                <Label fx:id="highScoreLabel" text="High Score: 1" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
+            <HBox alignment="CENTER" spacing="40">
+                <Label fx:id="scoreLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" text="Score: 0" />
+                <Label fx:id="highScoreLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" text="High Score: 1" />
             </HBox>
 
             <!-- Timer Countdown -->
-            <Label fx:id="timerLabel" text="Time: 1:30" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
+            <Label fx:id="timerLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" text="Time: 1:30" />
 
             <!-- Timer Progress Bar -->
             <ProgressBar fx:id="timerProgressBar" prefWidth="750" progress="0.3" style="-fx-accent: #2DBEDF;" />
 
             <!-- Spacer between progress bar and question -->
-            <Region prefHeight="75"/>
+            <Region prefHeight="75" />
 
             <!-- Question Display -->
             <!-- LaTeX Question Display -->
-            <WebView fx:id="questionWebView" prefWidth="800" prefHeight="100" />
-
-            <!-- Spacer between question and answer field -->
-            <Region prefHeight="25"/>
+            <WebView fx:id="questionWebView" prefHeight="100" prefWidth="800" />
 
             <!-- Answer Input -->
             <!-- Placeholder Label -->
-            <Label fx:id="answerPlaceholder" text="?" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" />
+            <Label fx:id="answerPlaceholder" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" text="?" />
             <!-- Hidden Answer Field -->
-            <TextField fx:id="answerField" promptText="Enter your answer..." style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 16;" maxWidth="200" visible="false" />
+            <TextField fx:id="answerField" maxWidth="200" promptText="Enter your answer..." style="-fx-border-color: white; -fx-border-radius: 2%; -fx-border-width: 1; -fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 16;" />
 
-            <Region prefHeight="50"/>
+            <Region prefHeight="50" />
 
-            <Button fx:id="skipButton" text="Skip" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" />
+            <Button fx:id="skipButton" onAction="#onSkip" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" text="Skip" />
 
         </VBox>
     </center>

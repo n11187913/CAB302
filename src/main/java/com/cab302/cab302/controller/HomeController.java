@@ -8,6 +8,6 @@ import static com.cab302.cab302.Main.changeScene;
 public class HomeController {
     @FXML
     void onPlayButton() {
-        changeScene("question.fxml");
+        changeScene("Gameplay/question.fxml");
     }
 }
