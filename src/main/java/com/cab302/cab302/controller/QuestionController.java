@@ -30,10 +30,18 @@ public class QuestionController {
     private final int totalSeconds = 60;
     private int secondsRemaining;
 
+    private int currentStreak = 0;
+    private int highestStreak = 0;
+
+    private long questionStartTime = 0;
+    private double fastestAnswerTime = Double.MAX_VALUE;
+
     @FXML private Label scoreLabel;
     @FXML private Label highScoreLabel;
     @FXML private Label timerLabel;
     @FXML private ProgressBar timerProgressBar;
+    @FXML private Label streakLabel;
+    @FXML private Label fastestAnswerLabel;
 
     @FXML private Label answerPlaceholder;
     @FXML private TextField answerField;
@@ -87,14 +95,27 @@ public class QuestionController {
 
         if (userAnswer.equalsIgnoreCase(correctAnswer)) {
             score++;
+            currentStreak++;
             if (score > highScore) highScore = score;
             scoreLabel.setText("Score: " + score);
             highScoreLabel.setText("High Score: " + highScore);
 
+            if (currentStreak > highestStreak) highestStreak = currentStreak;
+            streakLabel.setText("Streak: " + currentStreak);
+
+            long answerTimeMillis = System.currentTimeMillis() - questionStartTime;
+            double answerTimeSeconds = answerTimeMillis / 1000.0;
+            double roundedTime = Math.round(answerTimeSeconds * 100.0) / 100.0;
+
+            if (roundedTime < fastestAnswerTime) fastestAnswerTime = roundedTime;
+            fastestAnswerLabel.setText("Fastest: " + fastestAnswerTime + " s");
+
             answerField.clear(); // clears the field after correct answer
             nextQuestion();
         } else {
+            currentStreak = 0;
             answerField.clear(); // clear on incorrect too
+            nextQuestion();
         }
     }
 
@@ -143,6 +164,7 @@ public class QuestionController {
                 "MathJax.typeset();";
 
         questionWebView.getEngine().executeScript(script);
+        questionStartTime = System.currentTimeMillis();
     }
 
     @FXML
