@@ -35,7 +35,7 @@ public class QuestionController {
     private int highestStreak = 0;
 
     private long questionStartTime = 0;
-    private double fastestAnswerTime = Double.MAX_VALUE;
+    private double fastestAnswerTime = 60;
 
     @FXML private Label scoreLabel;
     @FXML private Label highScoreLabel;
@@ -112,7 +112,8 @@ public class QuestionController {
             double roundedTime = Math.round(answerTimeSeconds * 100.0) / 100.0;
 
             if (roundedTime < fastestAnswerTime) fastestAnswerTime = roundedTime;
-            fastestAnswerLabel.setText("Fastest: " + fastestAnswerTime + " s");
+            String formattedFastest = String.format("%.2f", fastestAnswerTime);
+            fastestAnswerLabel.setText("Fastest: " + formattedFastest + " s");
 
             answerField.clear(); // clears the field after correct answer
             nextQuestion();
