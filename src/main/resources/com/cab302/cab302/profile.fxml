@@ -9,7 +9,7 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="ui.ProfileController"
+      fx:controller="com.cab302.cab302.controller.ProfileController"
       alignment="CENTER"
       spacing="24"
       stylesheets="@stylesheet.css"

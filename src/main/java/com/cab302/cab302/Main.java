@@ -7,23 +7,23 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javax.imageio.IIOParam;
 import java.io.IOException;
 import java.util.Objects;
 
 public class Main extends Application {
     public static final String TITLE = "Sign In / Log In";
     private static Stage primaryStage;
+    private IIOParam fxmlLoader;
 
     @Override
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("Auth/login-view.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("profile.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.show();
-        ui.ProfileController c = fxmlLoader.getController();
-
     }
 
     public static void main(String[] args) {

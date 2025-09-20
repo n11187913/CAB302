@@ -1,6 +1,7 @@
 
 package com.cab302.cab302.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -98,5 +99,8 @@ public class ProfileController {
             avatar.setImage(new Image(file.toURI().toString()));
             status.setText("Profile picture updated");
         }
+    }
+
+    public void onChangeName(ActionEvent actionEvent) {
     }
 }
