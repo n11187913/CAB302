@@ -66,6 +66,14 @@ public class QuestionController {
 
         answerField.setOnAction(e -> checkAnswer());
         skipButton.setOnAction(e -> nextQuestion());
+
+        questionStartTime = System.currentTimeMillis();
+    }
+
+    private String gameMode = "daily";
+
+    public void setGameMode(String mode) {
+        this.gameMode = mode;
     }
 
     private void startGameTimer() {
