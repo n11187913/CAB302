@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Random;
 
 import static com.cab302.cab302.Main.changeScene;
+import static com.cab302.cab302.controller.AuthController.getCurrentUser;
+
+import com.cab302.cab302.Database.Backend;
 
 public class QuestionController {
 
@@ -67,6 +70,15 @@ public class QuestionController {
         answerField.setVisible(true);
         scoreLabel.setText("Score: 0");
         highScoreLabel.setText("High Score: 0");
+
+        try (Backend db = new Backend()) {
+            int highscoreDB = db.getHighScore(getCurrentUser().getId());
+            highScore = highscoreDB;
+            highScoreLabel.setText("High Score: %d".formatted(highScore));
+        } catch (Exception e) {
+            statusLabel.setText("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
         startGameTimer();
 
         answerField.setOnAction(e -> checkAnswer());
@@ -105,9 +117,13 @@ public class QuestionController {
         submit.setVisible(false);
         goHome.setVisible(true);
         questionType.setVisible(false);
-//        answerPlaceholder.setVisible(false);
         skipButton.setDisable(true);
-
+        try (Backend db = new Backend()) {
+            db.updateHighScore(getCurrentUser().getId(), highScore);
+        } catch (Exception e) {
+            statusLabel.setText("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -147,7 +163,20 @@ public class QuestionController {
 
             statusLabel.setTextFill(Color.GREEN);
             statusLabel.setText("Correct");
+
+            try (Backend db = new Backend()) {
+                db.recordAttempt(getCurrentUser().getId(), true);
+            } catch (Exception e) {
+                statusLabel.setText("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
         } else {
+            try (Backend db = new Backend()) {
+                db.recordAttempt(getCurrentUser().getId(), false);
+            } catch (Exception e) {
+                statusLabel.setText("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
             currentStreak = 0;
             statusLabel.setTextFill(Color.RED);
             statusLabel.setText("Wrong");
@@ -223,6 +252,16 @@ public class QuestionController {
     @FXML
     public void onSkip() {
         nextQuestion();
+    }
+
+    @FXML
+    public void onSubmit() throws InterruptedException {
+        checkAnswer();
+    }
+
+    @FXML
+    public void onContinue() {
+
     }
 
     private String difficulty = "easy"; // default

@@ -13,7 +13,7 @@ public class TestUserList implements UserList {
     public TestUserList() {
         if (users.isEmpty()) {
             // this is demo user but can log in with anything as long as you sign up with same credentials
-            UserAccount u = new UserAccount("Nick", "Tesch", "NickTesch@example.com", "1234");
+            UserAccount u = new UserAccount("Nick", "Tesch", "NickTesch@example.com");
             add(u);
         }
     }
