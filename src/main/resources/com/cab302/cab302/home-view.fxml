@@ -1,144 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
+
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Line?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.cab302.cab302.controller.HomeController"
-            style="-fx-background-color:#2f2f2f;">
+<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color:#2f2f2f;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.2-ea" fx:controller="com.cab302.cab302.controller.HomeController">
 
     <!-- ========= TOP NAV ========= -->
     <top>
-        <HBox spacing="24" style="-fx-background-color:#2a2a2a; -fx-padding:8 12;">
-            <Label text="Home"   style="-fx-text-fill:#00bcd4; -fx-font-weight:bold; -fx-underline:true;"/>
-            <Label text="Leaderboard" style="-fx-text-fill:#e0e0e0;"/>
-            <Label text="About"  style="-fx-text-fill:#e0e0e0;"/>
-            <Pane HBox.hgrow="ALWAYS" />
-            <Label text="Mental Math Game" style="-fx-text-fill:#e0e0e0; -fx-font-weight:bold;"/>
-            <Pane HBox.hgrow="ALWAYS" />
-            <Label text="≡" style="-fx-text-fill:#e0e0e0; -fx-font-size:16;" />
+        <HBox spacing="0" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
+            <!-- Left Navigation -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Home" />
+                <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Leaderboard" />
+                <Button prefWidth="65.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="About" />
+            </HBox>
+
+            <!-- Spacer before title -->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Centered Title -->
+            <StackPane>
+                <Label style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" text="Mental Math Game" />
+            </StackPane>
+
+            <!-- Spacer after title -->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Right Hamburger Menu -->
+            <HBox alignment="CENTER_RIGHT" spacing="20">
+                <Button prefHeight="25.0" prefWidth="169.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
+                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
+            </HBox>
         </HBox>
     </top>
-
     <!-- ========= LEFT RAIL ========= -->
     <left>
-        <VBox spacing="26" alignment="CENTER"
-              style="-fx-padding:12 8; -fx-background-color:#2b2b2b;">
-            <Label text="+" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="×" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="÷" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="+" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="×" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="÷" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
+        <VBox alignment="CENTER" spacing="26" style="-fx-padding:12 8; -fx-background-color:#2b2b2b;">
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="+" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="×" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="÷" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="+" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="×" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="÷" />
         </VBox>
     </left>
 
     <!-- ========= RIGHT RAIL ========= -->
     <right>
-        <VBox spacing="26" alignment="CENTER"
-              style="-fx-padding:12 8; -fx-background-color:#2b2b2b;">
-            <Label text="+" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="×" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="÷" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="+" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="×" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="÷" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
+        <VBox alignment="CENTER" spacing="26" style="-fx-padding:12 8; -fx-background-color:#2b2b2b;">
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="+" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="×" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="÷" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="+" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="×" />
+            <Label style="-fx-text-fill:#00bcd4; -fx-font-size:36;" text="÷" />
         </VBox>
     </right>
 
     <!-- ========= CENTER CONTENT ========= -->
     <center>
-        <VBox spacing="48" alignment="TOP_CENTER">
+        <VBox alignment="TOP_CENTER" spacing="48">
             <padding>
-                <Insets top="28" right="24" bottom="24" left="24"/>
+                <Insets bottom="24" left="24" right="24" top="28" />
             </padding>
 
             <!-- ======= Daily Challenge ======= -->
-            <VBox spacing="10" alignment="CENTER">
-                <HBox spacing="12" alignment="CENTER">
-                    <Label text="🗓" style="-fx-font-size:20; -fx-text-fill:#e0e0e0;"/>
-                    <Label text="Daily Challenge"
-                           style="-fx-text-fill:#27d3f8; -fx-font-size:24; -fx-font-weight:bold;"/>
-                    <Label text="🗓" style="-fx-font-size:20; -fx-text-fill:#e0e0e0;"/>
+            <VBox alignment="CENTER" spacing="10">
+                <HBox alignment="CENTER" spacing="12">
+                    <Label style="-fx-font-size:20; -fx-text-fill:#e0e0e0;" text="🗓" />
+                    <Label style="-fx-text-fill:#27d3f8; -fx-font-size:24; -fx-font-weight:bold;" text="Daily Challenge" />
+                    <Label style="-fx-font-size:20; -fx-text-fill:#e0e0e0;" text="🗓" />
                 </HBox>
 
                 <HBox alignment="CENTER" spacing="8">
-                    <ToggleButton text="Easy" fx:id="dcEasy" toggleGroup="$difficultyGroup" selected="true"
-                                  styleClass="difficulty-btn"/>
-                    <ToggleButton text="Medium" fx:id="dcMedium" toggleGroup="$difficultyGroup"
-                                  styleClass="difficulty-btn"/>
-                    <ToggleButton text="Hard" fx:id="dcHard" toggleGroup="$difficultyGroup"
-                                  styleClass="difficulty-btn"/>
+                    <ToggleButton fx:id="dcEasy" selected="true" styleClass="difficulty-btn" text="Easy">
+                  <toggleGroup>
+                     <ToggleGroup fx:id="difficultyGroup" />
+                  </toggleGroup></ToggleButton>
+                    <ToggleButton fx:id="dcMedium" styleClass="difficulty-btn" text="Medium" toggleGroup="$difficultyGroup" />
+                    <ToggleButton fx:id="dcHard" styleClass="difficulty-btn" text="Hard" toggleGroup="$difficultyGroup" />
                 </HBox>
 
                 <!-- buttons directly under the chips -->
-                <HBox spacing="12" alignment="CENTER">
-                    <Button text="Start" onAction="#startDaily"
-                            prefWidth="96"
-                            style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
-                    <Button text="Leaderboard" onAction="#openDailyLeaderboard"
-                            prefWidth="120"
-                            style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
+                <HBox alignment="CENTER" spacing="12">
+                    <Button onAction="#startDaily" prefWidth="96" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Start" />
+                    <Button onAction="#openDailyLeaderboard" prefWidth="120" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Leaderboard" />
                 </HBox>
 
-                <Label text="Your current streak: 🔥 4"
-                       style="-fx-font-size: 16; -fx-text-fill: orange; -fx-font-weight: bold;"/>
+                <Label style="-fx-font-size: 16; -fx-text-fill: orange; -fx-font-weight: bold;" text="Your current streak: 🔥 4" />
             </VBox>
 
             <!-- ======= Time Trial ======= -->
-            <VBox spacing="10" alignment="CENTER">
-                <HBox spacing="12" alignment="CENTER">
-                    <Label text="⏱" style="-fx-font-size:20; -fx-text-fill:#e0e0e0;"/>
-                    <Label text="Time Trial"
-                           style="-fx-text-fill:#27d3f8; -fx-font-size:24; -fx-font-weight:bold;"/>
-                    <Label text="⏱" style="-fx-font-size:20; -fx-text-fill:#e0e0e0;"/>
+            <VBox alignment="CENTER" spacing="10">
+                <HBox alignment="CENTER" spacing="12">
+                    <Label style="-fx-font-size:20; -fx-text-fill:#e0e0e0;" text="⏱" />
+                    <Label style="-fx-text-fill:#27d3f8; -fx-font-size:24; -fx-font-weight:bold;" text="Time Trial" />
+                    <Label style="-fx-font-size:20; -fx-text-fill:#e0e0e0;" text="⏱" />
                 </HBox>
 
                 <HBox alignment="CENTER" spacing="8">
-                    <ToggleButton text="Easy" fx:id="ttEasy" toggleGroup="$difficultyGroup" selected="true"
-                                  styleClass="difficulty-btn"/>
-                    <ToggleButton text="Medium" fx:id="ttMedium" toggleGroup="$difficultyGroup"
-                                  styleClass="difficulty-btn"/>
-                    <ToggleButton text="Hard" fx:id="ttHard" toggleGroup="$difficultyGroup"
-                                  styleClass="difficulty-btn"/>
+                    <ToggleButton fx:id="ttEasy" selected="true" styleClass="difficulty-btn" text="Easy" toggleGroup="$difficultyGroup" />
+                    <ToggleButton fx:id="ttMedium" styleClass="difficulty-btn" text="Medium" toggleGroup="$difficultyGroup" />
+                    <ToggleButton fx:id="ttHard" styleClass="difficulty-btn" text="Hard" toggleGroup="$difficultyGroup" />
                 </HBox>
 
-                <HBox spacing="12" alignment="CENTER">
-                    <Button text="Start" onAction="#startTimeTrial"
-                            prefWidth="96"
-                            style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
-                    <Button text="Leaderboard" onAction="#openTimeTrialLeaderboard"
-                            prefWidth="120"
-                            style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
+                <HBox alignment="CENTER" spacing="12">
+                    <Button onAction="#startTimeTrial" prefWidth="96" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Start" />
+                    <Button onAction="#openTimeTrialLeaderboard" prefWidth="120" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Leaderboard" />
                 </HBox>
             </VBox>
 
             <!-- ======= 1v1 Battle ======= -->
-            <VBox spacing="10" alignment="CENTER">
-                <HBox spacing="12" alignment="CENTER">
-                    <Label text="👥" style="-fx-font-size:20; -fx-text-fill:#e0e0e0;"/>
-                    <Label text="1v1 Battle"
-                           style="-fx-text-fill:#27d3f8; -fx-font-size:24; -fx-font-weight:bold;"/>
-                    <Label text="👥" style="-fx-font-size:20; -fx-text-fill:#e0e0e0;"/>
+            <VBox alignment="CENTER" spacing="10">
+                <HBox alignment="CENTER" spacing="12">
+                    <Label style="-fx-font-size:20; -fx-text-fill:#e0e0e0;" text="👥" />
+                    <Label style="-fx-text-fill:#27d3f8; -fx-font-size:24; -fx-font-weight:bold;" text="1v1 Battle" />
+                    <Label style="-fx-font-size:20; -fx-text-fill:#e0e0e0;" text="👥" />
                 </HBox>
 
                 <HBox alignment="CENTER" spacing="8">
-                    <ToggleButton text="Easy" fx:id="bEasy" toggleGroup="$difficultyGroup" selected="true"
-                                  styleClass="difficulty-btn"/>
-                    <ToggleButton text="Medium" fx:id="bMedium" toggleGroup="$difficultyGroup"
-                                  styleClass="difficulty-btn"/>
-                    <ToggleButton text="Hard" fx:id="bHard" toggleGroup="$difficultyGroup"
-                                  styleClass="difficulty-btn"/>
+                    <ToggleButton fx:id="bEasy" selected="true" styleClass="difficulty-btn" text="Easy" toggleGroup="$difficultyGroup" />
+                    <ToggleButton fx:id="bMedium" styleClass="difficulty-btn" text="Medium" toggleGroup="$difficultyGroup" />
+                    <ToggleButton fx:id="bHard" styleClass="difficulty-btn" text="Hard" toggleGroup="$difficultyGroup" />
                 </HBox>
 
-                <HBox spacing="12" alignment="CENTER">
-                    <Button text="Start" onAction="#startBattle"
-                            prefWidth="96"
-                            style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
-                    <Button text="Leaderboard" onAction="#openBattleLeaderboard"
-                            prefWidth="120"
-                            style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
+                <HBox alignment="CENTER" spacing="12">
+                    <Button onAction="#startBattle" prefWidth="96" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Start" />
+                    <Button onAction="#openBattleLeaderboard" prefWidth="120" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Leaderboard" />
                 </HBox>
             </VBox>
 
