@@ -3,6 +3,11 @@ package com.cab302.cab302.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import java.io.IOException;
 
 public class HomeController {
     @FXML
@@ -51,10 +56,47 @@ public class HomeController {
     @FXML private void selectBattleHard(){}
 
     // --- actions ---
-    @FXML private void startDaily()              {  }
     @FXML private void openDailyLeaderboard()    { }
-    @FXML private void startTimeTrial()          {/* TODO */ }
     @FXML private void openTimeTrialLeaderboard(){  }
-    @FXML private void startBattle()             { }
     @FXML private void openBattleLeaderboard()   {  }
+
+    private String getSelectedDifficulty(ToggleGroup group) {
+        ToggleButton selected = (ToggleButton) group.getSelectedToggle();
+        return (selected != null) ? selected.getText().toLowerCase() : "easy";
+    }
+
+    @FXML
+    private void startDaily() {
+        String difficulty = getSelectedDifficulty(dcGroup);
+        launchGame("daily", difficulty);
+    }
+
+    @FXML
+    private void startTimeTrial() {
+        String difficulty = getSelectedDifficulty(ttGroup);
+        launchGame("time_trial", difficulty);
+    }
+
+    @FXML
+    private void startBattle() {
+        String difficulty = getSelectedDifficulty(bGroup);
+        launchGame("battle", difficulty);
+    }
+
+    private void launchGame(String mode, String difficulty) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/cab302/Gameplay/question.fxml"));
+            Parent root = loader.load();
+
+            QuestionController controller = loader.getController();
+            controller.setDifficulty(difficulty);
+            controller.setGameMode(mode);
+
+            Stage stage = (Stage) dcEasy.getScene().getWindow(); // or any node
+            stage.setScene(new Scene(root, 1080, 720));
+            stage.setTitle("Mental Math Game");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

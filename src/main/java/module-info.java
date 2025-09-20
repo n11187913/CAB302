@@ -2,10 +2,13 @@ module com.cab302.cab302 {
     // JavaFX
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.web;
 
     // JDBC
     requires java.sql;
     requires org.xerial.sqlitejdbc;
+    requires java.net.http;
+    requires org.json;
 
     // Open packages for FXML reflection
     opens com.cab302.cab302 to javafx.fxml;
