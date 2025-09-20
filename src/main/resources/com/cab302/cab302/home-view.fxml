@@ -25,10 +25,8 @@
                         style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
                 <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0"
                         style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
-            </HBox>
         </HBox>
     </top>
-
 
     <!-- ========= LEFT RAIL ========= -->
     <left>
@@ -152,7 +150,6 @@
                             style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
                 </HBox>
             </VBox>
-
         </VBox>
     </center>
 </BorderPane>

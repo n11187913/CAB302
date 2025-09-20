@@ -12,7 +12,8 @@
         <HBox spacing="0" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
             <!-- Left Navigation -->
             <HBox alignment="CENTER_LEFT" spacing="20">
-                <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Home" />
+                <Button fx:id="homeButton" text="Home" onAction="#goToHome"
+                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" />
                 <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Leaderboard" />
                 <Button prefWidth="65.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="About" />
             </HBox>
