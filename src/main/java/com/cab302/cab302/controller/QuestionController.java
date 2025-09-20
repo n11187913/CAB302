@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import static com.cab302.cab302.Main.changeScene;
+
 public class QuestionController {
 
     private ArrayList<JSONObject> questions;
@@ -28,7 +30,7 @@ public class QuestionController {
     private int highScore = 0;
 
     private Timeline timer;
-    private final int totalSeconds = 3;
+    private final int totalSeconds = 60;
     private int secondsRemaining;
 
     private int currentStreak = 0;
@@ -53,6 +55,7 @@ public class QuestionController {
     @FXML private Label statusLabel;
 
     @FXML private Label questionType;
+    @FXML private Button goHome;
 
     @FXML
     public void initialize() {
@@ -89,7 +92,8 @@ public class QuestionController {
     private void endGame() {
         questionWebView.getEngine().loadContent("<html><body style='background-color: #3c3c3c;'><h2 style='color:white; text-align: center;'>Time's up!</h2></body></html>");
         answerField.setDisable(true);
-        submit.setDisable(true);
+        submit.setVisible(false);
+        goHome.setVisible(true);
         questionType.setVisible(false);
 //        answerPlaceholder.setVisible(false);
         skipButton.setDisable(true);
@@ -218,6 +222,11 @@ public class QuestionController {
         } else {
             return "Please differentiate using the power rule:";
         }
+    }
+
+    @FXML
+    private void onLeave() {
+        changeScene("home-view.fxml");
     }
 
     private ArrayList<JSONObject> getQuestions(String difficultyLabel, int count) {
