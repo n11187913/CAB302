@@ -109,6 +109,46 @@ public class Backend implements AutoCloseable {
             }
         }
     }
+    public void updateEmail(long profileId, String newEmail) throws SQLException {
+        requireNonBlank(newEmail, "email");
+        String sql = "UPDATE profiles SET email = ? WHERE profile_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newEmail.trim());
+            ps.setLong(2, profileId);
+            if (ps.executeUpdate() == 0) throw new SQLException("No profile found for id=" + profileId);
+        }
+    }
+
+    public void updateName(long profileId, String newName) throws SQLException {
+        requireNonBlank(newName, "name");
+        String sql = "UPDATE profiles SET name = ? WHERE profile_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newName.trim());
+            ps.setLong(2, profileId);
+            if (ps.executeUpdate() == 0) throw new SQLException("No profile found for id=" + profileId);
+        }
+    }
+
+    public void updatePassword(long profileId, String newPassword) throws Exception {
+        requireNonBlank(newPassword, "password");
+        String[] kdf = hashPassword(newPassword);
+        String sql = "UPDATE profiles SET password_hash = ?, password_salt = ? WHERE profile_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, kdf[1]);
+            ps.setString(2, kdf[0]);
+            ps.setLong(3, profileId);
+            if (ps.executeUpdate() == 0) throw new SQLException("No profile found for id=" + profileId);
+        }
+    }
+
+    public void deleteUser(long profileId) throws SQLException {
+        String sql = "DELETE FROM profiles WHERE profile_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, profileId);
+            ps.executeUpdate(); // cascades remove children
+        }
+    }
+
 
     /** Fetch a user summary (first focus area name if any). */
     public Optional<User> getUser(String email) throws SQLException {

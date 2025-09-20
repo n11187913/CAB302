@@ -72,6 +72,7 @@ public class AuthController {
             return;
         }
 
+
         try (Backend db = new Backend()) {
             boolean ok = db.authenticate(email, password);
             if (ok) {
