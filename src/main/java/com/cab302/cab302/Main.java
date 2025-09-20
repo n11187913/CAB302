@@ -19,7 +19,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("profile.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("auth-view.fxml"));
         Scene scene = new Scene(loader.load());
         stage.setTitle(TITLE);
         stage.setScene(scene);
