@@ -8,13 +8,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
-/**
- * Simple unit tests for Backend (user-related functionality).
- *
- * WARNING: these tests delete the database file named `cab302.db` in the working directory
- * before and after each test to ensure a clean state. Back up any real data before running.
- */
 public class UserTest {
 
     private Backend backend;
