@@ -41,12 +41,8 @@ public class AnswerTest {
         assertEquals(0, backend.getHighScore(userId));
 
         // accuracy should be 1.0 (1/1)
-        // (We can't read stats directly without SQL, but a second call to recordAttempt updates correctly)
         backend.recordAttempt(userId, false); // now answered=2, correct=1
 
-        // accuracy should be 0.5 (1/2)
-        // We check indirectly by ensuring recordAttempt doesn’t throw and DB updates
-        // (you may extend Backend with a getter for testing)
         assertDoesNotThrow(() -> backend.recordAttempt(userId, true));
     }
 }

@@ -28,9 +28,6 @@ public class AccuracyTest {
         backend.recordAttempt(userId, false);  // 1/3 correct
         backend.recordAttempt(userId, true);   // 2/4 correct
 
-        // Accuracy = 2/4 = 0.5
-        // We can only test indirectly since Backend doesn't expose accuracy directly.
-        // Let's trigger an extra attempt and assert it doesn't break
         assertDoesNotThrow(() -> backend.recordAttempt(userId, true));
     }
 }
