@@ -25,6 +25,7 @@
                         style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
                 <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0"
                         style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
+            </HBox>
         </HBox>
     </top>
 
