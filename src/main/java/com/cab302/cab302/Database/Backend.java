@@ -31,6 +31,11 @@ public class Backend implements AutoCloseable {
         initSchema();
     }
 
+    public Backend(boolean dev) throws SQLException {
+        connect(dev);
+        initSchema();
+    }
+
     // API (kept compatible with existing method names)
 
     /** Create a new user (stored in 'profiles'). */
@@ -267,6 +272,18 @@ public class Backend implements AutoCloseable {
     }
 
     // Internals
+
+    private void connect(boolean dev) throws SQLException {
+        try { Class.forName("org.sqlite.JDBC"); }
+        catch (ClassNotFoundException e) {
+            throw new SQLException("SQLite JDBC driver not found; check your pom.xml dependency.", e);
+        }
+        conn = DriverManager.getConnection("jdbc:sqlite::memory:");
+        try (Statement st = conn.createStatement()) {
+            st.execute("PRAGMA foreign_keys = ON");
+            st.execute("PRAGMA journal_mode = WAL");
+        }
+    }
 
     private void connect() throws SQLException {
         try { Class.forName("org.sqlite.JDBC"); }
