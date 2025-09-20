@@ -19,7 +19,7 @@ public class Main extends Application {
         this.primaryStage = stage;
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("Auth/login-view.fxml"));
         Scene scene = new Scene(loader.load());
-        stage.setTitle(TITLE)
+        stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.show();
     }
