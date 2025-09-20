@@ -1,13 +1,23 @@
 package com.cab302.cab302.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class HomeController {
     @FXML
     private ToggleGroup difficultyGroup;
 
+    @FXML
+    private BorderPane rootPane;
 
     // Daily Challenge difficulty
     @FXML private ToggleButton dcEasy, dcMedium, dcHard;
@@ -57,4 +67,20 @@ public class HomeController {
     @FXML private void openTimeTrialLeaderboard(){  }
     @FXML private void startBattle()             { }
     @FXML private void openBattleLeaderboard()   {  }
+
+
+    private void switchScene(String fxmlPath) {
+        try {
+            var url = getClass().getResource("/com/cab302/cab302/" + fxmlPath);
+            if (url == null) throw new IllegalStateException("FXML not found: " + fxmlPath);
+            FXMLLoader loader = new FXMLLoader(url);
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML private void goProfile()     { switchScene("profile-view.fxml"); }
 }

@@ -6,7 +6,8 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.cab302.controller.HomeController"
-            style="-fx-background-color:#2f2f2f;">
+            style="-fx-background-color:#2f2f2f;"
+            fx:id="rootPane">
 
     <!-- ========= TOP NAV ========= -->
     <top>
@@ -17,7 +18,12 @@
             <Pane HBox.hgrow="ALWAYS" />
             <Label text="Mental Math Game" style="-fx-text-fill:#e0e0e0; -fx-font-weight:bold;"/>
             <Pane HBox.hgrow="ALWAYS" />
-            <Label text="≡" style="-fx-text-fill:#e0e0e0; -fx-font-size:16;" />
+            <Button text="≡"
+                    onAction="#goProfile"
+                    style="-fx-background-color: transparent;
+               -fx-border-color: transparent;
+               -fx-text-fill:#e0e0e0;
+               -fx-font-size:16;"/>
         </HBox>
     </top>
 
