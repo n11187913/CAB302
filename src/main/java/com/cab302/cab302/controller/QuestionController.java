@@ -224,25 +224,7 @@ public class QuestionController {
 
     @FXML
     public void onSubmit() throws InterruptedException {
-        if (answerField.getText().trim().isEmpty()) {
-            statusLabel.setText("Please enter your answer");
-        }
-
-        if (answerField.getText().trim().equals(questions.get(questionCount).getString("solution"))) {
-            statusLabel.setTextFill(Color.GREEN);
-            statusLabel.setText("Correct");
-        } else {
-            statusLabel.setTextFill(Color.RED);
-            statusLabel.setText("Wrong");
-        }
-
-        answerField.clear();
-        nextQuestion();
-    }
-
-    @FXML
-    public void onContinue() {
-
+       checkAnswer();
     }
 
     private String difficulty = "easy"; // default
