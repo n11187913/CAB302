@@ -57,20 +57,22 @@
             <Separator/>
 
             <!-- Account -->
+            <!-- Account -->
             <VBox spacing="10">
                 <children>
                     <Label text="Account" styleClass="section-title"/>
-                    <HBox spacing="10">
+                    <HBox spacing="10" styleClass="account-bar">
                         <children>
-                            <Button text="Change Name" onAction="#onChangeName" />
-                            <Button text="Change Email" onAction="#onChangeEmail" />
-                            <Button text="Change Password" onAction="#onChangePassword" />
+                            <Button text="Change Name"     onAction="#onChangeName"     minWidth="150"/>
+                            <Button text="Change Email"    onAction="#onChangeEmail"    minWidth="150"/>
+                            <Button text="Change Password" onAction="#onChangePassword" minWidth="150"/>
                             <Pane HBox.hgrow="ALWAYS"/>
-                            <Button text="Delete Account" onAction="#onDeleteAccount" />
+                            <Button text="Delete Account"  onAction="#onDeleteAccount"  minWidth="150"/>
                         </children>
                     </HBox>
                 </children>
             </VBox>
+
 
             <!-- Preferences (aligned with GridPane) -->
             <VBox spacing="12">
