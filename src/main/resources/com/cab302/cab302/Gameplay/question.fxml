@@ -2,7 +2,8 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
 
 <BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cab302.cab302.controller.QuestionController">
 
@@ -11,7 +12,8 @@
         <HBox spacing="0" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
             <!-- Left Navigation -->
             <HBox alignment="CENTER_LEFT" spacing="20">
-                <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Home" />
+                <Button fx:id="homeButton" text="Home" onAction="#goToHome"
+                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" />
                 <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Leaderboard" />
                 <Button prefWidth="65.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="About" />
             </HBox>
@@ -29,7 +31,7 @@
 
             <!-- Right Hamburger Menu -->
             <HBox alignment="CENTER_RIGHT" spacing="20">
-                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="169.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
+                <Button prefHeight="25.0" prefWidth="169.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
                 <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
             </HBox>
         </HBox>
@@ -68,35 +70,38 @@
         <VBox alignment="CENTER" spacing="20">
 
             <!-- Score and High Score -->
-            <HBox spacing="40" alignment="CENTER">
-                <Label fx:id="scoreLabel" text="Score: 0" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
-                <Label fx:id="highScoreLabel" text="High Score: 1" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
+            <HBox alignment="CENTER" spacing="40">
+                <Label fx:id="scoreLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" text="Score: 0" />
+                <Label fx:id="highScoreLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" text="High Score: 0" />
+                <Label fx:id="fastestAnswerLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" text="Quickest: 0" />
+                <Label fx:id="streakLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" text="Streak: 0" />
             </HBox>
 
             <!-- Timer Countdown -->
-            <Label fx:id="timerLabel" text="Time: 1:30" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
+            <Label fx:id="timerLabel" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" text="Time: 1:30" />
 
             <!-- Timer Progress Bar -->
             <ProgressBar fx:id="timerProgressBar" prefWidth="750" progress="0.3" style="-fx-accent: #2DBEDF;" />
 
             <!-- Spacer between progress bar and question -->
-            <Region prefHeight="75"/>
+            <Region prefHeight="75" />
 
             <!-- Question Display -->
-            <Label fx:id="questionLabel" text="10 - 5" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" wrapText="true" />
-
-            <!-- Spacer between question and answer field -->
-            <Region prefHeight="25"/>
+            <!-- LaTeX Question Display -->
+            <Label fx:id="questionType" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
+            <WebView fx:id="questionWebView" prefHeight="60.0" prefWidth="905.0" />
 
             <!-- Answer Input -->
-            <!-- Placeholder Label -->
-            <Label fx:id="answerPlaceholder" text="?" style="-fx-text-fill: #cccccc; -fx-font-size: 24;" />
-            <!-- Hidden Answer Field -->
-            <TextField fx:id="answerField" promptText="Enter your answer..." style="-fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 16;" maxWidth="200" visible="false" />
+            <TextField fx:id="answerField" maxWidth="200" promptText="Enter your answer..." style="-fx-border-color: white; -fx-border-radius: 2%; -fx-border-width: 1; -fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 16;" />
+        <Button fx:id="submit" mnemonicParsing="false" onAction="#onSubmit" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" text="Submit" textFill="WHITE" />
+        <Button fx:id="goHome" mnemonicParsing="false" onAction="#onLeave" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" text="Go Home" textFill="WHITE" visible="false" />
+         <Label fx:id="statusLabel" textAlignment="CENTER" textFill="RED">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Label>
 
-            <Region prefHeight="50"/>
-
-            <Button fx:id="skipButton" text="Skip" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" />
+            <Button fx:id="skipButton" onAction="#onSkip" prefHeight="0.0" prefWidth="46.0" style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 14;" text="Skip" />
 
         </VBox>
     </center>

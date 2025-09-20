@@ -9,7 +9,7 @@
 
     <!-- Top Navigation Bar -->
     <top>
-        <HBox spacing="0" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
+        <HBox style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
             <HBox alignment="CENTER_LEFT" spacing="20">
                 <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Home" />
                 <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Leaderboard" />
@@ -22,7 +22,7 @@
             <Region HBox.hgrow="ALWAYS" />
             <HBox alignment="CENTER_RIGHT" spacing="20">
                 <Button prefHeight="25.0" prefWidth="169.0"
-                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
+                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" />
                 <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0"
                         style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
             </HBox>
@@ -84,7 +84,7 @@
         </GridPane>
 
         <HBox spacing="8">
-            <Button text="Log In" onAction="#goToHome" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" />
+            <Button text="Log In" onAction="#onLogIn" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" />
         </HBox>
 
         <HBox alignment="BASELINE_LEFT" spacing="6">
@@ -96,6 +96,8 @@
         </HBox>
 
         <Pane VBox.vgrow="ALWAYS"/>
+        <Label fx:id="statusLabel" wrapText="true"
+               style="-fx-text-fill: #cccccc;" />
     </VBox>
     </center>
 </BorderPane>
