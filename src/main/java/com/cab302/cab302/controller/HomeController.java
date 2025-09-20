@@ -1,18 +1,30 @@
 package com.cab302.cab302.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+Profile-page-cleaned
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+
+import java.awt.event.MouseEvent;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
+main
 import java.io.IOException;
 
 public class HomeController {
     @FXML
     private ToggleGroup difficultyGroup;
 
+    @FXML
+    private BorderPane rootPane;
 
     // Daily Challenge difficulty
     @FXML private ToggleButton dcEasy, dcMedium, dcHard;
@@ -59,7 +71,18 @@ public class HomeController {
     @FXML private void openDailyLeaderboard()    { }
     @FXML private void openTimeTrialLeaderboard(){  }
     @FXML private void openBattleLeaderboard()   {  }
+  
+  Profile-page-cleaned
 
+    private void switchScene(String fxmlPath) {
+        try {
+            var url = getClass().getResource("/com/cab302/cab302/" + fxmlPath);
+            if (url == null) throw new IllegalStateException("FXML not found: " + fxmlPath);
+            FXMLLoader loader = new FXMLLoader(url);
+            Scene scene = new Scene(loader.load());
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+            stage.setScene(scene);
+          
     private String getSelectedDifficulty(ToggleGroup group) {
         ToggleButton selected = (ToggleButton) group.getSelectedToggle();
         return (selected != null) ? selected.getText().toLowerCase() : "easy";
@@ -95,8 +118,15 @@ public class HomeController {
             Stage stage = (Stage) dcEasy.getScene().getWindow(); // or any node
             stage.setScene(new Scene(root, 1080, 720));
             stage.setTitle("Mental Math Game");
+ main
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+Profile-page-cleaned
+
+    @FXML private void goProfile()     { switchScene("profile-view.fxml"); }
 }
+
+}
+ main

@@ -4,6 +4,28 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Line?>
 
+Profile-page-cleaned
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.cab302.controller.HomeController"
+            style="-fx-background-color:#2f2f2f;"
+            fx:id="rootPane">
+
+    <!-- ========= TOP NAV ========= -->
+    <top>
+        <HBox spacing="24" style="-fx-background-color:#2a2a2a; -fx-padding:8 12;">
+            <Label text="Home"   style="-fx-text-fill:#00bcd4; -fx-font-weight:bold; -fx-underline:true;"/>
+            <Label text="Leaderboard" style="-fx-text-fill:#e0e0e0;"/>
+            <Label text="About"  style="-fx-text-fill:#e0e0e0;"/>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Label text="Mental Math Game" style="-fx-text-fill:#e0e0e0; -fx-font-weight:bold;"/>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button text="≡"
+                    onAction="#goProfile"
+                    style="-fx-background-color: transparent;
+               -fx-border-color: transparent;
+               -fx-text-fill:#e0e0e0;
+               -fx-font-size:16;"/>
+
 <BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.cab302.controller.HomeController">
 
@@ -26,6 +48,7 @@
                 <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0"
                         style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
             </HBox>
+          main
         </HBox>
     </top>
 
