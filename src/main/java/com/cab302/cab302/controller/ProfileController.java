@@ -75,7 +75,7 @@ public class ProfileController {
 
                 try {
                     FXMLLoader loader = new FXMLLoader(
-                            getClass().getResource("/com/cab302/cab302/auth/signup-view.fxml")
+                            getClass().getResource("/com/cab302/cab302/auth/Login-view.fxml")
                     );
                     Parent authroot = loader.load();
                     Stage stage = (Stage) status.getScene().getWindow();
