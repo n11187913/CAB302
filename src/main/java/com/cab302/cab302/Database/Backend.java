@@ -34,6 +34,7 @@ public class Backend implements AutoCloseable {
     // ------------------------------------------------------------
     // Public API (kept compatible with your existing method names)
     // ------------------------------------------------------------
+
     /** Create a new user (stored in 'profiles'). */
     public long addUser(String username, String password, String focusArea) throws Exception {
         requireNonBlank(username, "username");
