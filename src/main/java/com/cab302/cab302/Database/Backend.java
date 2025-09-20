@@ -72,14 +72,15 @@ public class Backend implements AutoCloseable {
         }
 
         String statsSql = """
-          INSERT INTO statistics(profile_id, correct_answered, answered, accuracy)
-          VALUES(?,?,?,?,?,?)
+          INSERT INTO statistics(profile_id, correct_answers, answered, highscore, accuracy)
+          VALUES(?,?,?,?,?)
         """;
         try (PreparedStatement ps = conn.prepareStatement(statsSql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setLong(1, profileId);
             ps.setInt(2, 0);
             ps.setInt(3, 0);
-            ps.setDouble(4, 0);
+            ps.setInt(4, 0);
+            ps.setDouble(5, 0);
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) profileId = rs.getLong(1);
@@ -107,7 +108,7 @@ public class Backend implements AutoCloseable {
     /** Fetch a user summary (first focus area name if any). */
     public Optional<User> getUser(String email) throws SQLException {
         String sql = """
-            SELECT p.profile_id, p.email, p.created_at,
+            SELECT p.name, p.profile_id, p.email, p.created_at,
                    (SELECT fa.area_name
                       FROM profile_focus_areas pfa
                       JOIN focus_areas fa ON fa.focus_area_id = pfa.focus_area_id
@@ -122,6 +123,7 @@ public class Backend implements AutoCloseable {
                 if (rs.next()) {
                     return Optional.of(new User(
                             rs.getLong("profile_id"),
+                            rs.getString("name"),
                             rs.getString("email"),
                             rs.getString("focus_area"),
                             rs.getString("created_at")
@@ -132,62 +134,130 @@ public class Backend implements AutoCloseable {
         return Optional.empty();
     }
 
-    /** Record a quiz attempt (includes correctness flag). */
-    public static long recordAttempt(long profileId, boolean isCorrect) {
 
+
+    /** Record a quiz attempt (includes correctness flag). */
+    public long recordAttempt(long profileId, boolean isCorrect) {
+
+        // Initialize variables to hold the stats fetched from the database
         int currentCorrectAnswers = 0;
         int currentAnswered = 0;
-        double currentAccuracy;
 
-
+        // SQL to get the current stats for the profile
         String getCurrentStats = """
-                SELECT s.correct_answers, s.answered, s.accuracy FROM statistics s WHERE s.profile_id = ?
-                """;
+            SELECT s.correct_answers, s.answered FROM statistics s WHERE s.profile_id = ?
+            """;
 
-        try (PreparedStatement currentPs = conn.prepareStatement(getCurrentStats, Statement.RETURN_GENERATED_KEYS)) {
-            currentPs.setLong(1, profileId);
-            currentPs.execute();
-            try (ResultSet rs = currentPs.getGeneratedKeys()) {
+        // Use try-with-resources for PreparedStatement and ResultSet to ensure they are closed
+        try (PreparedStatement selectPs = conn.prepareStatement(getCurrentStats)) {
+            selectPs.setLong(1, profileId);
+
+            // FIX 1: Use executeQuery() for SELECT. It returns a ResultSet with the query results.
+            try (ResultSet rs = selectPs.executeQuery()) {
+                // Check if a record was found before trying to read from it
                 if (rs.next()) {
-                    currentCorrectAnswers = rs.getInt("correct_answered");
+                    currentCorrectAnswers = rs.getInt("correct_answers");
                     currentAnswered = rs.getInt("answered");
-                    currentAccuracy = rs.getDouble("accuracy");
                 }
+                // Note: If no record exists, the variables will remain 0,
+                // and the UPDATE statement below will fail to update any rows.
+                // You may want to add logic here to INSERT a new record if rs.next() is false.
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error fetching statistics for profile " + profileId, e);
         }
 
-        int newCorrectAnswers = 0;
-        int newAnswered;
-        double newAccuracy;
-        
+        // --- Calculate the new statistics ---
+        int newCorrectAnswers;
         if (isCorrect) {
             newCorrectAnswers = currentCorrectAnswers + 1;
+        } else {
+            newCorrectAnswers = currentCorrectAnswers;
         }
-        
-        newAnswered = currentAnswered + 1;
-        
-        newAccuracy = (double) newCorrectAnswers / newAnswered;
 
-        String sql = """
-          UPDATE statistics SET correct_answered = %d, answered = %d, accuracy = %f WHERE profile_id = %d
-        """.formatted(newCorrectAnswers, newAnswered, newAccuracy, profileId);
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-//            ps.setLong(1, profileId);
-//            ps.setInt(2, isCorrect ? currentCorrectAnswers + 1 : currentCorrectAnswers);
-//            ps.setInt(3, currentAnswered + 1);
-//            ps.setDouble(4, isCorrect ? (double) (currentCorrectAnswers + 1) /currentAnswered : (double) currentCorrectAnswers /currentAnswered);
-            ps.executeUpdate();
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) profileId = rs.getLong(1);
-                else throw new SQLException("Failed to insert profile");
-            }
+        int newAnswered = currentAnswered + 1;
+
+        // Ensure floating-point division for accurate percentage
+        double newAccuracy = (double) newCorrectAnswers / newAnswered;
+
+        // FIX 2: Use a PreparedStatement with '?' placeholders to prevent SQL Injection.
+        String updateSql = """
+      UPDATE statistics SET correct_answers = ?, answered = ?, accuracy = ? WHERE profile_id = ?
+    """;
+
+        try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
+            // Bind the new values safely to the '?' placeholders
+            updatePs.setInt(1, newCorrectAnswers);
+            updatePs.setInt(2, newAnswered);
+            updatePs.setDouble(3, newAccuracy);
+            updatePs.setLong(4, profileId);
+
+            // Use executeUpdate() for INSERT, UPDATE, or DELETE statements
+            updatePs.executeUpdate();
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error updating statistics for profile " + profileId, e);
         }
 
         return profileId;
+    }
+
+    public int updateHighScore(long profileId, int newScore) {
+
+        int currentHighScore = 0;
+
+        // 1. Get the current high score from the database
+        String getScoreSQL = "SELECT highscore FROM statistics WHERE profile_id = ?";
+
+        try (PreparedStatement selectPs = conn.prepareStatement(getScoreSQL)) {
+            selectPs.setLong(1, profileId);
+
+            try (ResultSet rs = selectPs.executeQuery()) {
+                if (rs.next()) {
+                    currentHighScore = rs.getInt("highscore");
+                }
+                // If the profile has no stats row yet, currentHighScore will remain 0.
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching high score for profile " + profileId, e);
+        }
+
+        if (newScore > currentHighScore) {
+            String updateScoreSQL = "UPDATE statistics SET highscore = ? WHERE profile_id = ?";
+
+            try (PreparedStatement updatePs = conn.prepareStatement(updateScoreSQL)) {
+                updatePs.setInt(1, newScore);
+                updatePs.setLong(2, profileId);
+                updatePs.executeUpdate();
+
+                // The new score is now the official high score
+                return newScore;
+
+            } catch (SQLException e) {
+                throw new RuntimeException("Error updating high score for profile " + profileId, e);
+            }
+        }
+
+        // If the new score was not higher, just return the existing high score
+        return currentHighScore;
+    }
+
+    public int getHighScore(long profileId) {
+        String sql = "SELECT highscore FROM statistics WHERE profile_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, profileId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Return the high score if the record exists
+                    return rs.getInt("highscore");
+                }
+            }
+        } catch (SQLException e) {
+            // Wrap and re-throw the exception for better error handling upstream
+            throw new RuntimeException("Error fetching high score for profile " + profileId, e);
+        }
+        // Return 0 if no high score record is found for the profile
+        return 0;
     }
 
     public long countUsers() throws SQLException { return scalarLong("SELECT COUNT(*) FROM profiles"); }
@@ -265,6 +335,7 @@ public class Backend implements AutoCloseable {
                   profile_id     INTEGER NOT NULL,
                   correct_answers INTEGER NOT NULL,
                   answered       INTEGER NOT NULL,
+                  highscore      INTEGER NOT NULL,
                   accuracy       REAL,
                   FOREIGN KEY (profile_id)  REFERENCES profiles(profile_id)          ON DELETE CASCADE
                 );
@@ -380,7 +451,7 @@ public class Backend implements AutoCloseable {
 
     // DTOs
 
-    public record User(long id, String email, String focusArea, String createdAt) {}
+    public record User(long id, String name, String email, String focusArea, String createdAt) {}
 //    public record Question(long id, String focusArea, String question, String answer, String reference, String createdAt) {}
 
     // Quick manual test

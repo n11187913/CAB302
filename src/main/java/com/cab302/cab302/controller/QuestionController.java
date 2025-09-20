@@ -68,6 +68,15 @@ public class QuestionController {
         answerField.setVisible(true);
         scoreLabel.setText("Score: 0");
         highScoreLabel.setText("High Score: 0");
+
+        try (Backend db = new Backend()) {
+            int highscoreDB = db.getHighScore(getCurrentUser().getId());
+            highScore = highscoreDB;
+            highScoreLabel.setText("High Score: %d".formatted(highScore));
+        } catch (Exception e) {
+            statusLabel.setText("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
         startGameTimer();
 
         answerField.setOnAction(e -> checkAnswer());
@@ -106,9 +115,13 @@ public class QuestionController {
         submit.setVisible(false);
         goHome.setVisible(true);
         questionType.setVisible(false);
-//        answerPlaceholder.setVisible(false);
         skipButton.setDisable(true);
-
+        try (Backend db = new Backend()) {
+            db.updateHighScore(getCurrentUser().getId(), highScore);
+        } catch (Exception e) {
+            statusLabel.setText("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void checkAnswer() {
@@ -148,8 +161,19 @@ public class QuestionController {
             statusLabel.setTextFill(Color.GREEN);
             statusLabel.setText("Correct");
 
-            Backend.recordAttempt(getCurrentUser(), true);
+            try (Backend db = new Backend()) {
+                db.recordAttempt(getCurrentUser().getId(), true);
+            } catch (Exception e) {
+                statusLabel.setText("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
         } else {
+            try (Backend db = new Backend()) {
+                db.recordAttempt(getCurrentUser().getId(), false);
+            } catch (Exception e) {
+                statusLabel.setText("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
             currentStreak = 0;
             statusLabel.setTextFill(Color.RED);
             statusLabel.setText("Wrong");
@@ -229,20 +253,7 @@ public class QuestionController {
 
     @FXML
     public void onSubmit() throws InterruptedException {
-        if (answerField.getText().trim().isEmpty()) {
-            statusLabel.setText("Please enter your answer");
-        }
-
-        if (answerField.getText().trim().equals(questions.get(questionCount).getString("solution"))) {
-            statusLabel.setTextFill(Color.GREEN);
-            statusLabel.setText("Correct");
-        } else {
-            statusLabel.setTextFill(Color.RED);
-            statusLabel.setText("Wrong");
-        }
-
-        answerField.clear();
-        nextQuestion();
+        checkAnswer();
     }
 
     @FXML
