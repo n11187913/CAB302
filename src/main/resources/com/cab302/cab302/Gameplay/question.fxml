@@ -87,18 +87,22 @@
 
             <!-- Question Display -->
             <!-- LaTeX Question Display -->
+            <Label fx:id="questionType" style="-fx-text-fill: #cccccc; -fx-font-size: 16;" />
             <WebView fx:id="questionWebView" prefHeight="60.0" prefWidth="905.0" />
 
             <!-- Answer Input -->
             <TextField fx:id="answerField" maxWidth="200" promptText="Enter your answer..." style="-fx-border-color: white; -fx-border-radius: 2%; -fx-border-width: 1; -fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 16;" />
          <Button fx:id="submit" mnemonicParsing="false" onAction="#onSubmit" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" text="Submit" textFill="WHITE" />
+         <Button fx:id="nextButton" mnemonicParsing="false" onAction="#onContinue" style="-fx-background-color: #2DBEDF;" text="Next Question" textFill="WHITE" visible="false">
+            <font>
+               <Font size="16.0" />
+            </font>
+         </Button>
          <Label fx:id="statusLabel" textAlignment="CENTER" textFill="RED">
             <font>
                <Font size="14.0" />
             </font>
          </Label>
-
-            <Region prefHeight="50" />
 
             <Button fx:id="skipButton" onAction="#onSkip" prefHeight="0.0" prefWidth="46.0" style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 14;" text="Skip" />
 

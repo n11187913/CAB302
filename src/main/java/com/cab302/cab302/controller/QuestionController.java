@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.util.Duration;
 import org.json.JSONObject;
@@ -51,9 +52,12 @@ public class QuestionController {
     @FXML private Button submit;
     @FXML private Label statusLabel;
 
+    @FXML private Label questionType;
+
     @FXML
     public void initialize() {
         questions = getQuestions(difficulty, 5);
+        questionType.setText(getQuestionLabelFromType(questions.get(questionCount).getString("type")));
         renderLatexQuestion(questions.get(questionCount).getString("problem"));
         answerField.setVisible(true);
         scoreLabel.setText("Score: 0");
@@ -85,7 +89,7 @@ public class QuestionController {
     private void endGame() {
         questionWebView.getEngine().loadContent("<html><body><h2 style='color:white;'>Time's up!</h2></body></html>");
         answerField.setDisable(true);
-        answerPlaceholder.setVisible(false);
+//        answerPlaceholder.setVisible(false);
         skipButton.setDisable(true);
     }
 
@@ -156,6 +160,7 @@ public class QuestionController {
 
         questionCount++;
         String latex = questions.get(questionCount).getString("problem");
+        questionType.setText(getQuestionLabelFromType(questions.get(questionCount).getString("type")));
 
         String newQuestionHtml = "\\( " + latex + " \\)";
         String escapedHtml = newQuestionHtml.replace("\\", "\\\\").replace("'", "\\'");
@@ -173,16 +178,41 @@ public class QuestionController {
     }
 
     @FXML
-    public void onSubmit() {
-        if (answerField.getText().isEmpty()) {
+    public void onSubmit() throws InterruptedException {
+        if (answerField.getText().trim().isEmpty()) {
             statusLabel.setText("Please enter your answer");
         }
+
+        if (answerField.getText().trim().equals(questions.get(questionCount).getString("solution"))) {
+            statusLabel.setTextFill(Color.GREEN);
+            statusLabel.setText("Correct");
+        } else {
+            statusLabel.setTextFill(Color.RED);
+            statusLabel.setText("Wrong");
+        }
+
+        nextQuestion();
+    }
+
+    @FXML
+    public void onContinue() {
+
     }
 
     private String difficulty = "easy"; // default
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    private String getQuestionLabelFromType(String type) {
+        if (type.equals("algebra/basic")) {
+            return "Please solve for X:";
+        } else if (type.equals("algebra/factoring")) {
+            return "Please factorise this quadratic:";
+        } else {
+            return "Please differentiate using the power rule:";
+        }
     }
 
     private ArrayList<JSONObject> getQuestions(String difficultyLabel, int count) {
@@ -221,6 +251,7 @@ public class QuestionController {
                 HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).build();
                 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
                 JSONObject question = new JSONObject(response.body());
+                question.put("type", type);
                 qs.add(question);
             }
 
