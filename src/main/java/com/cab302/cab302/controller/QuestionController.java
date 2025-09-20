@@ -110,6 +110,7 @@ public class QuestionController {
 
     }
 
+    @FXML
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim().replaceAll("\\s+", "").replace("$", "");
         String correctAnswer = questions.get(questionCount).getString("solution").trim().replaceAll("\\s+", "").replace("$", "");
@@ -222,29 +223,6 @@ public class QuestionController {
     @FXML
     public void onSkip() {
         nextQuestion();
-    }
-
-    @FXML
-    public void onSubmit() throws InterruptedException {
-        if (answerField.getText().trim().isEmpty()) {
-            statusLabel.setText("Please enter your answer");
-        }
-
-        if (answerField.getText().trim().equals(questions.get(questionCount).getString("solution"))) {
-            statusLabel.setTextFill(Color.GREEN);
-            statusLabel.setText("Correct");
-        } else {
-            statusLabel.setTextFill(Color.RED);
-            statusLabel.setText("Wrong");
-        }
-
-        answerField.clear();
-        nextQuestion();
-    }
-
-    @FXML
-    public void onContinue() {
-
     }
 
     private String difficulty = "easy"; // default

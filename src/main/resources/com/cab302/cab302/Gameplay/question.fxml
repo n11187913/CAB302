@@ -93,7 +93,7 @@
 
             <!-- Answer Input -->
             <TextField fx:id="answerField" maxWidth="200" promptText="Enter your answer..." style="-fx-border-color: white; -fx-border-radius: 2%; -fx-border-width: 1; -fx-background-color: #2b2b2b; -fx-text-fill: white; -fx-font-size: 16;" />
-        <Button fx:id="submit" mnemonicParsing="false" onAction="#onSubmit" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" text="Submit" textFill="WHITE" />
+        <Button fx:id="submit" mnemonicParsing="false" onAction="#checkAnswer" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" text="Submit" textFill="WHITE" />
         <Button fx:id="goHome" mnemonicParsing="false" onAction="#onLeave" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-font-size: 16;" text="Go Home" textFill="WHITE" visible="false" />
          <Label fx:id="statusLabel" textAlignment="CENTER" textFill="RED">
             <font>
