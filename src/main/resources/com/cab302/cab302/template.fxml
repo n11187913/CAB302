@@ -8,28 +8,21 @@
     <!-- Top Navigation Bar with Centered Title -->
     <top>
         <HBox spacing="0" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
-            <!-- Left Navigation -->
             <HBox alignment="CENTER_LEFT" spacing="20">
                 <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Home" />
                 <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Leaderboard" />
                 <Button prefWidth="65.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="About" />
             </HBox>
-
-            <!-- Spacer before title -->
             <Region HBox.hgrow="ALWAYS" />
-
-            <!-- Centered Title -->
             <StackPane>
                 <Label style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" text="Mental Math Game" />
             </StackPane>
-
-            <!-- Spacer after title -->
             <Region HBox.hgrow="ALWAYS" />
-
-            <!-- Right Hamburger Menu -->
             <HBox alignment="CENTER_RIGHT" spacing="20">
-                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="169.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
-                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
+                <Button prefHeight="25.0" prefWidth="169.0"
+                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
+                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0"
+                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
             </HBox>
         </HBox>
     </top>

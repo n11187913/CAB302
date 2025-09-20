@@ -1,5 +1,7 @@
 package com.cab302.cab302.controller;
 
+import com.cab302.cab302.Main;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -124,6 +126,7 @@ public class QuestionController {
         }
     }
 
+    @FXML
     private void checkAnswer() {
         String userAnswer = answerField.getText().trim().replaceAll("\\s+", "").replace("$", "");
         String correctAnswer = questions.get(questionCount).getString("solution").trim().replaceAll("\\s+", "").replace("$", "");
@@ -327,5 +330,10 @@ public class QuestionController {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @FXML
+    private void goToHome() {
+        Main.changeScene("home-view.fxml");
     }
 }
