@@ -28,7 +28,7 @@ public class QuestionController {
     private int highScore = 0;
 
     private Timeline timer;
-    private final int totalSeconds = 60;
+    private final int totalSeconds = 3;
     private int secondsRemaining;
 
     private int currentStreak = 0;
@@ -87,10 +87,13 @@ public class QuestionController {
     }
 
     private void endGame() {
-        questionWebView.getEngine().loadContent("<html><body><h2 style='color:white;'>Time's up!</h2></body></html>");
+        questionWebView.getEngine().loadContent("<html><body style='background-color: #3c3c3c;'><h2 style='color:white; text-align: center;'>Time's up!</h2></body></html>");
         answerField.setDisable(true);
+        submit.setDisable(true);
+        questionType.setVisible(false);
 //        answerPlaceholder.setVisible(false);
         skipButton.setDisable(true);
+
     }
 
     private void checkAnswer() {
@@ -192,6 +195,7 @@ public class QuestionController {
             statusLabel.setText("Wrong");
         }
 
+        answerField.clear();
         nextQuestion();
     }
 
