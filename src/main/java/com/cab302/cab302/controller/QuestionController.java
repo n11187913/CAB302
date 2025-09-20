@@ -109,10 +109,22 @@ public class QuestionController {
     }
 
     private void checkAnswer() {
-        String userAnswer = answerField.getText().trim();
-        String correctAnswer = questions.get(questionCount).getString("solution").trim();
+        String userAnswer = answerField.getText().trim().replaceAll("\\s+", "").replace("$", "");
+        String correctAnswer = questions.get(questionCount).getString("solution").trim().replaceAll("\\s+", "").replace("$", "");
+        String type = questions.get(questionCount).getString("type");
 
-        if (userAnswer.equalsIgnoreCase(correctAnswer)) {
+        boolean isCorrect;
+
+        if (type.equals("algebra/factoring")) {
+            // Accept swapped factor order
+            String swappedAnswer = swapFactors(correctAnswer);
+            isCorrect = userAnswer.equalsIgnoreCase(correctAnswer) || userAnswer.equalsIgnoreCase(swappedAnswer);
+        } else {
+            // Default strict match
+            isCorrect = userAnswer.equalsIgnoreCase(correctAnswer);
+        }
+
+        if (isCorrect) {
             score++;
             currentStreak++;
             if (score > highScore) highScore = score;
@@ -130,13 +142,30 @@ public class QuestionController {
             String formattedFastest = String.format("%.2f", fastestAnswerTime);
             fastestAnswerLabel.setText("Fastest: " + formattedFastest + " s");
 
-            answerField.clear(); // clears the field after correct answer
-            nextQuestion();
+            statusLabel.setTextFill(Color.GREEN);
+            statusLabel.setText("Correct");
         } else {
             currentStreak = 0;
-            answerField.clear(); // clear on incorrect too
-            nextQuestion();
+            statusLabel.setTextFill(Color.RED);
+            statusLabel.setText("Wrong");
         }
+
+        answerField.clear();
+        nextQuestion();
+    }
+
+    private String swapFactors(String latex) {
+        // Assumes format: (x±a)(x±b)
+        if (!latex.contains(")(")) return latex;
+
+        int firstClose = latex.indexOf(")");
+        int secondOpen = latex.indexOf("(", firstClose);
+        if (firstClose == -1 || secondOpen == -1) return latex;
+
+        String first = latex.substring(0, firstClose + 1);
+        String second = latex.substring(secondOpen);
+
+        return second + first;
     }
 
     private void renderLatexQuestion(String latex) {
@@ -171,7 +200,7 @@ public class QuestionController {
     public void nextQuestion() {
         // If we're running low on questions, fetch more using current difficulty
         if (questionCount >= questions.size() - 2) {
-            questions.addAll(getQuestions(difficulty, 5)); // 👈 pass difficulty and count
+            questions.addAll(getQuestions(difficulty, 5));
         }
 
         questionCount++;
