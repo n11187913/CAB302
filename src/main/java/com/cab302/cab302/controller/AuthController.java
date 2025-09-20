@@ -9,6 +9,8 @@ import static com.cab302.cab302.Main.changeScene;
 
 public class AuthController {
 
+    public TextField firstNameField;
+    public TextField lastNameField;
     @FXML private TextField emailField;
     @FXML private TextField focusField; // optional: default to "Other"
     @FXML private PasswordField passwordField;
@@ -29,6 +31,7 @@ public class AuthController {
 
     @FXML
     private void onSignUp() {
+        String name = firstNameField.getText().trim() + " " + lastNameField.getText().trim();
         String email = emailField.getText().trim();
         String password = passwordField.getText().trim();
         String focusArea = (focusField != null) ? focusField.getText().trim() : "";
@@ -42,7 +45,7 @@ public class AuthController {
         if (focusArea.isEmpty()) focusArea = "Other";
 
         try (Backend db = new Backend()) {
-            long id = db.addUser(email, password, focusArea); // Using email as username
+            long id = db.addUser(name, email, password, focusArea); // Using email as username
             statusLabel.setText("Sign-up successful! Your ID: " + id);
             clearFields();
         } catch (Exception e) {
@@ -70,7 +73,7 @@ public class AuthController {
             if (ok) {
                 Optional<Backend.User> user = db.getUser(email);
                 String msg = "Login successful!";
-                if (user.isPresent()) msg += " Welcome " + user.get().username();
+                if (user.isPresent()) msg += " Welcome " + user.get().email();
                 statusLabel.setText(msg);
                 goToHome();
                 clearFields();

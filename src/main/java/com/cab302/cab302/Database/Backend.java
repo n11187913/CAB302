@@ -34,31 +34,28 @@ public class Backend implements AutoCloseable {
     // API (kept compatible with existing method names)
 
     /** Create a new user (stored in 'profiles'). */
-    public long addUser(String username, String password, String focusArea) throws Exception {
-        requireNonBlank(username, "username");
+    public long addUser(String name, String email, String password, String focusArea) throws Exception {
+        requireNonBlank(email, "email");
         requireNonBlank(password, "password");
 
         int focusId = ensureFocusExists(sanitizeFocus(focusArea));
         String[] kdf = hashPassword(password);
 
         // NOTE: name/email are required in schema — use sensible placeholders for now
-        String name = username;
-        String email = username + "@local";
 
         String sql = """
-            INSERT INTO profiles(name, email, username, password_hash, password_salt, studentTeacher, created_at)
-            VALUES(?,?,?,?,?,?,?)
+            INSERT INTO profiles(name, email, password_hash, password_salt, studentTeacher, created_at)
+            VALUES(?,?,?,?,?,?)
         """;
 
         long profileId;
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, name);
             ps.setString(2, email);
-            ps.setString(3, username.trim());
-            ps.setString(4, kdf[1]); // hash
-            ps.setString(5, kdf[0]); // salt
-            ps.setString(6, "student"); // default role
-            ps.setString(7, Instant.now().toString());
+            ps.setString(3, kdf[1]); // hash
+            ps.setString(4, kdf[0]); // salt
+            ps.setString(5, "student"); // default role
+            ps.setString(6, Instant.now().toString());
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) profileId = rs.getLong(1);
@@ -74,14 +71,30 @@ public class Backend implements AutoCloseable {
             map.executeUpdate();
         }
 
+        String statsSql = """
+          INSERT INTO statistics(profile_id, correct_answered, answered, accuracy)
+          VALUES(?,?,?,?,?,?)
+        """;
+        try (PreparedStatement ps = conn.prepareStatement(statsSql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setLong(1, profileId);
+            ps.setInt(2, 0);
+            ps.setInt(3, 0);
+            ps.setDouble(4, 0);
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) profileId = rs.getLong(1);
+                else throw new SQLException("Failed to insert profile");
+            }
+        }
+
         return profileId;
     }
 
     /** Authenticate a user by username/password against 'profiles'. */
-    public boolean authenticate(String username, String password) throws Exception {
-        String sql = "SELECT password_hash, password_salt FROM profiles WHERE username = ?";
+    public boolean authenticate(String email, String password) throws Exception {
+        String sql = "SELECT password_hash, password_salt FROM profiles WHERE email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username.trim());
+            ps.setString(1, email.trim());
             try (ResultSet rs = ps.executeQuery()) {
                 if (!rs.next()) return false;
                 String hash = rs.getString("password_hash");
@@ -92,24 +105,24 @@ public class Backend implements AutoCloseable {
     }
 
     /** Fetch a user summary (first focus area name if any). */
-    public Optional<User> getUser(String username) throws SQLException {
+    public Optional<User> getUser(String email) throws SQLException {
         String sql = """
-            SELECT p.profile_id, p.username, p.created_at,
+            SELECT p.profile_id, p.email, p.created_at,
                    (SELECT fa.area_name
                       FROM profile_focus_areas pfa
                       JOIN focus_areas fa ON fa.focus_area_id = pfa.focus_area_id
                      WHERE pfa.profile_id = p.profile_id
                      ORDER BY fa.area_name LIMIT 1) AS focus_area
               FROM profiles p
-             WHERE p.username = ?
+             WHERE p.email = ?
         """;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username.trim());
+            ps.setString(1, email.trim());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return Optional.of(new User(
                             rs.getLong("profile_id"),
-                            rs.getString("username"),
+                            rs.getString("email"),
                             rs.getString("focus_area"),
                             rs.getString("created_at")
                     ));
@@ -119,97 +132,61 @@ public class Backend implements AutoCloseable {
         return Optional.empty();
     }
 
-    /** Insert a question into 'question_library'. */
-    public long addQuestion(String focusArea, String question, String answer, String reference) throws SQLException {
-        requireNonBlank(question, "question");
-        requireNonBlank(answer, "answer");
+    /** Record a quiz attempt (includes correctness flag). */
+    public long recordAttempt(long profileId, boolean isCorrect) throws SQLException {
 
-        int focusId = ensureFocusExists(sanitizeFocus(focusArea));
+        int currentCorrectAnswers = 0;
+        int currentAnswered = 0;
+        double currentAccuracy;
 
-        String sql = """
-            INSERT INTO question_library(question, answer, reference, focus_area_id, question_type, created_at)
-            VALUES(?,?,?,?,?,?)
-        """;
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, question.trim());
-            ps.setString(2, answer.trim());
-            ps.setString(3, reference == null ? null : reference.trim());
-            ps.setInt(4, focusId);
-            ps.setString(5, "worded"); // default type; change as needed
-            ps.setString(6, Instant.now().toString());
-            ps.executeUpdate();
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) return rs.getLong(1);
-            }
-        }
-        throw new SQLException("Failed to insert question");
-    }
 
-    /** Get questions by focus area (randomized). If focusArea null/"Any": from all. */
-    public List<Question> getQuestions(String focusArea, int limit) throws SQLException {
-        boolean all = (focusArea == null) || focusArea.equalsIgnoreCase("Any");
-        String base = """
-            SELECT q.question_id AS id,
-                   fa.area_name   AS focus_area,
-                   q.question,
-                   q.answer,
-                   q.reference,
-                   q.created_at
-              FROM question_library q
-              LEFT JOIN focus_areas fa ON fa.focus_area_id = q.focus_area_id
-        """;
-        String sql = all
-                ? base + " ORDER BY RANDOM() LIMIT ?"
-                : base + " WHERE fa.area_name = ? ORDER BY RANDOM() LIMIT ?";
+        String getCurrentStats = """
+                SELECT s.correct_answers, s.answered, s.accuracy FROM statistics s WHERE s.profile_id = ?
+                """;
 
-        List<Question> out = new ArrayList<>();
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            if (all) {
-                ps.setInt(1, Math.max(1, limit));
-            } else {
-                ps.setString(1, sanitizeFocus(focusArea));
-                ps.setInt(2, Math.max(1, limit));
-            }
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    out.add(new Question(
-                            rs.getLong("id"),
-                            rs.getString("focus_area"),
-                            rs.getString("question"),
-                            rs.getString("answer"),
-                            rs.getString("reference"),
-                            rs.getString("created_at")
-                    ));
+        try (PreparedStatement currentPs = conn.prepareStatement(getCurrentStats, Statement.RETURN_GENERATED_KEYS)) {
+            currentPs.setLong(1, profileId);
+            currentPs.execute();
+            try (ResultSet rs = currentPs.getGeneratedKeys()) {
+                if (rs.next()) {
+                    currentCorrectAnswers = rs.getInt("correct_answered");
+                    currentAnswered = rs.getInt("answered");
+                    currentAccuracy = rs.getDouble("accuracy");
                 }
             }
         }
-        return out;
-    }
+        
+        int newCorrectAnswers = 0;
+        int newAnswered;
+        double newAccuracy;
+        
+        if (isCorrect) {
+            newCorrectAnswers = currentCorrectAnswers + 1;
+        }
+        
+        newAnswered = currentAnswered + 1;
+        
+        newAccuracy = (double) newCorrectAnswers / newAnswered;
 
-    /** Record a quiz attempt (includes correctness flag). */
-    public long recordAttempt(long profileId, long questionId, String userAnswer,
-                              boolean isCorrect, double speedSeconds, double accuracy) throws SQLException {
         String sql = """
-          INSERT INTO statistics(question_id, profile_id, user_answer, is_correct, speed, accuracy)
-          VALUES(?,?,?,?,?,?)
-        """;
+          UPDATE statistics SET correct_answered = %d, answered = %d, accuracy = %f WHERE profile_id = %d
+        """.formatted(newCorrectAnswers, newAnswered, newAccuracy, profileId);
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setLong(1, questionId);
-            ps.setLong(2, profileId);
-            ps.setString(3, userAnswer);
-            ps.setInt(4, isCorrect ? 1 : 0);
-            ps.setDouble(5, speedSeconds);
-            ps.setDouble(6, accuracy);
+//            ps.setLong(1, profileId);
+//            ps.setInt(2, isCorrect ? currentCorrectAnswers + 1 : currentCorrectAnswers);
+//            ps.setInt(3, currentAnswered + 1);
+//            ps.setDouble(4, isCorrect ? (double) (currentCorrectAnswers + 1) /currentAnswered : (double) currentCorrectAnswers /currentAnswered);
             ps.executeUpdate();
             try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) return rs.getLong(1);
+                if (rs.next()) profileId = rs.getLong(1);
+                else throw new SQLException("Failed to insert profile");
             }
         }
-        throw new SQLException("Failed to insert statistics row.");
+
+        return profileId;
     }
 
     public long countUsers() throws SQLException { return scalarLong("SELECT COUNT(*) FROM profiles"); }
-    public long countQuestions() throws SQLException { return scalarLong("SELECT COUNT(*) FROM question_library"); }
 
     @Override public void close() throws SQLException {
         if (conn != null && !conn.isClosed()) conn.close();
@@ -240,7 +217,6 @@ public class Backend implements AutoCloseable {
                   profile_id      INTEGER PRIMARY KEY AUTOINCREMENT,
                   name            VARCHAR(100) NOT NULL,
                   email           VARCHAR(255) NOT NULL UNIQUE,
-                  username        VARCHAR(50)  NOT NULL UNIQUE,
                   password_hash   VARCHAR(255) NOT NULL,
                   password_salt   VARCHAR(255) NOT NULL,
                   studentTeacher  VARCHAR(20) NOT NULL DEFAULT 'student',
@@ -267,62 +243,13 @@ public class Backend implements AutoCloseable {
                 );
                 """,
 
-                // question library
-                """
-                CREATE TABLE IF NOT EXISTS question_library(
-                  question_id    INTEGER PRIMARY KEY AUTOINCREMENT,
-                  question       TEXT NOT NULL,
-                  answer         TEXT NOT NULL,
-                  reference      TEXT,
-                  focus_area_id  INTEGER,
-                  question_type  VARCHAR(20) NOT NULL CHECK (question_type IN ('numerical','worded','object')),
-                  created_at     VARCHAR(40)  NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
-                  FOREIGN KEY (focus_area_id) REFERENCES focus_areas(focus_area_id) ON DELETE SET NULL
-                );
-                """,
-                "CREATE INDEX IF NOT EXISTS idx_qlib_focus ON question_library(focus_area_id);",
-                "CREATE INDEX IF NOT EXISTS idx_qlib_type  ON question_library(question_type);",
-
-                // numerical subtype
-                """
-                CREATE TABLE IF NOT EXISTS numerical_questions(
-                  question_id  INTEGER PRIMARY KEY,
-                  question     TEXT NOT NULL,
-                  answer       TEXT NOT NULL,
-                  FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE
-                );
-                """,
-
-                // worded subtype
-                """
-                CREATE TABLE IF NOT EXISTS worded_questions(
-                  question_id  INTEGER PRIMARY KEY,
-                  question     TEXT NOT NULL,
-                  answer       TEXT NOT NULL,
-                  FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE
-                );
-                """,
-
-                // object subtype
-                """
-                CREATE TABLE IF NOT EXISTS object_questions(
-                  question_id  INTEGER PRIMARY KEY,
-                  question     TEXT NOT NULL,
-                  answer       TEXT NOT NULL,
-                  image        VARCHAR(255),
-                  FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE
-                );
-                """,
-
                 // sessions
                 """
                 CREATE TABLE IF NOT EXISTS sessions(
                   session_id          INTEGER PRIMARY KEY AUTOINCREMENT,
                   profile_id          INTEGER NOT NULL,
-                  flagged_question_id INTEGER,
                   started_at          VARCHAR(40) NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
-                  FOREIGN KEY (profile_id)          REFERENCES profiles(profile_id)           ON DELETE CASCADE,
-                  FOREIGN KEY (flagged_question_id) REFERENCES question_library(question_id) ON DELETE SET NULL
+                  FOREIGN KEY (profile_id)          REFERENCES profiles(profile_id)           ON DELETE CASCADE
                 );
                 """,
                 "CREATE INDEX IF NOT EXISTS idx_sessions_profile ON sessions(profile_id);",
@@ -331,19 +258,14 @@ public class Backend implements AutoCloseable {
                 """
                 CREATE TABLE IF NOT EXISTS statistics(
                   statistics_id  INTEGER PRIMARY KEY AUTOINCREMENT,
-                  question_id    INTEGER NOT NULL,
                   profile_id     INTEGER NOT NULL,
-                  user_answer    VARCHAR(500),
-                  is_correct     INTEGER NOT NULL CHECK (is_correct IN (0,1)) DEFAULT 0,
-                  speed          REAL,
+                  correct_answers INTEGER NOT NULL,
+                  answered       INTEGER NOT NULL,
                   accuracy       REAL,
-                  created_at     VARCHAR(40) NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
-                  FOREIGN KEY (question_id) REFERENCES question_library(question_id) ON DELETE CASCADE,
                   FOREIGN KEY (profile_id)  REFERENCES profiles(profile_id)          ON DELETE CASCADE
                 );
                 """,
                 "CREATE INDEX IF NOT EXISTS idx_stats_profile  ON statistics(profile_id);",
-                "CREATE INDEX IF NOT EXISTS idx_stats_question ON statistics(question_id);"
         };
 
         try (Statement st = conn.createStatement()) {
@@ -454,27 +376,18 @@ public class Backend implements AutoCloseable {
 
     // DTOs
 
-    public record User(long id, String username, String focusArea, String createdAt) {}
-    public record Question(long id, String focusArea, String question, String answer, String reference, String createdAt) {}
+    public record User(long id, String email, String focusArea, String createdAt) {}
+//    public record Question(long id, String focusArea, String question, String answer, String reference, String createdAt) {}
 
     // Quick manual test
 
     public static void main(String[] args) throws Exception {
         try (Backend db = new Backend()) {
             if (db.countUsers() == 0) {
-                db.addUser("alice", "ChangeMe123", "Calculus");
-                db.addUser("bob", "StrongPass456", "Electrical");
+                db.addUser("alice", "alice@gmail.com","ChangeMe123", "Calculus");
+                db.addUser("bob", "bob@gmail.com", "StrongPass456", "Electrical");
             }
-            if (db.countQuestions() == 0) {
-                db.addQuestion("Calculus", "Differentiate f(x)=x^2", "f'(x)=2x", "Stewart Calculus, Ch2");
-                db.addQuestion("Electrical", "Ohm's Law?", "V=IR", "Any EE101 text");
-            }
-
-            System.out.println("Users: " + db.countUsers() + ", Questions: " + db.countQuestions());
-            System.out.println("Auth alice: " + db.authenticate("alice", "ChangeMe123"));
-
-            List<Question> q = db.getQuestions("Any", 3);
-            q.forEach(qq -> System.out.println("Q: " + qq.question() + " [" + qq.focusArea() + "]"));
+            System.out.println("Auth alice: " + db.authenticate("alice@gmail.com", "ChangeMe123"));
         }
     }
 }
