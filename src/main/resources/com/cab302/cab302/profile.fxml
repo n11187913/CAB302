@@ -7,117 +7,132 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.cab302.cab302.controller.ProfileController"
-      alignment="CENTER"
-      spacing="24"
-      stylesheets="@stylesheet.css"
-      styleClass="wrapper">
+<BorderPane prefHeight="720" prefWidth="1080"
+            xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.cab302.controller.ProfileController"
+            style="-fx-background-color: #3c3c3c;"
+            stylesheets="@stylesheet.css">
+    <!-- Left Symbols -->
+    <left>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </left>
 
-    <!-- Content container -->
-    <VBox alignment="CENTER_LEFT" maxWidth="600" spacing="20">
-        <children>
+    <!-- Right Symbols -->
+    <right>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </right>
 
-            <!-- Title -->
-            <Label text="Profile" styleClass="title"/>
+    <center>
+        <VBox alignment="CENTER_LEFT" maxWidth="600" spacing="20" style="-fx-padding: 40;">
+            <children>
 
-            <!-- Header row: avatar + basic info -->
-            <HBox alignment="CENTER_LEFT" spacing="20">
-                <children>
+                <Label text="Profile" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;"/>
 
-                    <!-- Avatar with circular clip -->
-                    <VBox spacing="8" alignment="CENTER">
-                        <children>
-                            <ImageView fx:id="avatar"
-                                       fitWidth="120" fitHeight="120"
-                                       preserveRatio="true">
-                                <image>
-                                    <Image url="@profile.png" />
-                                </image>
-                                <clip>
-                                    <Circle radius="60" centerX="60" centerY="60"/>
-                                </clip>
-                            </ImageView>
-                            <Button text="Change Picture" onAction="#onUploadAvatar" />
-                        </children>
-                    </VBox>
+                <HBox alignment="CENTER_LEFT" spacing="20">
+                    <children>
+                        <VBox spacing="8" alignment="CENTER">
+                            <children>
+                                <ImageView fx:id="avatar"
+                                           fitWidth="120" fitHeight="120"
+                                           preserveRatio="true">
+                                    <image>
+                                        <Image url="@profile.png" />
+                                    </image>
+                                    <clip>
+                                        <Circle radius="60" centerX="60" centerY="60"/>
+                                    </clip>
+                                </ImageView>
+                                <Button text="Change Picture" onAction="#onUploadAvatar"
+                                        style="-fx-background-color: #2DBEDF; -fx-text-fill: white;"/>
+                            </children>
+                        </VBox>
 
-                    <!-- Name / Email / Bio -->
-                    <VBox spacing="6">
-                        <children>
-                            <Label fx:id="nameLbl" text="Guest"/>
-                            <Label fx:id="emailLbl" text="—"/>
-                            <Label fx:id="bioLbl" text="I love solving math problems!!"/>
-                        </children>
-                    </VBox>
-                </children>
-            </HBox>
+                        <VBox spacing="6">
+                            <children>
+                                <Label fx:id="nameLbl" text="Guest" style="-fx-text-fill: white;"/>
+                                <Label fx:id="emailLbl" text="—" style="-fx-text-fill: white;"/>
+                                <Label fx:id="bioLbl" text="I love solving math problems!!" style="-fx-text-fill: white;"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
 
-            <Separator/>
+                <Separator/>
 
-            <!-- Account -->
-            <!-- Account -->
-            <VBox spacing="10">
-                <children>
-                    <Label text="Account" styleClass="section-title"/>
-                    <HBox spacing="10" styleClass="account-bar">
-                        <children>
-                            <Button text="Change Name"     onAction="#onChangeName"     minWidth="150"/>
-                            <Button text="Change Email"    onAction="#onChangeEmail"    minWidth="150"/>
-                            <Button text="Change Password" onAction="#onChangePassword" minWidth="150"/>
-                            <Pane HBox.hgrow="ALWAYS"/>
-                            <Button text="Delete Account"  onAction="#onDeleteAccount"  minWidth="150"/>
-                        </children>
-                    </HBox>
-                </children>
-            </VBox>
+                <VBox spacing="10">
+                    <children>
+                        <Label text="Account" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <HBox spacing="10">
+                            <children>
+                                <Button text="Change Name" onAction="#onChangeName" minWidth="150"
+                                        style="-fx-background-color: #2DBEDF; -fx-text-fill: white;"/>
+                                <Button text="Change Email" onAction="#onChangeEmail" minWidth="150"
+                                        style="-fx-background-color: #2DBEDF; -fx-text-fill: white;"/>
+                                <Button text="Change Password" onAction="#onChangePassword" minWidth="150"
+                                        style="-fx-background-color: #2DBEDF; -fx-text-fill: white;"/>
+                                <Pane HBox.hgrow="ALWAYS"/>
+                                <Button text="Delete Account" onAction="#onDeleteAccount" minWidth="150"
+                                        style="-fx-background-color: #2DBEDF; -fx-text-fill: white;"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
 
+                <VBox spacing="12">
+                    <children>
+                        <Label text="Preferences" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <GridPane hgap="12" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="RIGHT" minWidth="110"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+                            <children>
+                                <Label text="Language:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-text-fill: white;"/>
+                                <ComboBox fx:id="languageBox" prefWidth="180"
+                                          GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-            <!-- Preferences (aligned with GridPane) -->
-            <VBox spacing="12">
-                <children>
-                    <Label text="Preferences" styleClass="section-title"/>
+                                <CheckBox fx:id="accessibilityBox" text="Accessibility Mode"
+                                          GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                          GridPane.halignment="LEFT" style="-fx-text-fill: white;"/>
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
 
-                    <GridPane hgap="12" vgap="12">
-                        <columnConstraints>
-                            <!-- Right-align labels; controls column grows -->
-                            <ColumnConstraints halignment="RIGHT" minWidth="110"/>
-                            <ColumnConstraints hgrow="ALWAYS"/>
-                        </columnConstraints>
-                        <children>
-                            <!-- Row 0: Language -->
-                            <Label text="Language:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                            <ComboBox fx:id="languageBox"
-                                      prefWidth="180"
-                                      GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                <VBox spacing="10" alignment="CENTER_LEFT">
+                    <children>
+                        <Label text="Game Stats" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <ProgressBar fx:id="progressBar" progress="0.5" styleClass="progress-wide"/>
+                        <Label fx:id="levelLbl" text="⭐ Level 5" style="-fx-text-fill: white;"/>
+                    </children>
+                </VBox>
 
-                            <!-- Row 1: Accessibility checkbox aligned under controls column -->
-                            <CheckBox fx:id="accessibilityBox"
-                                      text="Accessibility Mode"
-                                      GridPane.rowIndex="1" GridPane.columnIndex="1"
-                                      GridPane.halignment="LEFT"/>
-                        </children>
-                    </GridPane>
-                </children>
-            </VBox>
+                <Label fx:id="status" text="" style="-fx-text-fill: white;"/>
 
-            <!-- Game stats -->
-            <VBox spacing="10" alignment="CENTER_LEFT">
-                <children>
-                    <Label text="Game Stats" styleClass="section-title"/>
-                    <ProgressBar fx:id="progressBar" progress="0.5" styleClass="progress-wide"/>
-                    <Label fx:id="levelLbl" text="⭐ Level 5"/>
-                </children>
-            </VBox>
+            </children>
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+        </VBox>
+    </center>
 
-            <!-- Status -->
-            <Label fx:id="status" text=""/>
-
-        </children>
-        <padding>
-            <Insets top="24" right="24" bottom="24" left="24"/>
-        </padding>
-    </VBox>
-
-</VBox>
+</BorderPane>

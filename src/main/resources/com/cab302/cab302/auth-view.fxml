@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;"
+            xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.cab302.cab302.controller.AuthController">
+
+    <!-- Top Navigation Bar -->
+    <top>
+        <HBox spacing="0" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Home" />
+                <Button style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Leaderboard" />
+                <Button prefWidth="65.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="About" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <StackPane>
+                <Label style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" text="Mental Math Game" />
+            </StackPane>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER_RIGHT" spacing="20">
+                <Button prefHeight="25.0" prefWidth="169.0"
+                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
+                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0"
+                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- Left Symbols -->
+    <left>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </left>
+
+    <!-- Right Symbols -->
+    <right>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </right>
+
+    <!-- Center Auth Form -->
+    <center>
+        <VBox spacing="20" alignment="TOP_LEFT" style="-fx-padding: 40;">
+            <padding>
+                <Insets top="16.0" right="16.0" bottom="16.0" left="16.0"/>
+            </padding>
+
+            <Label text="Create an account or log in"
+                   style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" />
+
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="First name:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #cccccc;" />
+                <TextField fx:id="firstNameField" promptText="First name"
+                           GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                <Label text="Last name:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #cccccc;" />
+                <TextField fx:id="lastNameField" promptText="Last name"
+                           GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #cccccc;" />
+                <TextField fx:id="emailField" promptText="email@example.com"
+                           GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                <Label text="Password:" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                       style="-fx-text-fill: #cccccc;" />
+                <PasswordField fx:id="passwordField" promptText="Password"
+                               GridPane.rowIndex="3" GridPane.columnIndex="1" />
+            </GridPane>
+
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="Role:" style="-fx-text-fill: #cccccc;" />
+                <RadioButton fx:id="studentRadio" text="Student" selected="true"
+                             style="-fx-text-fill: white;" />
+                <RadioButton fx:id="teacherRadio" text="Teacher"
+                             style="-fx-text-fill: white;" />
+            </HBox>
+
+            <HBox spacing="10">
+                <Button text="Sign Up" onAction="#onSignUp"
+                        style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" />
+            </HBox>
+
+            <HBox alignment="BASELINE_LEFT" spacing="6">
+                <Label text="If you already have an account, log in"
+                       style="-fx-text-fill: white; -fx-font-size: 14;"/>
+                <Hyperlink text="here"
+                           onAction="#goToLogin"
+                           style="-fx-text-fill: #1E90FF; -fx-font-weight: bold; -fx-underline: true; -fx-font-size: 14;"/>
+            </HBox>
+
+            <Label fx:id="statusLabel" text="" wrapText="true"
+                   style="-fx-text-fill: #cccccc;" />
+
+        </VBox>
+    </center>
+
+</BorderPane>
