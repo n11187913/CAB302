@@ -24,7 +24,7 @@ public class Backend implements AutoCloseable {
     private static final int SALT_BYTES = 16;
     private static final int KEY_BITS = 256;
 
-    private Connection conn;
+    private static Connection conn;
 
     public Backend() throws SQLException {
         connect();
@@ -133,7 +133,7 @@ public class Backend implements AutoCloseable {
     }
 
     /** Record a quiz attempt (includes correctness flag). */
-    public long recordAttempt(long profileId, boolean isCorrect) throws SQLException {
+    public static long recordAttempt(long profileId, boolean isCorrect) {
 
         int currentCorrectAnswers = 0;
         int currentAnswered = 0;
@@ -154,8 +154,10 @@ public class Backend implements AutoCloseable {
                     currentAccuracy = rs.getDouble("accuracy");
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        
+
         int newCorrectAnswers = 0;
         int newAnswered;
         double newAccuracy;
@@ -181,6 +183,8 @@ public class Backend implements AutoCloseable {
                 if (rs.next()) profileId = rs.getLong(1);
                 else throw new SQLException("Failed to insert profile");
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
         return profileId;

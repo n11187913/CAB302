@@ -20,6 +20,9 @@ import java.util.List;
 import java.util.Random;
 
 import static com.cab302.cab302.Main.changeScene;
+import static com.cab302.cab302.controller.AuthController.getCurrentUser;
+
+import com.cab302.cab302.Database.Backend;
 
 public class QuestionController {
 
@@ -144,6 +147,8 @@ public class QuestionController {
 
             statusLabel.setTextFill(Color.GREEN);
             statusLabel.setText("Correct");
+
+            Backend.recordAttempt(getCurrentUser(), true);
         } else {
             currentStreak = 0;
             statusLabel.setTextFill(Color.RED);

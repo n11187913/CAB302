@@ -1,6 +1,7 @@
 package com.cab302.cab302.controller;
 
 import com.cab302.cab302.Database.Backend;
+import com.cab302.cab302.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.util.Optional;
@@ -18,6 +19,8 @@ public class AuthController {
     @FXML private RadioButton studentRadio;
     @FXML private RadioButton teacherRadio;
     private ToggleGroup roleGroup;
+
+    private static long currentUser = 0;
 
     @FXML
     public void initialize() {
@@ -73,10 +76,14 @@ public class AuthController {
             if (ok) {
                 Optional<Backend.User> user = db.getUser(email);
                 String msg = "Login successful!";
-                if (user.isPresent()) msg += " Welcome " + user.get().email();
+                if (user.isPresent()) {
+                    msg += " Welcome " + user.get().email();
+                }
                 statusLabel.setText(msg);
                 goToHome();
                 clearFields();
+
+                currentUser = user.get().id();
             } else {
                 statusLabel.setText("Invalid email or password.");
             }
@@ -84,6 +91,9 @@ public class AuthController {
             statusLabel.setText("Error: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    public static long getCurrentUser() {
+        return currentUser;
     }
 
     private void clearFields() {
