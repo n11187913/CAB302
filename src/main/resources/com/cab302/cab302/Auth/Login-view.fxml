@@ -84,7 +84,7 @@
         </GridPane>
 
         <HBox spacing="8">
-            <Button text="Log In" onAction="#goToHome" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" />
+            <Button text="Log In" onAction="#onLogIn" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" />
         </HBox>
 
         <HBox alignment="BASELINE_LEFT" spacing="6">
@@ -96,6 +96,8 @@
         </HBox>
 
         <Pane VBox.vgrow="ALWAYS"/>
+        <Label fx:id="statusLabel" text="" wrapText="true"
+               style="-fx-text-fill: #cccccc;" />
     </VBox>
     </center>
 </BorderPane>
