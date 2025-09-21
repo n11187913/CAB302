@@ -10,7 +10,6 @@
 <BorderPane prefHeight="720" prefWidth="1080"
             style="-fx-background-color: #3c3c3c;"
             stylesheets="@stylesheet.css"
-            xmlns="http://javafx.com/javafx/24.0.1"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.cab302.cab302.controller.ProfileController">
 
