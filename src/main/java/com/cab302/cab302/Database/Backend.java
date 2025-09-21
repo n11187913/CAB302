@@ -403,11 +403,7 @@ public class Backend implements AutoCloseable {
         try (Statement st = conn.createStatement()) {
             for (String sql : ddl) st.execute(sql);
         }
-        try (Statement st = conn.createStatement()) {
-            st.execute("ALTER TABLE profiles ADD COLUMN phone VARCHAR(30)");
-        } catch (SQLException ignore) {
-            // will throw "duplicate column name" after the first run — that's fine
-        }
+
 
         // Seed focus areas (idempotent)
         String seed = """
