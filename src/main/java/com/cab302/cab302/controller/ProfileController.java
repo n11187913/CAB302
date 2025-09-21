@@ -19,6 +19,10 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class ProfileController {
+    @FXML private void goHome()        { com.cab302.cab302.Main.changeScene("home-view.fxml"); }
+    @FXML private void goLeaderboard() { com.cab302.cab302.Main.changeScene("leaderboard-view.fxml"); }
+    @FXML private void goAbout()       { com.cab302.cab302.Main.changeScene("about-view.fxml"); }
+    @FXML private void goProfile()     { /* already here, do nothing or reload if you want */ }
 
     @FXML private ImageView avatar;
     @FXML private Label nameLbl, emailLbl, bioLbl, levelLbl, status;
