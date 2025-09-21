@@ -9,6 +9,7 @@ public class ProfileControllerFlowTest {
 
     private Backend backend;
     private long userId;
+
     @BeforeEach
     void setUp() throws Exception {
         backend = new Backend(true);
