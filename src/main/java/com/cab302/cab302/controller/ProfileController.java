@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+import static com.cab302.cab302.Main.changeScene;
+
 public class ProfileController {
 
     @FXML private ImageView avatar;
@@ -80,16 +82,7 @@ public class ProfileController {
     }
     @FXML
     private void goBackHome(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/cab302/home-view.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        changeScene("home-view.fxml");
     }
 
 
@@ -133,7 +126,7 @@ public class ProfileController {
                 // Return to login screen
                 try {
                     FXMLLoader loader = new FXMLLoader(
-                            getClass().getResource("/com/cab302/cab302/auth/Login-view.fxml")
+                            getClass().getResource("/com/cab302/cab302/Auth/Login-view.fxml")
                     );
                     Parent root = loader.load();
                     Stage stage = (Stage) status.getScene().getWindow();
