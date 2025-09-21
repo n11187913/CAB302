@@ -98,9 +98,13 @@ public class ProfileController {
         d.setTitle("Change Password");
         d.setHeaderText(null);
         d.setContentText("New password:");
-        d.showAndWait().ifPresent(pw -> {
-            String npw = pw.trim();
-            if (npw.length() < 8) { status.setText("Password too short (min 8)."); return; }
+
+        d.showAndWait().ifPresent(newPw -> {
+            String npw = newPw.trim();
+            if (npw.isEmpty()) {               // optional: avoid writing an empty string
+                status.setText("Password unchanged.");
+                return;
+            }
             try (Backend db = new Backend()) {
                 db.updatePassword(profileId, npw);
                 status.setText("Password changed.");
@@ -109,6 +113,7 @@ public class ProfileController {
             }
         });
     }
+
 
     @FXML
     private void onDeleteAccount() {
