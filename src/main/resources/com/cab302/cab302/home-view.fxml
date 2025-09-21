@@ -21,10 +21,11 @@
             </StackPane>
             <Region HBox.hgrow="ALWAYS" />
             <HBox alignment="CENTER_RIGHT" spacing="20">
-                <Button prefHeight="25.0" prefWidth="169.0"
-                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="" />
-                <Button fx:id="hamburgerMenu" prefHeight="25.0" prefWidth="47.0"
-                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="≡" />
+                <Button prefHeight="25.0" prefWidth="169.0"/>
+                <Button fx:id="profileBtn"
+                        style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;"
+                        text="Profile"
+                        onAction="#goToProfile"/>
             </HBox>
         </HBox>
     </top>

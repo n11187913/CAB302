@@ -61,7 +61,7 @@
                                         <Circle radius="60" centerX="60" centerY="60"/>
                                     </clip>
                                 </ImageView>
-                                <Button text="Change Picture" onAction="#onUploadAvatar"
+                                <Button text="Change Profile" onAction="#onUploadAvatar"
                                         style="-fx-background-color: #2DBEDF; -fx-text-fill: white;"/>
                             </children>
                         </VBox>
