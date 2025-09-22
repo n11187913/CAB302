@@ -114,7 +114,6 @@ public class ProfileController {
         });
     }
 
-
     @FXML
     private void onDeleteAccount() {
         if (!ensureLoggedIn()) return;
@@ -123,31 +122,24 @@ public class ProfileController {
                 "Are you sure you want to delete your account?",
                 ButtonType.YES, ButtonType.NO);
         confirm.setHeaderText(null);
+
         confirm.showAndWait().ifPresent(btn -> {
-            if (btn == ButtonType.YES) {
-                try (Backend db = new Backend()) {
-                    db.deleteUser(profileId);
-                } catch (Exception ex) {
-                    status.setText("Failed to delete account: " + ex.getMessage());
-                    return;
-                }
-                status.setText("Account deleted.");
-                // Return to login screen
-                try {
-                    FXMLLoader loader = new FXMLLoader(
-                            getClass().getResource("/com/cab302/cab302/Auth/Login-view.fxml")
-                    );
-                    Parent root = loader.load();
-                    Stage stage = (Stage) status.getScene().getWindow();
-                    stage.getScene().setRoot(root);
-                    stage.setTitle("Sign In / Log In");
-                    stage.centerOnScreen();
-                } catch (IOException e) {
-                    status.setText("Failed to go back to login: " + e.getMessage());
-                }
+            if (btn != ButtonType.YES) return;
+
+            try (Backend db = new Backend()) {
+                db.deleteUser(profileId);
+            } catch (Exception ex) {
+                status.setText("Failed to delete account: " + ex.getMessage());
+                return;
             }
+
+            status.setText("Account deleted.");
+
+            // Go to login using the shared navigator
+            changeScene("Auth/Login-view.fxml");
         });
     }
+
 
     @FXML
     private void onUploadAvatar() {
