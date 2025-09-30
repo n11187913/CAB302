@@ -1,14 +1,14 @@
 package com.cab302.cab302;
 
-import com.cab302.cab302.Database.Backend;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
+import javafx.stage.Stage; // needed for "Stage primaryStage"
 
 import java.io.IOException;
 import java.util.Objects;
+
 
 public class Main extends Application {
     public static final String TITLE = "Sign In / Log In";
@@ -17,11 +17,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("Auth/login-view.fxml"));
-        Scene scene = new Scene(loader.load());
-        stage.setTitle(TITLE);
-        stage.setScene(scene);
-        stage.show();
+        changeScene("Auth/login-view.fxml"); // simplified first scene load
     }
 
     public static void main(String[] args) {
@@ -30,10 +26,32 @@ public class Main extends Application {
 
     public static void changeScene(String fxmlPath) {
         try {
-            Parent pane = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource("/com/cab302/cab302/" +  fxmlPath)));
-            primaryStage.getScene().setRoot(pane);
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlPath));
+            Parent pane = loader.load();
+
+            if (primaryStage.getScene() == null) {
+                primaryStage.setScene(new Scene(pane));
+            } else {
+                primaryStage.getScene().setRoot(pane);
+            }
+            primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    // NEW: load scene and get controller
+    public static <T> T loadScene(String fxmlPath) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlPath));
+        Parent pane = loader.load();
+
+        if (primaryStage.getScene() == null) {
+            primaryStage.setScene(new Scene(pane));
+        } else {
+            primaryStage.getScene().setRoot(pane);
+        }
+        primaryStage.show();
+
+        return loader.getController();
     }
 }
