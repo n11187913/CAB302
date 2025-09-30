@@ -1,5 +1,6 @@
 package com.cab302.cab302.controller;
 
+import com.cab302.cab302.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -85,6 +86,12 @@ public class HomeController {
         String difficulty = getSelectedDifficulty(bGroup);
         launchGame("battle", difficulty);
     }
+    @FXML
+    private void goToProfile() {
+        Main.changeScene("profile.fxml");
+    }
+
+
 
     private void launchGame(String mode, String difficulty) {
         try {
