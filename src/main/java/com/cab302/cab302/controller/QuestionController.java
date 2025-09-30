@@ -35,7 +35,7 @@ public class QuestionController {
     private int highScore = 0;
 
     private Timeline timer;
-    private final int totalSeconds = 60;
+    private final int totalSeconds = 20;
     private int secondsRemaining;
 
     private int currentStreak = 0;
@@ -43,6 +43,9 @@ public class QuestionController {
 
     private long questionStartTime = 0;
     private double fastestAnswerTime = 60;
+
+    private int totalAttempts = 0;
+
 
     @FXML private Label scoreLabel;
     @FXML private Label highScoreLabel;
@@ -112,22 +115,36 @@ public class QuestionController {
     }
 
     private void endGame() {
-        questionWebView.getEngine().loadContent("<html><body style='background-color: #3c3c3c;'><h2 style='color:white; text-align: center;'>Time's up!</h2></body></html>");
         answerField.setDisable(true);
         submit.setVisible(false);
-        goHome.setVisible(true);
-        questionType.setVisible(false);
         skipButton.setDisable(true);
+        questionType.setVisible(false);
+
+        // Update high score in DB
         try (Backend db = new Backend()) {
             db.updateHighScore(getCurrentUser().getId(), highScore);
         } catch (Exception e) {
             statusLabel.setText("Error: " + e.getMessage());
             e.printStackTrace();
         }
+
+        // Compute accuracy
+        double accuracy = (totalAttempts == 0) ? 0 : ((double) score / totalAttempts) * 100;
+
+        // Load results scene and pass stats
+        try {
+            GameOverController controller = Main.loadScene("/com/cab302/cab302/results.fxml");
+            controller.setGameStats(score, highScore, highestStreak, fastestAnswerTime, accuracy); // <-- 5 args
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+
 
     @FXML
     private void checkAnswer() {
+        totalAttempts++;
         String userAnswer = answerField.getText().trim().replaceAll("\\s+", "").replace("$", "");
         String correctAnswer = questions.get(questionCount).getString("solution").trim().replaceAll("\\s+", "").replace("$", "");
         String type = questions.get(questionCount).getString("type");
