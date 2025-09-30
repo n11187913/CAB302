@@ -10,10 +10,10 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 
+
 public class HomeController {
     @FXML
     private ToggleGroup difficultyGroup;
-
     @FXML
     private BorderPane rootPane;
 
