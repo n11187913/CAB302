@@ -35,7 +35,7 @@ public class QuestionController {
     private int highScore = 0;
 
     private Timeline timer;
-    private final int totalSeconds = 20;
+    private final int totalSeconds = 60;
     private int secondsRemaining;
 
     private int currentStreak = 0;
