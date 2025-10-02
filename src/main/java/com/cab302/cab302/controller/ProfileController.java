@@ -4,34 +4,28 @@ import com.cab302.cab302.Database.Backend;
 import com.cab302.cab302.model.UserAccount;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 
 import static com.cab302.cab302.Main.changeScene;
 
 public class ProfileController {
-    @FXML private void goHome()        { com.cab302.cab302.Main.changeScene("home-view.fxml"); }
-    @FXML private void goLeaderboard() { com.cab302.cab302.Main.changeScene("leaderboard-view.fxml"); }
-    @FXML private void goAbout()       { com.cab302.cab302.Main.changeScene("about-view.fxml"); }
-    @FXML private void goProfile()     { /* already here, do nothing or reload if you want */ }
+    @FXML private void goHome()        { changeScene("home-view.fxml"); }
+    @FXML private void goLeaderboard() { changeScene("leaderboard-view.fxml"); }
+    @FXML private void goAbout()       { changeScene("about-view.fxml"); }
+    @FXML private void goProfile()     { /* already here */ }
 
     @FXML private ImageView avatar;
     @FXML private Label nameLbl, emailLbl, bioLbl, levelLbl, status;
     @FXML private ComboBox<String> languageBox;
 
-    private Long profileId;      // from AuthController.getCurrentUser()
-    private String email;        // current email for convenience
+    private Long profileId;
+    private String email;
 
     @FXML
     private void initialize() {
@@ -60,6 +54,42 @@ public class ProfileController {
         status.setText("Welcome, " + nameLbl.getText());
     }
 
+    // ---------- Account actions ----------
+
+    @FXML
+    private void onSignOut() {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "Do you want to sign out?", ButtonType.YES, ButtonType.NO);
+        confirm.setHeaderText(null);
+
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn != ButtonType.YES) return;
+
+            // Clear the session without modifying AuthController
+            clearAuthSession();
+
+            status.setText("Signed out.");
+            com.cab302.cab302.Main.changeScene("Auth/login-view.fxml"); // back to login
+        });
+    }
+
+    /** Clears AuthController's private static 'currentUser' field via reflection. */
+    private void clearAuthSession() {
+        try {
+            // Find the private static field
+            java.lang.reflect.Field f =
+                    com.cab302.cab302.controller.AuthController.class.getDeclaredField("currentUser");
+            f.setAccessible(true);
+            // Because it's static, target is null
+            f.set(null, null);
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+            // If this ever fails, navigation to login still happens;
+            // next login will overwrite the session anyway.
+        }
+    }
+
+
+
     @FXML
     private void onChangeEmail() {
         if (!ensureLoggedIn()) return;
@@ -75,7 +105,6 @@ public class ProfileController {
                 db.updateEmail(profileId, e);
                 email = e;
                 emailLbl.setText(e);
-                // also reflect in AuthController’s cached user
                 UserAccount ua = AuthController.getCurrentUser();
                 if (ua != null) ua.setEmail(e);
                 status.setText("Email updated.");
@@ -84,11 +113,11 @@ public class ProfileController {
             }
         });
     }
+
     @FXML
     private void goBackHome(ActionEvent event) {
         changeScene("home-view.fxml");
     }
-
 
     @FXML
     private void onChangePassword() {
@@ -101,7 +130,7 @@ public class ProfileController {
 
         d.showAndWait().ifPresent(newPw -> {
             String npw = newPw.trim();
-            if (npw.isEmpty()) {               // optional: avoid writing an empty string
+            if (npw.isEmpty()) {
                 status.setText("Password unchanged.");
                 return;
             }
@@ -134,12 +163,9 @@ public class ProfileController {
             }
 
             status.setText("Account deleted.");
-
-            // Go to login using the shared navigator
-            changeScene("Auth/Login-view.fxml");
+            changeScene("Auth/login-view.fxml");
         });
     }
-
 
     @FXML
     private void onUploadAvatar() {
@@ -169,7 +195,6 @@ public class ProfileController {
         try (Backend db = new Backend()) {
             db.updateName(profileId, newName);
             nameLbl.setText(newName);
-            // reflect in AuthController cache
             UserAccount ua = AuthController.getCurrentUser();
             if (ua != null) {
                 String[] parts = newName.split("\\s+", 2);

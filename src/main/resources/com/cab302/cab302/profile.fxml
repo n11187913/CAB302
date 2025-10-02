@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" stylesheets="@stylesheet.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/24.0.1" fx:controller="com.cab302.cab302.controller.ProfileController">
+<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cab302.cab302.controller.ProfileController">
 
     <!-- Top Navigation Bar -->
     <top>
@@ -47,7 +47,6 @@
     <left>
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
             <HBox alignment="CENTER_LEFT" spacing="10" />
-
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
@@ -59,7 +58,7 @@
         </VBox>
     </left>
 
-    <!-- Right Symbols (Back button removed) -->
+    <!-- Right Symbols -->
     <right>
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
@@ -115,7 +114,9 @@
                                 <Button minWidth="150" onAction="#onChangeName" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Change Name" />
                                 <Button minWidth="150" onAction="#onChangeEmail" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Change Email" />
                                 <Button minWidth="150" onAction="#onChangePassword" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Change Password" />
+
                                 <Pane HBox.hgrow="ALWAYS" />
+
                                 <Button minWidth="150" onAction="#onDeleteAccount" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Delete Account" />
                             </children>
                         </HBox>
@@ -137,10 +138,10 @@
 
                                 <CheckBox fx:id="accessibilityBox" style="-fx-text-fill: white;" text="Accessibility Mode" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                             </children>
-                     <rowConstraints>
-                        <RowConstraints />
-                        <RowConstraints />
-                     </rowConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
                         </GridPane>
                     </children>
                 </VBox>
@@ -155,6 +156,8 @@
 
                 <Label fx:id="status" style="-fx-text-fill: white;" text="" />
 
+                          <!-- NEW: Sign Out button -->
+                    <Button minWidth="150" onAction="#onSignOut" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Sign Out" />
             </children>
             <padding>
                 <Insets bottom="24" left="24" right="24" top="24" />
