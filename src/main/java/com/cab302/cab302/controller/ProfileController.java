@@ -29,16 +29,13 @@ public class ProfileController {
 
     @FXML
     private void initialize() {
-        // Always have a default avatar available
         setDefaultAvatar();
 
-        // Prefs
         if (languageBox != null) {
             languageBox.getItems().setAll("English", "Spanish", "French", "Chinese");
             languageBox.setValue("English");
         }
 
-        // Load current user
         UserAccount ua = AuthController.getCurrentUser();
         if (ua == null) {
             nameLbl.setText("Guest");
@@ -53,7 +50,7 @@ public class ProfileController {
         emailLbl.setText(email);
         status.setText("Welcome, " + nameLbl.getText());
 
-        // Try to load persisted avatar
+        //  to load persisted avatar
         try (Backend db = new Backend()) {
             String path = db.getAvatarPath(profileId);
             if (path != null && !path.isBlank()) {
@@ -67,7 +64,7 @@ public class ProfileController {
                 }
             }
         } catch (Exception ignore) {
-            // Keep default avatar on any failure
+            // to Keep default avatar on any failure
         }
     }
 
@@ -79,8 +76,6 @@ public class ProfileController {
             avatar.setImage(defaultImg);
         } catch (Exception ignored) { }
     }
-
-    // ---------- Account actions ----------
 
     @FXML
     private void onSignOut() {
@@ -98,8 +93,6 @@ public class ProfileController {
             com.cab302.cab302.Main.changeScene("Auth/login-view.fxml");
         });
     }
-
-    /** Clears AuthController's private static 'currentUser' field via reflection. */
     private void clearAuthSession() {
         try {
             java.lang.reflect.Field f =
@@ -132,7 +125,6 @@ public class ProfileController {
             }
         });
     }
-
     @FXML
     private void goBackHome(ActionEvent event) {
         changeScene("home-view.fxml");

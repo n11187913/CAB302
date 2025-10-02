@@ -13,7 +13,7 @@ public class Backend implements AutoCloseable {
     // DB file created in the working directory
     private static final String DB_URL = "jdbc:sqlite:cab302.db";
 
-    // Allowed focus areas (simple whitelist)
+    // Allowed focus areas
     private static final String[] ALLOWED_FOCUS = {
             "Electrical", "Dynamics", "Calculus", "Physics", "Mechanical", "Probability", "Other"
     };
@@ -36,7 +36,7 @@ public class Backend implements AutoCloseable {
         initSchema();
     }
 
-    // API (kept compatible with existing method names)
+    // API
     /** Returns the stored avatar path (or null if none). */
     public String getAvatarPath(long profileId) throws SQLException {
         String sql = "SELECT avatar_path FROM profiles WHERE profile_id = ?";
@@ -60,17 +60,12 @@ public class Backend implements AutoCloseable {
             }
         }
     }
-
-
-    /** Create a new user (stored in 'profiles'). */
     public long addUser(String name, String email, String password, String focusArea) throws Exception {
         requireNonBlank(email, "email");
         requireNonBlank(password, "password");
 
         int focusId = ensureFocusExists(sanitizeFocus(focusArea));
         String[] kdf = hashPassword(password);
-
-        // NOTE: name/email are required in schema — use sensible placeholders for now
 
         String sql = """
             INSERT INTO profiles(name, email, password_hash, password_salt, studentTeacher, created_at)
@@ -91,8 +86,6 @@ public class Backend implements AutoCloseable {
                 else throw new SQLException("Failed to insert profile");
             }
         }
-
-        // map profile to focus area
         try (PreparedStatement map = conn.prepareStatement(
                 "INSERT OR IGNORE INTO profile_focus_areas(profile_id, focus_area_id) VALUES(?,?)")) {
             map.setLong(1, profileId);
@@ -119,8 +112,6 @@ public class Backend implements AutoCloseable {
 
         return profileId;
     }
-
-    /** Authenticate a user by username/password against 'profiles'. */
     public boolean authenticate(String email, String password) throws Exception {
         String sql = "SELECT password_hash, password_salt FROM profiles WHERE email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -208,7 +199,7 @@ public class Backend implements AutoCloseable {
     /** Record a quiz attempt (includes correctness flag). */
     public long recordAttempt(long profileId, boolean isCorrect) {
 
-        // Initialize variables to hold the stats fetched from the database
+        // Initializing variables to hold the stats fetched from the database
         int currentCorrectAnswers = 0;
         int currentAnswered = 0;
 
@@ -217,26 +208,23 @@ public class Backend implements AutoCloseable {
             SELECT s.correct_answers, s.answered FROM statistics s WHERE s.profile_id = ?
             """;
 
-        // Use try-with-resources for PreparedStatement and ResultSet to ensure they are closed
+
         try (PreparedStatement selectPs = conn.prepareStatement(getCurrentStats)) {
             selectPs.setLong(1, profileId);
 
-            // FIX 1: Use executeQuery() for SELECT. It returns a ResultSet with the query results.
+
             try (ResultSet rs = selectPs.executeQuery()) {
                 // Check if a record was found before trying to read from it
                 if (rs.next()) {
                     currentCorrectAnswers = rs.getInt("correct_answers");
                     currentAnswered = rs.getInt("answered");
                 }
-                // Note: If no record exists, the variables will remain 0,
-                // and the UPDATE statement below will fail to update any rows.
-                // You may want to add logic here to INSERT a new record if rs.next() is false.
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching statistics for profile " + profileId, e);
         }
 
-        // --- Calculate the new statistics ---
+        // --- Calculating the new statistics ---
         int newCorrectAnswers;
         if (isCorrect) {
             newCorrectAnswers = currentCorrectAnswers + 1;
@@ -248,8 +236,6 @@ public class Backend implements AutoCloseable {
 
         // Ensure floating-point division for accurate percentage
         double newAccuracy = (double) newCorrectAnswers / newAnswered;
-
-        // FIX 2: Use a PreparedStatement with '?' placeholders to prevent SQL Injection.
         String updateSql = """
       UPDATE statistics SET correct_answers = ?, answered = ?, accuracy = ? WHERE profile_id = ?
     """;
@@ -274,8 +260,6 @@ public class Backend implements AutoCloseable {
     public int updateHighScore(long profileId, int newScore) {
 
         int currentHighScore = 0;
-
-        // 1. Get the current high score from the database
         String getScoreSQL = "SELECT highscore FROM statistics WHERE profile_id = ?";
 
         try (PreparedStatement selectPs = conn.prepareStatement(getScoreSQL)) {
@@ -285,7 +269,6 @@ public class Backend implements AutoCloseable {
                 if (rs.next()) {
                     currentHighScore = rs.getInt("highscore");
                 }
-                // If the profile has no stats row yet, currentHighScore will remain 0.
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching high score for profile " + profileId, e);
@@ -298,16 +281,12 @@ public class Backend implements AutoCloseable {
                 updatePs.setInt(1, newScore);
                 updatePs.setLong(2, profileId);
                 updatePs.executeUpdate();
-
-                // The new score is now the official high score
                 return newScore;
 
             } catch (SQLException e) {
                 throw new RuntimeException("Error updating high score for profile " + profileId, e);
             }
         }
-
-        // If the new score was not higher, just return the existing high score
         return currentHighScore;
     }
 
@@ -322,10 +301,9 @@ public class Backend implements AutoCloseable {
                 }
             }
         } catch (SQLException e) {
-            // Wrap and re-throw the exception for better error handling upstream
+
             throw new RuntimeException("Error fetching high score for profile " + profileId, e);
         }
-        // Return 0 if no high score record is found for the profile
         return 0;
     }
 
@@ -360,8 +338,6 @@ public class Backend implements AutoCloseable {
             st.execute("PRAGMA journal_mode = WAL");
         }
     }
-
-    /** Full schema with VARCHAR (per your teammate’s review) + is_correct flag in statistics. */
     private void initSchema() throws SQLException {
         String[] ddl = {
                 "PRAGMA foreign_keys = ON",
@@ -428,16 +404,10 @@ public class Backend implements AutoCloseable {
         try (Statement st = conn.createStatement()) {
             for (String sql : ddl) st.execute(sql);
         }
-        // Try to add avatar_path if the DB was created before this field existed
         try (Statement st = conn.createStatement()) {
             st.execute("ALTER TABLE profiles ADD COLUMN avatar_path VARCHAR(1024)");
         } catch (SQLException ignore) {
-            // Column already exists -> ignore
         }
-
-
-
-        // Seed focus areas (idempotent)
         String seed = """
             INSERT OR IGNORE INTO focus_areas(focus_area_id, area_name) VALUES
               (1,'Electrical'),(2,'Dynamics'),(3,'Calculus'),(4,'Physics'),
@@ -447,7 +417,6 @@ public class Backend implements AutoCloseable {
             st.execute(seed);
         }
     }
-
     private long scalarLong(String sql) throws SQLException {
         try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
             return rs.next() ? rs.getLong(1) : 0L;
@@ -471,7 +440,7 @@ public class Backend implements AutoCloseable {
         return s.substring(0, 1).toUpperCase() + s.substring(1);
     }
 
-    /** Returns [saltB64, "pbkdf2:ITER:hashB64"] */
+
     private static String[] hashPassword(String password) throws Exception {
         byte[] salt = new byte[SALT_BYTES];
         new SecureRandom().nextBytes(salt);
