@@ -29,16 +29,16 @@ public class ProfileController {
 
     @FXML
     private void initialize() {
-        try {
-            Image defaultImg = new Image(
-                    getClass().getResourceAsStream("/com/cab302/cab302/Default-Profile.jpg")
-            );
-            avatar.setImage(defaultImg);
-        } catch (Exception ignored) { }
+        // Always have a default avatar available
+        setDefaultAvatar();
 
-        languageBox.getItems().setAll("English", "Spanish", "French", "Chinese");
-        languageBox.setValue("English");
+        // Prefs
+        if (languageBox != null) {
+            languageBox.getItems().setAll("English", "Spanish", "French", "Chinese");
+            languageBox.setValue("English");
+        }
 
+        // Load current user
         UserAccount ua = AuthController.getCurrentUser();
         if (ua == null) {
             nameLbl.setText("Guest");
@@ -52,6 +52,32 @@ public class ProfileController {
         nameLbl.setText((ua.getFirstName() + " " + ua.getLastName()).trim());
         emailLbl.setText(email);
         status.setText("Welcome, " + nameLbl.getText());
+
+        // Try to load persisted avatar
+        try (Backend db = new Backend()) {
+            String path = db.getAvatarPath(profileId);
+            if (path != null && !path.isBlank()) {
+                File f = new File(path);
+                if (f.exists()) {
+                    avatar.setImage(new Image(f.toURI().toString()));
+                } else {
+                    // File missing on disk – fall back and clear the stale path
+                    setDefaultAvatar();
+                    db.updateAvatarPath(profileId, null);
+                }
+            }
+        } catch (Exception ignore) {
+            // Keep default avatar on any failure
+        }
+    }
+
+    private void setDefaultAvatar() {
+        try {
+            Image defaultImg = new Image(
+                    getClass().getResourceAsStream("/com/cab302/cab302/Default-Profile.jpg")
+            );
+            avatar.setImage(defaultImg);
+        } catch (Exception ignored) { }
     }
 
     // ---------- Account actions ----------
@@ -65,30 +91,23 @@ public class ProfileController {
         confirm.showAndWait().ifPresent(btn -> {
             if (btn != ButtonType.YES) return;
 
-            // Clear the session without modifying AuthController
+            // Clear the session without modifying AuthController class API
             clearAuthSession();
 
             status.setText("Signed out.");
-            com.cab302.cab302.Main.changeScene("Auth/login-view.fxml"); // back to login
+            com.cab302.cab302.Main.changeScene("Auth/login-view.fxml");
         });
     }
 
     /** Clears AuthController's private static 'currentUser' field via reflection. */
     private void clearAuthSession() {
         try {
-            // Find the private static field
             java.lang.reflect.Field f =
                     com.cab302.cab302.controller.AuthController.class.getDeclaredField("currentUser");
             f.setAccessible(true);
-            // Because it's static, target is null
             f.set(null, null);
-        } catch (NoSuchFieldException | IllegalAccessException ignored) {
-            // If this ever fails, navigation to login still happens;
-            // next login will overwrite the session anyway.
-        }
+        } catch (NoSuchFieldException | IllegalAccessException ignored) { }
     }
-
-
 
     @FXML
     private void onChangeEmail() {
@@ -169,12 +188,22 @@ public class ProfileController {
 
     @FXML
     private void onUploadAvatar() {
+        if (!ensureLoggedIn()) { status.setText("No user session."); return; }
+
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
         File file = fc.showOpenDialog(avatar.getScene().getWindow());
         if (file != null) {
+            // Update UI
             avatar.setImage(new Image(file.toURI().toString()));
             status.setText("Profile picture updated");
+
+            // Persist path
+            try (Backend db = new Backend()) {
+                db.updateAvatarPath(profileId, file.getAbsolutePath());
+            } catch (Exception ex) {
+                status.setText("Saved locally, but failed to store avatar path: " + ex.getMessage());
+            }
         }
     }
 

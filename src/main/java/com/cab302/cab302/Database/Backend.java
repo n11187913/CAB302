@@ -37,6 +37,30 @@ public class Backend implements AutoCloseable {
     }
 
     // API (kept compatible with existing method names)
+    /** Returns the stored avatar path (or null if none). */
+    public String getAvatarPath(long profileId) throws SQLException {
+        String sql = "SELECT avatar_path FROM profiles WHERE profile_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, profileId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString(1) : null;
+            }
+        }
+    }
+
+    /** Updates (or clears) the stored avatar path for a profile. */
+    public void updateAvatarPath(long profileId, String path) throws SQLException {
+        String sql = "UPDATE profiles SET avatar_path = ? WHERE profile_id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            if (path == null || path.isBlank()) ps.setNull(1, Types.VARCHAR);
+            else ps.setString(1, path);
+            ps.setLong(2, profileId);
+            if (ps.executeUpdate() == 0) {
+                throw new SQLException("No profile found for id=" + profileId);
+            }
+        }
+    }
+
 
     /** Create a new user (stored in 'profiles'). */
     public long addUser(String name, String email, String password, String focusArea) throws Exception {
@@ -351,7 +375,8 @@ public class Backend implements AutoCloseable {
                   password_hash   VARCHAR(255) NOT NULL,
                   password_salt   VARCHAR(255) NOT NULL,
                   studentTeacher  VARCHAR(20) NOT NULL DEFAULT 'student',
-                  created_at      VARCHAR(40)  NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+                  created_at      VARCHAR(40)  NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+                  avatar_path     VARCHAR(1024)
                 );
                 """,
 
@@ -403,6 +428,13 @@ public class Backend implements AutoCloseable {
         try (Statement st = conn.createStatement()) {
             for (String sql : ddl) st.execute(sql);
         }
+        // Try to add avatar_path if the DB was created before this field existed
+        try (Statement st = conn.createStatement()) {
+            st.execute("ALTER TABLE profiles ADD COLUMN avatar_path VARCHAR(1024)");
+        } catch (SQLException ignore) {
+            // Column already exists -> ignore
+        }
+
 
 
         // Seed focus areas (idempotent)
