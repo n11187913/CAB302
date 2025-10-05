@@ -2,6 +2,7 @@ package com.cab302.cab302.controller;
 
 import com.cab302.cab302.Main;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.fxml.FXML;
@@ -46,13 +47,24 @@ public class QuestionController {
 
     private int totalAttempts = 0;
 
+    private String gameMode = "";
+    private boolean isDailyChallenge = false;
+    private boolean isTimeTrial = false;
+    private boolean isPractice = false;
+    private int dailyQuestions = 5;
+
+    private int questionsAnsweredInMode = 0;
+
+    private int totalTime = 60;
+    private double timeRemaining; // <-- make it a field
 
     @FXML private Label scoreLabel;
     @FXML private Label highScoreLabel;
     @FXML private Label timerLabel;
-    @FXML private ProgressBar timerProgressBar;
+    @FXML private ProgressBar progressBar;
     @FXML private Label streakLabel;
     @FXML private Label fastestAnswerLabel;
+    @FXML private Label questionCounterLabel;
 
     @FXML private Label answerPlaceholder;
     @FXML private TextField answerField;
@@ -82,36 +94,132 @@ public class QuestionController {
             statusLabel.setText("Error: " + e.getMessage());
             e.printStackTrace();
         }
-        startGameTimer();
+
+        // Decide behaviour based on game mode
+        if (isDailyChallenge) {
+            if (timer != null) { timer.stop(); timer = null; }
+            timerLabel.setVisible(false);
+            progressBar.setProgress(0.0);
+            questionCounterLabel.setVisible(true);
+            startQuestionProgress();
+        } else if (isTimeTrial) {
+            questionCounterLabel.setVisible(false);
+            timerLabel.setVisible(true);
+            progressBar.setProgress(1.0); // start full
+            startGameTimer();
+        } else {
+            // Default (practice mode): hide timer and progress bar
+            if (timer != null) { timer.stop(); timer = null; }
+            timerLabel.setVisible(false);
+            questionCounterLabel.setVisible(false);
+            progressBar.setProgress(0.0);
+        }
 
         answerField.setOnAction(e -> checkAnswer());
-        skipButton.setOnAction(e -> nextQuestion());
+        skipButton.setOnAction(e -> {
+            if (isDailyChallenge) {
+                updateQuestionProgress();
+                if (questionsAnsweredInMode >= dailyQuestions) return;
+            }
+            nextQuestion();
+        });
 
         questionStartTime = System.currentTimeMillis();
     }
 
-    private String gameMode = "daily";
+    private void initializeUIForMode() {
+        if (isDailyChallenge) {
+            if (timer != null) { timer.stop(); timer = null; }
+            timerLabel.setVisible(false);
+            questionCounterLabel.setVisible(true);
+            progressBar.setProgress(0.0);
+            startQuestionProgress();
+        } else if (isTimeTrial) {
+            questionCounterLabel.setVisible(false);
+            timerLabel.setVisible(true);
+            progressBar.setProgress(1.0);
+            startGameTimer();
+        } else {
+            if (timer != null) { timer.stop(); timer = null; }
+            timerLabel.setVisible(false);
+            questionCounterLabel.setVisible(false);
+            progressBar.setProgress(0.0);
+        }
+    }
 
     public void setGameMode(String mode) {
-        this.gameMode = mode;
+        this.gameMode = mode == null ? "" : mode.trim().toLowerCase();
+        this.isDailyChallenge = "daily".equals(this.gameMode);
+        this.isTimeTrial = "time_trial".equals(this.gameMode);
+        this.isPractice = "practice".equals(this.gameMode);
+        if (this.isDailyChallenge) this.dailyQuestions = 3;
+
+        initializeUIForMode();
+    }
+
+    private void startQuestionProgress() {
+        questionsAnsweredInMode = 0;
+        if (progressBar != null) progressBar.setProgress(0.0);
+        if (questionCounterLabel != null) {
+            questionCounterLabel.setVisible(true);
+            updateQuestionCounterLabel();
+        }
+        if (timerLabel != null) timerLabel.setVisible(false);
+    }
+
+
+    private void updateQuestionProgress() {
+        if (!isDailyChallenge) return; // only apply to daily mode
+
+        questionsAnsweredInMode++;
+        double progress = (double) questionsAnsweredInMode / Math.max(1, dailyQuestions);
+        progressBar.setProgress(progress);
+        updateQuestionCounterLabel();
+
+        if (isDailyChallenge && questionsAnsweredInMode >= dailyQuestions) {
+            endGame();
+        }
+    }
+
+    private void updateQuestionCounterLabel() {
+        int current = Math.min(questionsAnsweredInMode + 1, dailyQuestions);
+        // If zero answered yet, show Question 1 of N
+        if (questionsAnsweredInMode == 0) current = 1;
+        questionCounterLabel.setText(current + " / " + dailyQuestions);
     }
 
     private void startGameTimer() {
-        secondsRemaining = totalSeconds;
-        timerLabel.setText("Time: " + secondsRemaining);
-        timerProgressBar.setProgress(1.0);
+        totalTime = 60;                       // total seconds
+        secondsRemaining = totalTime;
+        updateTimerLabel(secondsRemaining);
+        if (timer != null) timer.stop();
 
-        timer = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+        // update once per second
+        timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             secondsRemaining--;
-            timerLabel.setText("Time: " + secondsRemaining);
-            timerProgressBar.setProgress((double) secondsRemaining / totalSeconds);
+            // clamp
+            if (secondsRemaining < 0) secondsRemaining = 0;
+
+            // progressBar expects ratio 0..1
+            if (progressBar != null) progressBar.setProgress((double) secondsRemaining / totalTime);
+
+            // update label each second
+            updateTimerLabel(secondsRemaining);
+
             if (secondsRemaining <= 0) {
                 timer.stop();
                 endGame();
             }
         }));
-        timer.setCycleCount(totalSeconds);
+        timer.setCycleCount(Animation.INDEFINITE);
         timer.play();
+    }
+
+    private void updateTimerLabel(int seconds) {
+        if (timerLabel == null) return;
+        int minutes = seconds / 60;
+        int sec = seconds % 60;
+        timerLabel.setText(String.format("%d:%02d", minutes, sec));
     }
 
     private void endGame() {
@@ -200,8 +308,13 @@ public class QuestionController {
         }
 
         answerField.clear();
+        if (isDailyChallenge) {
+            updateQuestionProgress();
+            if (questionsAnsweredInMode >= dailyQuestions) return;
+        }
         nextQuestion();
     }
+
 
     private String swapFactors(String latex) {
         // Assumes format: (x±a)(x±b)
@@ -247,6 +360,11 @@ public class QuestionController {
     }
 
     public void nextQuestion() {
+        if (isDailyChallenge && questionCount >= dailyQuestions - 1) {
+            endGame();
+            return;
+        }
+
         // If we're running low on questions, fetch more using current difficulty
         if (questionCount >= questions.size() - 2) {
             questions.addAll(getQuestions(difficulty, 5));
@@ -267,18 +385,12 @@ public class QuestionController {
     }
 
     @FXML
-    public void onSkip() {
+    private void onSkip() {
+        if (isDailyChallenge) {
+            updateQuestionProgress();
+            if (questionsAnsweredInMode >= dailyQuestions) return;
+        }
         nextQuestion();
-    }
-
-    @FXML
-    public void onSubmit() throws InterruptedException {
-        checkAnswer();
-    }
-
-    @FXML
-    public void onContinue() {
-
     }
 
     private String difficulty = "easy"; // default
