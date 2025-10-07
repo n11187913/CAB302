@@ -1,5 +1,6 @@
 package com.cab302.cab302.controller;
 
+import com.cab302.cab302.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -10,10 +11,13 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 
+
 public class HomeController {
 
     @FXML private BorderPane rootPane;
-
+  
+    @FXML private ToggleGroup difficultyGroup;
+  
     // Daily Challenge difficulty
     @FXML private ToggleButton dcEasy, dcMedium, dcHard;
     // Time Trial difficulty
@@ -70,6 +74,12 @@ public class HomeController {
     private void startPractice() {
         launchGame("practice", getSelectedDifficulty(pGroup));
     }
+    @FXML
+    private void goToProfile() {
+        Main.changeScene("profile.fxml");
+    }
+
+
 
     private void launchGame(String mode, String difficulty) {
         String fxmlFile = switch (mode.toLowerCase()) {
