@@ -13,56 +13,47 @@ import java.io.IOException;
 
 
 public class HomeController {
-    @FXML
-    private ToggleGroup difficultyGroup;
-    @FXML
-    private BorderPane rootPane;
 
+    @FXML private BorderPane rootPane;
+  
+    @FXML private ToggleGroup difficultyGroup;
+  
     // Daily Challenge difficulty
     @FXML private ToggleButton dcEasy, dcMedium, dcHard;
     // Time Trial difficulty
     @FXML private ToggleButton ttEasy, ttMedium, ttHard;
-    // Battle difficulty
-    @FXML private ToggleButton bEasy, bMedium, bHard;
+    // Practice difficulty
+    @FXML private ToggleButton pEasy, pMedium, pHard;
 
     private final ToggleGroup dcGroup = new ToggleGroup();
     private final ToggleGroup ttGroup = new ToggleGroup();
-    private final ToggleGroup bGroup  = new ToggleGroup();
+    private final ToggleGroup pGroup  = new ToggleGroup();
 
     @FXML
     public void initialize() {
-        // wire groups so only one is selected in each row
-        if (dcEasy != null)  { dcEasy.setToggleGroup(dcGroup); }
-        if (dcMedium != null){ dcMedium.setToggleGroup(dcGroup); }
-        if (dcHard != null)  { dcHard.setToggleGroup(dcGroup); }
-        if (ttEasy != null)  { ttEasy.setToggleGroup(ttGroup); }
-        if (ttMedium != null){ ttMedium.setToggleGroup(ttGroup); }
-        if (ttHard != null)  { ttHard.setToggleGroup(ttGroup); }
-        if (bEasy != null)   { bEasy.setToggleGroup(bGroup); }
-        if (bMedium != null) { bMedium.setToggleGroup(bGroup); }
-        if (bHard != null)   { bHard.setToggleGroup(bGroup); }
+        // wire difficulty groups
+        if (dcEasy != null)  { dcEasy.setToggleGroup(dcGroup); dcEasy.setUserData("easy"); }
+        if (dcMedium != null){ dcMedium.setToggleGroup(dcGroup); dcMedium.setUserData("medium"); }
+        if (dcHard != null)  { dcHard.setToggleGroup(dcGroup); dcHard.setUserData("hard"); }
+
+        if (ttEasy != null)  { ttEasy.setToggleGroup(ttGroup); ttEasy.setUserData("easy"); }
+        if (ttMedium != null){ ttMedium.setToggleGroup(ttGroup); ttMedium.setUserData("medium"); }
+        if (ttHard != null)  { ttHard.setToggleGroup(ttGroup); ttHard.setUserData("hard"); }
+
+        if (pEasy != null)   { pEasy.setToggleGroup(pGroup); pEasy.setUserData("easy"); }
+        if (pMedium != null) { pMedium.setToggleGroup(pGroup); pMedium.setUserData("medium"); }
+        if (pHard != null)   { pHard.setToggleGroup(pGroup); pHard.setUserData("hard"); }
 
         // defaults
         if (dcEasy != null)  dcEasy.setSelected(true);
         if (ttEasy != null)  ttEasy.setSelected(true);
-        if (bEasy != null)   bEasy.setSelected(true);
+        if (pEasy != null)   pEasy.setSelected(true);
     }
 
-    // --- difficulty handlers (optional, kept for future logic) ---
-    @FXML private void selectDcEasy()    {}
-    @FXML private void selectDcMedium()  {}
-    @FXML private void selectDcHard()    {}
-    @FXML private void selectTtEasy()    {}
-    @FXML private void selectTtMedium()  {}
-    @FXML private void selectTtHard()    {}
-    @FXML private void selectBattleEasy(){}
-    @FXML private void selectBattleMedium(){}
-    @FXML private void selectBattleHard(){}
-
-    // --- actions ---
+    // --- leaderboard actions ---
     @FXML private void openDailyLeaderboard()    { }
-    @FXML private void openTimeTrialLeaderboard(){  }
-    @FXML private void openBattleLeaderboard()   {  }
+    @FXML private void openTimeTrialLeaderboard(){ }
+    @FXML private void openPracticeLeaderboard() { }
 
     private String getSelectedDifficulty(ToggleGroup group) {
         ToggleButton selected = (ToggleButton) group.getSelectedToggle();
@@ -71,20 +62,17 @@ public class HomeController {
 
     @FXML
     private void startDaily() {
-        String difficulty = getSelectedDifficulty(dcGroup);
-        launchGame("daily", difficulty);
+        launchGame("daily", getSelectedDifficulty(dcGroup));
     }
 
     @FXML
     private void startTimeTrial() {
-        String difficulty = getSelectedDifficulty(ttGroup);
-        launchGame("time_trial", difficulty);
+        launchGame("time_trial", getSelectedDifficulty(ttGroup));
     }
 
     @FXML
-    private void startBattle() {
-        String difficulty = getSelectedDifficulty(bGroup);
-        launchGame("battle", difficulty);
+    private void startPractice() {
+        launchGame("practice", getSelectedDifficulty(pGroup));
     }
     @FXML
     private void goToProfile() {
@@ -94,21 +82,45 @@ public class HomeController {
 
 
     private void launchGame(String mode, String difficulty) {
+        String fxmlFile = switch (mode.toLowerCase()) {
+            case "daily"    -> "Gameplay/daily-challenge-view.fxml";
+            case "practice" -> "Gameplay/practice-view.fxml";
+            default         -> "Gameplay/time-trial-view.fxml";
+        };
+
+        String resourcePath = "/com/cab302/cab302/" + fxmlFile;
+        var url = getClass().getResource(resourcePath);
+        if (url == null) {
+            System.err.println("FXML not found: " + resourcePath);
+            return;
+        }
+
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/cab302/Gameplay/question.fxml"));
+            FXMLLoader loader = new FXMLLoader(url);
             Parent root = loader.load();
 
-            QuestionController controller = loader.getController();
-            controller.setDifficulty(difficulty);
-            controller.setGameMode(mode);
+            Object controller = loader.getController();
+            if (controller instanceof com.cab302.cab302.controller.QuestionController qc) {
+                qc.setDifficulty(difficulty);
+                qc.setGameMode(mode);
+            } else if (controller != null) {
+                try {
+                    var cls = controller.getClass();
+                    try { cls.getMethod("setDifficulty", String.class).invoke(controller, difficulty); } catch (NoSuchMethodException ignored) {}
+                    try { cls.getMethod("setGameMode", String.class).invoke(controller, mode); } catch (NoSuchMethodException ignored) {}
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
 
-            Stage stage = (Stage) dcEasy.getScene().getWindow(); // or any node
+            Stage stage = (Stage) rootPane.getScene().getWindow();
             stage.setScene(new Scene(root, 1080, 720));
             stage.setTitle("Mental Math Game");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     private void switchScene(String fxmlPath) {
         try {
             var url = getClass().getResource("/com/cab302/cab302/" + fxmlPath);
@@ -121,5 +133,6 @@ public class HomeController {
             e.printStackTrace();
         }
     }
-    @FXML private void goProfile()     { switchScene("profile-view.fxml"); }
+
+    @FXML private void goProfile() { switchScene("profile-view.fxml"); }
 }
