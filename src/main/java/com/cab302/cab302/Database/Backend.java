@@ -207,6 +207,86 @@ public class Backend implements AutoCloseable {
         return profileId;
     }
 
+    public static class LeaderboardEntry {
+        private final String name;
+        private final int highscore;
+        private final int correct_answers;
+        private final double accuracy;
+
+        public LeaderboardEntry(String name, int highscore, int correct_answers, double accuracy) {
+            this.name = name;
+            this.highscore = highscore;
+            this.correct_answers = correct_answers;
+            this.accuracy = accuracy;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getHighscore() {
+            return highscore;
+        }
+
+        public int getCorrectAnswers() {
+            return correct_answers;
+        }
+
+        public double getAccuracy() {
+            return accuracy;
+        }
+    }
+
+
+    public ArrayList<LeaderboardEntry> getLeaderboard() {
+        ArrayList<LeaderboardEntry> leaderboard = new ArrayList<>();
+
+        String getLeaderboardsSQL = """
+        WITH RankedStats AS (
+            SELECT
+                u.name,
+                s.highscore,
+                s.correct_answers,
+                s.accuracy,
+                ROW_NUMBER() OVER(PARTITION BY s.correct_answers ORDER BY s.accuracy DESC, s.highscore DESC) as rank
+            FROM
+                statistics s
+            JOIN
+                profiles u ON s.profile_id = u.profile_id
+        )
+        SELECT
+            name,
+            correct_answers,
+            highscore,
+            accuracy
+        FROM
+            RankedStats
+        WHERE
+            rank <= 10;
+    """;
+
+        try (PreparedStatement selectPs = conn.prepareStatement(getLeaderboardsSQL);
+             ResultSet rs = selectPs.executeQuery()) {
+
+            // Use while (rs.next()) to iterate over all rows in the result set
+            while (rs.next()) {
+                String name = rs.getString("name");
+                int correct_answers = rs.getInt("correct_answers");
+                int highscore = rs.getInt("highscore");
+                double accuracy = rs.getDouble("accuracy");
+
+                // Create a new entry and add it to the list
+                LeaderboardEntry entry = new LeaderboardEntry(name, correct_answers, highscore, accuracy);
+                leaderboard.add(entry);
+            }
+        } catch (SQLException e) {
+            // It's good practice to log the exception or handle it more gracefully
+            throw new RuntimeException("Error fetching leaderboard data.", e);
+        }
+
+        return leaderboard;
+    }
+
     public int updateHighScore(long profileId, int newScore) {
 
         int currentHighScore = 0;

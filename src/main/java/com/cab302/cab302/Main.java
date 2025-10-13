@@ -17,7 +17,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
-        changeScene("Auth/login-view.fxml"); // simplified first scene load
+        changeScene("leaderboard-view.fxml"); // simplified first scene load
     }
 
     public static void main(String[] args) {
