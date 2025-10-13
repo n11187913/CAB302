@@ -36,7 +36,7 @@ public class LeaderboardController {
 
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("highscore"));
-        correctColumn.setCellValueFactory(new PropertyValueFactory<>("correct_answers"));
+        correctColumn.setCellValueFactory(new PropertyValueFactory<>("correctAnswers"));
         accuracyColumn.setCellValueFactory(new PropertyValueFactory<>("accuracy"));
 
         accuracyColumn.setCellFactory(col -> new javafx.scene.control.TableCell<>() {
