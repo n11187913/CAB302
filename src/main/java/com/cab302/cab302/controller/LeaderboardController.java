@@ -34,7 +34,6 @@ public class LeaderboardController {
         correctColumn.setMaxWidth(1f * Integer.MAX_VALUE * 20); // ~20%
         accuracyColumn.setMaxWidth(1f * Integer.MAX_VALUE * 20); // ~20%
 
-        // Setup columns
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("highscore"));
         correctColumn.setCellValueFactory(new PropertyValueFactory<>("correct_answers"));
@@ -55,7 +54,6 @@ public class LeaderboardController {
         try (Backend db = new Backend()) {
             ArrayList<Backend.LeaderboardEntry> leaderboard = db.getLeaderboard();
 
-            // Sort by accuracy descending
             leaderboard.sort(Comparator.comparingDouble(Backend.LeaderboardEntry::getAccuracy).reversed());
 
             ObservableList<Backend.LeaderboardEntry> data = FXCollections.observableArrayList(leaderboard);
