@@ -52,6 +52,7 @@ public class QuestionController {
     private boolean isTimeTrial = false;
     private boolean isPractice = false;
     private int dailyQuestions = 5;
+    private int questionsAttempted = 0;
 
     private int questionsAnsweredInMode = 0;
 
@@ -107,12 +108,23 @@ public class QuestionController {
             timerLabel.setVisible(true);
             progressBar.setProgress(1.0); // start full
             startGameTimer();
-        } else {
-            // Default (practice mode): hide timer and progress bar
+        }
+        if (isPractice) {
             if (timer != null) { timer.stop(); timer = null; }
             timerLabel.setVisible(false);
+            questionCounterLabel.setVisible(true);
+            progressBar.setVisible(false);
+            progressBar.setManaged(false);
+            questionsAttempted = 0;
+            updatePracticeCounter();
+        }
+
+        else {
+            // Default (time trial mode):
             questionCounterLabel.setVisible(false);
-            progressBar.setProgress(0.0);
+            timerLabel.setVisible(true);
+            progressBar.setProgress(1.0); // start full
+            startGameTimer();
         }
 
         answerField.setOnAction(e -> checkAnswer());
@@ -188,6 +200,11 @@ public class QuestionController {
         questionCounterLabel.setText(current + " / " + dailyQuestions);
     }
 
+    private void updatePracticeCounter() {
+        questionCounterLabel.setText("Questions answered: " + questionsAttempted);
+    }
+
+
     private void startGameTimer() {
         totalTime = 60;                       // total seconds
         secondsRemaining = totalTime;
@@ -247,8 +264,6 @@ public class QuestionController {
             e.printStackTrace();
         }
     }
-
-
 
     @FXML
     private void checkAnswer() {
@@ -314,7 +329,6 @@ public class QuestionController {
         }
         nextQuestion();
     }
-
 
     private String swapFactors(String latex) {
         // Assumes format: (x±a)(x±b)
@@ -390,7 +404,14 @@ public class QuestionController {
             updateQuestionProgress();
             if (questionsAnsweredInMode >= dailyQuestions) return;
         }
+
+        if (isPractice) {
+            questionsAttempted++;
+            updatePracticeCounter();
+        }
+
         nextQuestion();
+
     }
 
     private String difficulty = "easy"; // default
