@@ -68,6 +68,8 @@
                 <Insets bottom="24" left="24" right="24" top="28" />
             </padding>
 
+            <Region prefHeight="30" />
+
             <!-- ======= Daily Challenge ======= -->
             <VBox alignment="CENTER" spacing="10">
                 <HBox alignment="CENTER" spacing="12">
@@ -85,10 +87,7 @@
                 <!-- buttons directly under the chips -->
                 <HBox alignment="CENTER" spacing="12">
                     <Button onAction="#startDaily" prefWidth="96" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Start" />
-                    <Button onAction="#openDailyLeaderboard" prefWidth="120" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Leaderboard" />
                 </HBox>
-
-                <Label style="-fx-font-size: 16; -fx-text-fill: orange; -fx-font-weight: bold;" text="Your current streak: 🔥 4" />
             </VBox>
 
             <!-- ======= Time Trial ======= -->
@@ -107,7 +106,6 @@
 
                 <HBox alignment="CENTER" spacing="12">
                     <Button onAction="#startTimeTrial" prefWidth="96" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Start" />
-                    <Button onAction="#openTimeTrialLeaderboard" prefWidth="120" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;" text="Leaderboard" />
                 </HBox>
             </VBox>
 
@@ -127,12 +125,7 @@
                 </HBox>
 
                 <HBox spacing="12" alignment="CENTER">
-                    <Button text="Start" onAction="#startPractice"
-                            prefWidth="96"
-                            style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
-                    <Button text="Leaderboard" onAction="#openPracticeLeaderboard"
-                            prefWidth="120"
-                            style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
+                    <Button text="Start" onAction="#startPractice" prefWidth="96" style="-fx-background-color: #2DBEDF; -fx-text-fill: white; -fx-padding:6 16; -fx-background-radius:8;"/>
                 </HBox>
             </VBox>
         </VBox>
