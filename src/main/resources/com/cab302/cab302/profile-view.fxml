@@ -9,44 +9,42 @@
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.cab302.controller.ProfileController"
-            style="-fx-background-color:#2f2f2f;">
+            style="-fx-background-color:#3c3c3c;">
 
     <!-- ========= TOP NAV ========= -->
     <top>
-        <HBox spacing="24" style="-fx-background-color:#2a2a2a; -fx-padding:8 12;">
-            <Label text="Home"   style="-fx-text-fill:#e0e0e0;"/>
-            <Label text="Leaderboard" style="-fx-text-fill:#e0e0e0;"/>
-            <Label text="About"  style="-fx-text-fill:#e0e0e0;"/>
-            <Pane HBox.hgrow="ALWAYS" />
-            <Label text="Mental Math Game" style="-fx-text-fill:#e0e0e0; -fx-font-weight:bold;"/>
-            <Pane HBox.hgrow="ALWAYS" />
-            <Label text="≡" style="-fx-text-fill:#00bcd4; -fx-font-size:16;" />
-        </HBox>
+        <fx:include source="Nav.fxml" />
     </top>
 
     <!-- ========= LEFT RAIL ========= -->
     <left>
-        <VBox spacing="26" alignment="CENTER"
-              style="-fx-padding:12 8; -fx-background-color:#2b2b2b;">
-            <Label text="+" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="×" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="÷" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="+" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="×" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="÷" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <!-- Set 1 -->
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <!-- Set 2 -->
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
         </VBox>
     </left>
 
-    <!-- ========= RIGHT RAIL ========= -->
+    <!-- Right Operation Symbols -->
     <right>
-        <VBox spacing="26" alignment="CENTER"
-              style="-fx-padding:12 8; -fx-background-color:#2b2b2b;">
-            <Label text="+" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="×" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="÷" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="+" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="×" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
-            <Label text="÷" style="-fx-text-fill:#00bcd4; -fx-font-size:36;"/>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <!-- Set 1 -->
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <!-- Set 2 -->
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
         </VBox>
     </right>
 

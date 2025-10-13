@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 
+import static com.cab302.cab302.Main.changeScene;
+
 public class HomeController {
     @FXML
     private ToggleGroup difficultyGroup;
@@ -102,17 +104,17 @@ public class HomeController {
             e.printStackTrace();
         }
     }
-    private void switchScene(String fxmlPath) {
-        try {
-            var url = getClass().getResource("/com/cab302/cab302/" + fxmlPath);
-            if (url == null) throw new IllegalStateException("FXML not found: " + fxmlPath);
-            FXMLLoader loader = new FXMLLoader(url);
-            Scene scene = new Scene(loader.load());
-            Stage stage = (Stage) rootPane.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    @FXML private void goProfile()     { switchScene("profile-view.fxml"); }
+//    private void switchScene(String fxmlPath) {
+//        try {
+//            var url = getClass().getResource("/com/cab302/cab302/" + fxmlPath);
+//            if (url == null) throw new IllegalStateException("FXML not found: " + fxmlPath);
+//            FXMLLoader loader = new FXMLLoader(url);
+//            Scene scene = new Scene(loader.load());
+//            Stage stage = (Stage) rootPane.getScene().getWindow();
+//            stage.setScene(scene);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
 }
