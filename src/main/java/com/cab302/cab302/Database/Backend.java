@@ -243,8 +243,8 @@ public class Backend implements AutoCloseable {
         )
         SELECT
             name,
-            correct_answers,
             highscore,
+            correct_answers,
             accuracy
         FROM
             RankedStats
@@ -257,11 +257,11 @@ public class Backend implements AutoCloseable {
 
             while (rs.next()) {
                 String name = rs.getString("name");
-                int correct_answers = rs.getInt("correct_answers");
                 int highscore = rs.getInt("highscore");
+                int correct_answers = rs.getInt("correct_answers");
                 double accuracy = rs.getDouble("accuracy");
 
-                LeaderboardEntry entry = new LeaderboardEntry(name, correct_answers, highscore, accuracy);
+                LeaderboardEntry entry = new LeaderboardEntry(name, highscore, correct_answers, accuracy);
                 leaderboard.add(entry);
             }
         } catch (SQLException e) {
