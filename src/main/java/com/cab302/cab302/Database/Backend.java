@@ -184,35 +184,26 @@ public class Backend implements AutoCloseable {
     /** Record a quiz attempt (includes correctness flag). */
     public long recordAttempt(long profileId, boolean isCorrect) {
 
-        // Initialize variables to hold the stats fetched from the database
         int currentCorrectAnswers = 0;
         int currentAnswered = 0;
 
-        // SQL to get the current stats for the profile
         String getCurrentStats = """
             SELECT s.correct_answers, s.answered FROM statistics s WHERE s.profile_id = ?
             """;
 
-        // Use try-with-resources for PreparedStatement and ResultSet to ensure they are closed
         try (PreparedStatement selectPs = conn.prepareStatement(getCurrentStats)) {
             selectPs.setLong(1, profileId);
 
-            // FIX 1: Use executeQuery() for SELECT. It returns a ResultSet with the query results.
             try (ResultSet rs = selectPs.executeQuery()) {
-                // Check if a record was found before trying to read from it
                 if (rs.next()) {
                     currentCorrectAnswers = rs.getInt("correct_answers");
                     currentAnswered = rs.getInt("answered");
                 }
-                // Note: If no record exists, the variables will remain 0,
-                // and the UPDATE statement below will fail to update any rows.
-                // You may want to add logic here to INSERT a new record if rs.next() is false.
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching statistics for profile " + profileId, e);
         }
 
-        // --- Calculate the new statistics ---
         int newCorrectAnswers;
         if (isCorrect) {
             newCorrectAnswers = currentCorrectAnswers + 1;
@@ -222,22 +213,18 @@ public class Backend implements AutoCloseable {
 
         int newAnswered = currentAnswered + 1;
 
-        // Ensure floating-point division for accurate percentage
         double newAccuracy = (double) newCorrectAnswers / newAnswered;
 
-        // FIX 2: Use a PreparedStatement with '?' placeholders to prevent SQL Injection.
         String updateSql = """
       UPDATE statistics SET correct_answers = ?, answered = ?, accuracy = ? WHERE profile_id = ?
     """;
 
         try (PreparedStatement updatePs = conn.prepareStatement(updateSql)) {
-            // Bind the new values safely to the '?' placeholders
             updatePs.setInt(1, newCorrectAnswers);
             updatePs.setInt(2, newAnswered);
             updatePs.setDouble(3, newAccuracy);
             updatePs.setLong(4, profileId);
 
-            // Use executeUpdate() for INSERT, UPDATE, or DELETE statements
             updatePs.executeUpdate();
 
         } catch (SQLException e) {
@@ -245,6 +232,83 @@ public class Backend implements AutoCloseable {
         }
 
         return profileId;
+    }
+
+    public static class LeaderboardEntry {
+        private final String name;
+        private final int highscore;
+        private final int correct_answers;
+        private final double accuracy;
+
+        public LeaderboardEntry(String name, int highscore, int correct_answers, double accuracy) {
+            this.name = name;
+            this.highscore = highscore;
+            this.correct_answers = correct_answers;
+            this.accuracy = accuracy;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getHighscore() {
+            return highscore;
+        }
+
+        public int getCorrectAnswers() {
+            return correct_answers;
+        }
+
+        public double getAccuracy() {
+            return accuracy;
+        }
+    }
+
+
+    public ArrayList<LeaderboardEntry> getLeaderboard() {
+        ArrayList<LeaderboardEntry> leaderboard = new ArrayList<>();
+
+        String getLeaderboardsSQL = """
+        WITH RankedStats AS (
+            SELECT
+                u.name,
+                s.highscore,
+                s.correct_answers,
+                s.accuracy,
+                ROW_NUMBER() OVER(PARTITION BY s.correct_answers ORDER BY s.accuracy DESC, s.highscore DESC) as rank
+            FROM
+                statistics s
+            JOIN
+                profiles u ON s.profile_id = u.profile_id
+        )
+        SELECT
+            name,
+            highscore,
+            correct_answers,
+            accuracy
+        FROM
+            RankedStats
+        WHERE
+            rank <= 10;
+    """;
+
+        try (PreparedStatement selectPs = conn.prepareStatement(getLeaderboardsSQL);
+             ResultSet rs = selectPs.executeQuery()) {
+
+            while (rs.next()) {
+                String name = rs.getString("name");
+                int highscore = rs.getInt("highscore");
+                int correct_answers = rs.getInt("correct_answers");
+                double accuracy = rs.getDouble("accuracy");
+
+                LeaderboardEntry entry = new LeaderboardEntry(name, highscore, correct_answers, accuracy);
+                leaderboard.add(entry);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching leaderboard data.", e);
+        }
+
+        return leaderboard;
     }
 
     public int updateHighScore(long profileId, int newScore) {

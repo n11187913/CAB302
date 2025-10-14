@@ -1,11 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" alignment="CENTER" spacing="16">
-    <Label text="Leaderboard"/>
-</VBox>
+<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cab302.cab302.controller.LeaderboardController">
+
+    <!-- Top Navigation Bar with Centered Title -->
+    <top>
+        <fx:include source="Nav.fxml"/>
+    </top>
+
+    <left>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </left>
+
+    <right>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </right>
+
+    <!-- Center Content -->
+    <center>
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 26; -fx-font-weight: bold;" text="Leaderboard" />
+            <TableView fx:id="leaderboardTable"
+                       prefWidth="700"
+                       style="-fx-background-color: #2b2b2b;"
+                       stylesheets="@css/leaderboard.css">
+
+            <columns>
+                    <TableColumn fx:id="nameColumn" text="Name" prefWidth="200"/>
+                    <TableColumn fx:id="scoreColumn" text="High Score" prefWidth="150"/>
+                    <TableColumn fx:id="correctColumn" text="Correct Answers" prefWidth="150"/>
+                    <TableColumn fx:id="accuracyColumn" text="Accuracy (%)" prefWidth="150"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>
