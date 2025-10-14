@@ -12,13 +12,12 @@ import java.io.IOException;
 
 import static com.cab302.cab302.Main.changeScene;
 
-
 public class HomeController {
 
     @FXML private BorderPane rootPane;
-  
+
     @FXML private ToggleGroup difficultyGroup;
-  
+
     // Daily Challenge difficulty
     @FXML private ToggleButton dcEasy, dcMedium, dcHard;
     // Time Trial difficulty
