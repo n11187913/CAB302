@@ -29,12 +29,13 @@ public class Main extends Application {
         launch();
     }
 
-    public static void changeScene(String fxmlPath) {
+    public static Object changeScene(String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("Components/BaseTemplate.fxml"));
             BorderPane mainLayout = loader.load();
 
-            Parent page = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxmlPath)));
+            FXMLLoader pageLoader = new FXMLLoader(Objects.requireNonNull(Main.class.getResource(fxmlPath)));
+            Parent page = pageLoader.load();
 
             LayoutController layoutController = loader.getController();
 
@@ -48,18 +49,22 @@ public class Main extends Application {
                 primaryStage.getScene().setRoot(mainLayout);
             }
             primaryStage.show();
+
+            return pageLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    public static void changeScene(String fxmlPath, boolean setNavlinksVisible) {
+    public static Object changeScene(String fxmlPath, boolean setNavlinksVisible) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("Components/BaseTemplate.fxml"));
             BorderPane mainLayout = loader.load();
             LayoutController layoutController = loader.getController();
 
-            Parent page = FXMLLoader.load(Main.class.getResource(fxmlPath));
+            FXMLLoader pageLoader = new FXMLLoader(Objects.requireNonNull(Main.class.getResource(fxmlPath)));
+            Parent page = pageLoader.load();
 
             if (!setNavlinksVisible) {
                 layoutController.setLinksVisible(false);
@@ -75,9 +80,11 @@ public class Main extends Application {
                 primaryStage.getScene().setRoot(mainLayout);
             }
             primaryStage.show();
+            return pageLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     // NEW: load scene and get controller
