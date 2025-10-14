@@ -8,39 +8,6 @@
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.cab302.cab302.controller.GameOverController">
 
-    <!-- Top Navigation Bar with Centered Title -->
-    <top>
-        <fx:include source="Nav.fxml" />
-    </top>
-
-    <!-- Left Operation Symbols -->
-    <left>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-        </VBox>
-    </left>
-
-    <!-- Right Operation Symbols -->
-    <right>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-        </VBox>
-    </right>
-
     <!-- Center Content: Game Results -->
     <center>
         <VBox alignment="CENTER" spacing="20">

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cab302.cab302.controller.LayoutController" style="-fx-background-color: #3c3c3c;">
+
+    <top>
+        <fx:include fx:id="nav" source="Nav.fxml"/>
+    </top>
+
+    <left>
+        <VBox fx:id="leftSidebar" alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </left>
+
+    <right>
+        <VBox fx:id="rightSidebar" alignment="CENTER" spacing="20" style="-fx-padding: 30;">
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
+            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
+        </VBox>
+    </right>
+
+</BorderPane>

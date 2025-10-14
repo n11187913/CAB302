@@ -1,9 +1,12 @@
 package com.cab302.cab302;
 
+import com.cab302.cab302.controller.LayoutController;
+import com.cab302.cab302.controller.NavController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage; // needed for "Stage primaryStage"
 
 import javax.imageio.IIOParam;
@@ -19,7 +22,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         this.primaryStage = stage;
-        changeScene("Auth/login-view.fxml"); // simplified first scene load
+        changeScene("Auth/Login-view.fxml", false);
     }
 
     public static void main(String[] args) {
@@ -28,13 +31,48 @@ public class Main extends Application {
 
     public static void changeScene(String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlPath));
-            Parent pane = loader.load();
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("Components/BaseTemplate.fxml"));
+            BorderPane mainLayout = loader.load();
+
+            Parent page = FXMLLoader.load(Objects.requireNonNull(Main.class.getResource(fxmlPath)));
+
+            LayoutController layoutController = loader.getController();
+
+            layoutController.setLinksVisible(true);
+
+            mainLayout.setCenter(page);
 
             if (primaryStage.getScene() == null) {
-                primaryStage.setScene(new Scene(pane));
+                primaryStage.setScene(mainLayout.getScene());
             } else {
-                primaryStage.getScene().setRoot(pane);
+                primaryStage.getScene().setRoot(mainLayout);
+            }
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void changeScene(String fxmlPath, boolean setNavlinksVisible) {
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("Components/BaseTemplate.fxml"));
+            BorderPane mainLayout = loader.load();
+            LayoutController layoutController = loader.getController();
+
+            Parent page = FXMLLoader.load(Main.class.getResource(fxmlPath));
+
+            if (!setNavlinksVisible) {
+                layoutController.setLinksVisible(false);
+            } else {
+                layoutController.setLinksVisible(true);
+            }
+
+            mainLayout.setCenter(page);
+
+            if (primaryStage.getScene() == null) {
+                primaryStage.setScene(new Scene(mainLayout));
+            } else {
+                primaryStage.getScene().setRoot(mainLayout);
             }
             primaryStage.show();
         } catch (IOException e) {

@@ -7,45 +7,6 @@
             xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.cab302.cab302.controller.AuthController">
 
-    <!-- Top Navigation Bar -->
-    <top>
-        <HBox style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
-            <Region HBox.hgrow="ALWAYS" />
-            <StackPane>
-                <Label style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" text="Mental Math Game" />
-            </StackPane>
-            <Region HBox.hgrow="ALWAYS" />
-        </HBox>
-    </top>
-
-    <!-- Left Symbols -->
-    <left>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-        </VBox>
-    </left>
-
-    <!-- Right Symbols -->
-    <right>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-        </VBox>
-    </right>
-
     <center>
         <VBox spacing="20" alignment="TOP_LEFT" style="-fx-padding: 40;">
             <padding>
