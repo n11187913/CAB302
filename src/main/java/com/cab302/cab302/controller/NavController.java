@@ -23,7 +23,7 @@ public class NavController {
         homeButton.setOnAction(e -> changeScene("home-view.fxml"));
         leaderboardButton.setOnAction(e -> changeScene("leaderboard-view.fxml"));
         aboutButton.setOnAction(e -> changeScene("about-view.fxml"));
-        profileButton.setOnAction(e -> changeScene("profile-view.fxml"));
+        profileButton.setOnAction(e -> changeScene("profile.fxml"));
 //        hamburgerMenu.setOnAction(e -> toggleMenu());
     }
 }

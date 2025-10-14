@@ -24,23 +24,7 @@
 
     <!-- Top Navigation Bar -->
     <top>
-        <HBox spacing="0" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
-            <HBox alignment="CENTER_LEFT" spacing="20">
-                <Button onAction="#goHome" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Home" />
-                <Button onAction="#goLeaderboard" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Leaderboard" />
-                <Button onAction="#goAbout" prefWidth="65.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="About" />
-            </HBox>
-
-            <Region HBox.hgrow="ALWAYS" />
-            <StackPane>
-                <Label style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" text="Mental Math Game" />
-            </StackPane>
-            <Region HBox.hgrow="ALWAYS" />
-
-            <HBox alignment="CENTER_RIGHT" spacing="20">
-                <Button onAction="#goProfile" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Profile" />
-            </HBox>
-        </HBox>
+        <fx:include source="Nav.fxml"/>
     </top>
 
     <!-- Left Symbols -->
