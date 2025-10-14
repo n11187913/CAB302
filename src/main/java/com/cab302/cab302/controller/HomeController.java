@@ -1,6 +1,5 @@
 package com.cab302.cab302.controller;
 
-import com.cab302.cab302.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -11,13 +10,14 @@ import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 
+import static com.cab302.cab302.Main.changeScene;
 
 public class HomeController {
 
     @FXML private BorderPane rootPane;
-  
+
     @FXML private ToggleGroup difficultyGroup;
-  
+
     // Daily Challenge difficulty
     @FXML private ToggleButton dcEasy, dcMedium, dcHard;
     // Time Trial difficulty
@@ -76,7 +76,7 @@ public class HomeController {
     }
     @FXML
     private void goToProfile() {
-        Main.changeScene("profile.fxml");
+        changeScene("profile.fxml");
     }
 
 
@@ -120,19 +120,17 @@ public class HomeController {
             e.printStackTrace();
         }
     }
+//    private void switchScene(String fxmlPath) {
+//        try {
+//            var url = getClass().getResource("/com/cab302/cab302/" + fxmlPath);
+//            if (url == null) throw new IllegalStateException("FXML not found: " + fxmlPath);
+//            FXMLLoader loader = new FXMLLoader(url);
+//            Scene scene = new Scene(loader.load());
+//            Stage stage = (Stage) rootPane.getScene().getWindow();
+//            stage.setScene(scene);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    private void switchScene(String fxmlPath) {
-        try {
-            var url = getClass().getResource("/com/cab302/cab302/" + fxmlPath);
-            if (url == null) throw new IllegalStateException("FXML not found: " + fxmlPath);
-            FXMLLoader loader = new FXMLLoader(url);
-            Scene scene = new Scene(loader.load());
-            Stage stage = (Stage) rootPane.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML private void goProfile() { switchScene("profile-view.fxml"); }
 }
