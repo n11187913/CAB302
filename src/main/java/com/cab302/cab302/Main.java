@@ -86,19 +86,4 @@ public class Main extends Application {
         }
         return null;
     }
-
-    // NEW: load scene and get controller
-    public static <T> T loadScene(String fxmlPath) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlPath));
-        Parent pane = loader.load();
-
-        if (primaryStage.getScene() == null) {
-            primaryStage.setScene(new Scene(pane));
-        } else {
-            primaryStage.getScene().setRoot(pane);
-        }
-        primaryStage.show();
-
-        return loader.getController();
-    }
 }
