@@ -20,18 +20,33 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
 
-<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" stylesheets="@stylesheet.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/24.0.1" fx:controller="com.cab302.cab302.controller.ProfileController">
+<BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" stylesheets="@stylesheet.css" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cab302.cab302.controller.ProfileController">
 
     <!-- Top Navigation Bar -->
     <top>
-        <fx:include source="Nav.fxml"/>
+        <HBox spacing="0" style="-fx-padding: 12; -fx-background-color: #2b2b2b;">
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button onAction="#goHome" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Home" />
+                <Button onAction="#goLeaderboard" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Leaderboard" />
+                <Button onAction="#goAbout" prefWidth="65.0" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="About" />
+            </HBox>
+
+            <Region HBox.hgrow="ALWAYS" />
+            <StackPane>
+                <Label style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" text="Mental Math Game" />
+            </StackPane>
+            <Region HBox.hgrow="ALWAYS" />
+
+            <HBox alignment="CENTER_RIGHT" spacing="20">
+                <Button onAction="#goProfile" style="-fx-text-fill: white; -fx-background-color: transparent; -fx-font-size: 12;" text="Profile" />
+            </HBox>
+        </HBox>
     </top>
 
     <!-- Left Symbols -->
     <left>
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
             <HBox alignment="CENTER_LEFT" spacing="10" />
-
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
@@ -43,7 +58,7 @@
         </VBox>
     </left>
 
-    <!-- Right Symbols (Back button removed) -->
+    <!-- Right Symbols -->
     <right>
         <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
             <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
@@ -99,7 +114,9 @@
                                 <Button minWidth="150" onAction="#onChangeName" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Change Name" />
                                 <Button minWidth="150" onAction="#onChangeEmail" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Change Email" />
                                 <Button minWidth="150" onAction="#onChangePassword" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Change Password" />
+
                                 <Pane HBox.hgrow="ALWAYS" />
+
                                 <Button minWidth="150" onAction="#onDeleteAccount" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Delete Account" />
                             </children>
                         </HBox>
@@ -121,10 +138,10 @@
 
                                 <CheckBox fx:id="accessibilityBox" style="-fx-text-fill: white;" text="Accessibility Mode" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                             </children>
-                     <rowConstraints>
-                        <RowConstraints />
-                        <RowConstraints />
-                     </rowConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
                         </GridPane>
                     </children>
                 </VBox>
@@ -139,6 +156,8 @@
 
                 <Label fx:id="status" style="-fx-text-fill: white;" text="" />
 
+                <!-- NEW: Sign Out button -->
+                <Button minWidth="150" onAction="#onSignOut" style="-fx-background-color: #2DBEDF; -fx-text-fill: white;" text="Sign Out" />
             </children>
             <padding>
                 <Insets bottom="24" left="24" right="24" top="24" />
