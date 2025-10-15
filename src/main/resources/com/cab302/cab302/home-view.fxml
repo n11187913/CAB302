@@ -14,39 +14,6 @@
 <BorderPane fx:id="rootPane" prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.cab302.controller.HomeController">
 
-    <!-- ========= TOP NAV ========= -->
-    <top>
-        <fx:include source="Nav.fxml" />
-    </top>
-
-    <!-- ========= LEFT RAIL ========= -->
-    <left>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-        </VBox>
-    </left>
-
-    <!-- ========= RIGHT RAIL ========= -->
-    <right>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-        </VBox>
-    </right>
-
     <!-- ========= CENTER CONTENT ========= -->
     <center>
         <VBox alignment="TOP_CENTER" spacing="48">

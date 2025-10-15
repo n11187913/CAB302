@@ -4,44 +4,6 @@
 <?import javafx.scene.layout.*?>
 
 <BorderPane prefHeight="720" prefWidth="1080" style="-fx-background-color: #3c3c3c;" xmlns:fx="http://javafx.com/fxml/1">
-
-    <!-- Top Navigation Bar with Centered Title -->
-    <top>
-        <fx:include source="Nav.fxml" />
-    </top>
-
-    <!-- Left Operation Symbols -->
-    <left>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <!-- Set 1 -->
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <!-- Set 2 -->
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-        </VBox>
-    </left>
-
-    <!-- Right Operation Symbols -->
-    <right>
-        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;">
-            <!-- Set 1 -->
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-            <!-- Set 2 -->
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="+" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="−" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="×" />
-            <Label style="-fx-text-fill: #2DBEDF; -fx-font-size: 40;" text="÷" />
-        </VBox>
-    </right>
-
     <!-- Center Content -->
     <center>
         <VBox alignment="CENTER" spacing="15">

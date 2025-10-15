@@ -257,11 +257,9 @@ public class QuestionController {
         double accuracy = (totalAttempts == 0) ? 0 : ((double) score / totalAttempts) * 100;
 
         // Load results scene and pass stats
-        try {
-            GameOverController controller = Main.loadScene("/com/cab302/cab302/results.fxml");
-            controller.setGameStats(score, highScore, highestStreak, fastestAnswerTime, accuracy); // <-- 5 args
-        } catch (IOException e) {
-            e.printStackTrace();
+        Object controller = changeScene("results.fxml");
+        if (controller instanceof GameOverController goc) {
+            goc.setGameStats(score, highScore, highestStreak, fastestAnswerTime, accuracy); // <-- 5 args
         }
     }
 

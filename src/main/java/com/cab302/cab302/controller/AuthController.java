@@ -108,16 +108,16 @@ public class AuthController {
 
     @FXML
     private void goToLogin() {
-        changeScene("Auth/login-view.fxml");
+        changeScene("Auth/login-view.fxml", false);
     }
 
     @FXML
     private void goToSignUp() {
-        changeScene("Auth/signup-view.fxml");
+        changeScene("Auth/signup-view.fxml", false);
     }
 
     @FXML
     private void goToHome() {
-        changeScene("home-view.fxml");
+        changeScene("home-view.fxml", true);
     }
 }

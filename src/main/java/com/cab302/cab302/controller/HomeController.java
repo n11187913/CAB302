@@ -1,5 +1,6 @@
 package com.cab302.cab302.controller;
 
+import com.cab302.cab302.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -17,6 +18,8 @@ public class HomeController {
     @FXML private BorderPane rootPane;
 
     @FXML private ToggleGroup difficultyGroup;
+
+    @FXML private QuestionController questionController;
 
     // Daily Challenge difficulty
     @FXML private ToggleButton dcEasy, dcMedium, dcHard;
@@ -79,8 +82,6 @@ public class HomeController {
         changeScene("profile.fxml");
     }
 
-
-
     private void launchGame(String mode, String difficulty) {
         String fxmlFile = switch (mode.toLowerCase()) {
             case "daily"    -> "Gameplay/daily-challenge-view.fxml";
@@ -88,49 +89,11 @@ public class HomeController {
             default         -> "Gameplay/time-trial-view.fxml";
         };
 
-        String resourcePath = "/com/cab302/cab302/" + fxmlFile;
-        var url = getClass().getResource(resourcePath);
-        if (url == null) {
-            System.err.println("FXML not found: " + resourcePath);
-            return;
-        }
-
-        try {
-            FXMLLoader loader = new FXMLLoader(url);
-            Parent root = loader.load();
-
-            Object controller = loader.getController();
-            if (controller instanceof com.cab302.cab302.controller.QuestionController qc) {
-                qc.setDifficulty(difficulty);
-                qc.setGameMode(mode);
-            } else if (controller != null) {
-                try {
-                    var cls = controller.getClass();
-                    try { cls.getMethod("setDifficulty", String.class).invoke(controller, difficulty); } catch (NoSuchMethodException ignored) {}
-                    try { cls.getMethod("setGameMode", String.class).invoke(controller, mode); } catch (NoSuchMethodException ignored) {}
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            Stage stage = (Stage) rootPane.getScene().getWindow();
-            stage.setScene(new Scene(root, 1080, 720));
-            stage.setTitle("Mental Math Game");
-        } catch (IOException e) {
-            e.printStackTrace();
+        Object controller = Main.changeScene(fxmlFile);
+        if (controller instanceof QuestionController qc) {
+            qc.setGameMode(mode);
+            qc.setDifficulty(difficulty);
         }
     }
-//    private void switchScene(String fxmlPath) {
-//        try {
-//            var url = getClass().getResource("/com/cab302/cab302/" + fxmlPath);
-//            if (url == null) throw new IllegalStateException("FXML not found: " + fxmlPath);
-//            FXMLLoader loader = new FXMLLoader(url);
-//            Scene scene = new Scene(loader.load());
-//            Stage stage = (Stage) rootPane.getScene().getWindow();
-//            stage.setScene(scene);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 }
